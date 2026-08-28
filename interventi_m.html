@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Interventi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           iOS NATIVE STYLE - Interventi Mobile
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --ios-blue: #007AFF;
+            --ios-blue-dark: #0055CC;
+            --ios-red: #FF3B30;
+            --ios-green: #34C759;
+            --ios-orange: #FF9500;
+            --ios-yellow: #FFCC00;
+            --ios-gray: #8E8E93;
+            --ios-gray-light: #C7C7CC;
+            --ios-gray-bg: #F2F2F7;
+            --ios-card: #FFFFFF;
+            --ios-text: #000000;
+            --ios-text-secondary: #3C3C43;
+            --ios-text-tertiary: #8E8E93;
+            --ios-separator: #E5E5EA;
+            --ios-shadow: rgba(0, 0, 0, 0.08);
+            --ios-shadow-heavy: rgba(0, 0, 0, 0.15);
+            --safe-top: env(safe-area-inset-top, 20px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --tab-height: 50px;
+            --header-height: 52px;
+
+            --color-reperibilita: #FFCDD2;
+            --color-reperibilita-border: #C62828;
+            --color-reperibilita-text: #C62828;
+            --color-normale: #C8E6C9;
+            --color-normale-border: #1B5E20;
+            --color-normale-text: #1B5E20;
+            --color-rip-consuntivo: #BBDEFB;
+            --color-rip-consuntivo-border: #0D47A1;
+            --color-rip-consuntivo-text: #0D47A1;
+            --color-misto: #E0E0E0;
+            --color-misto-border: #757575;
+            --color-misto-text: #757575;
+        }
+
+        body.dark {
+            --ios-gray-bg: #000000;
+            --ios-card: #1C1C1E;
+            --ios-text: #FFFFFF;
+            --ios-text-secondary: #EBEBF5;
+            --ios-text-tertiary: #8E8E93;
+            --ios-separator: #38383A;
+            --ios-shadow: rgba(255, 255, 255, 0.05);
+            --ios-shadow-heavy: rgba(255, 255, 255, 0.08);
+            --color-reperibilita: rgba(198, 40, 40, 0.2);
+            --color-reperibilita-text: #EF9A9A;
+            --color-normale: rgba(27, 94, 32, 0.2);
+            --color-normale-text: #81C784;
+            --color-rip-consuntivo: rgba(13, 71, 161, 0.2);
+            --color-rip-consuntivo-text: #90CAF9;
+            --color-misto: rgba(117, 117, 117, 0.2);
+            --color-misto-text: #9E9E9E;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background: var(--ios-gray-bg);
+            color: var(--ios-text);
+            min-height: 100vh;
+            padding-top: var(--safe-top);
+            padding-bottom: calc(var(--tab-height) + var(--safe-bottom) + 8px);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ----- HEADER ----- */
+        .header {
+            background: var(--ios-card);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 0.5px solid var(--ios-separator);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            min-height: var(--header-height);
+            transition: background 0.3s ease;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header-back {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--ios-blue);
+            padding: 4px;
+            transition: transform 0.15s ease;
+        }
+
+        .header-back:active {
+            transform: scale(0.85);
+        }
+
+        .header-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--ios-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .header-actions button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+            color: var(--ios-blue);
+            transition: transform 0.15s ease;
+        }
+
+        .header-actions button:active {
+            transform: scale(0.85);
+        }
+
+        /* ----- IMPIANTO INFO ----- */
+        .impianto-info {
+            background: var(--ios-card);
+            padding: 8px 16px 12px;
+            border-bottom: 0.5px solid var(--ios-separator);
+        }
+
+        .impianto-info .code {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ios-text);
+        }
+
+        .impianto-info .address {
+            font-size: 13px;
+            color: var(--ios-text-secondary);
+            margin-top: 2px;
+        }
+
+        /* ----- FILTERS ----- */
+        .filter-wrapper {
+            padding: 8px 16px 12px;
+            background: var(--ios-gray-bg);
+            transition: background 0.3s ease;
+        }
+
+        .filter-scroll {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 2px 0 4px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .filter-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-chip {
+            flex-shrink: 0;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            background: var(--ios-card);
+            border: 0.5px solid var(--ios-separator);
+            color: var(--ios-text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+            box-shadow: 0 1px 2px var(--ios-shadow);
+            min-height: 32px;
+        }
+
+        .filter-chip:active {
+            transform: scale(0.95);
+        }
+
+        .filter-chip.active {
+            background: var(--ios-blue);
+            color: white;
+            border-color: var(--ios-blue);
+        }
+
+        /* ----- LISTA ----- */
+        .list {
+            padding: 0 16px 16px;
+        }
+
+        /* ----- JOB CARD ----- */
+        .job-card {
+            background: var(--ios-card);
+            border-radius: 14px;
+            border: 0.5px solid var(--ios-separator);
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px var(--ios-shadow);
+            transition: background 0.3s ease;
+        }
+
+        .job-header {
+            padding: 14px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 56px;
+            user-select: none;
+        }
+
+        .job-header:active {
+            background: var(--ios-separator);
+        }
+
+        .job-header .job-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .job-header .job-left .job-id {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ios-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .job-header .job-left .job-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            border: 0.5px solid;
+        }
+
+        .badge-reperibilita {
+            background: var(--color-reperibilita);
+            color: var(--color-reperibilita-text);
+            border-color: var(--color-reperibilita-border);
+        }
+
+        .badge-normale {
+            background: var(--color-normale);
+            color: var(--color-normale-text);
+            border-color: var(--color-normale-border);
+        }
+
+        .badge-rip-consuntivo {
+            background: var(--color-rip-consuntivo);
+            color: var(--color-rip-consuntivo-text);
+            border-color: var(--color-rip-consuntivo-border);
+        }
+
+        .badge-misto {
+            background: var(--color-misto);
+            color: var(--color-misto-text);
+            border-color: var(--color-misto-border);
+        }
+
+        .job-header .job-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .job-header .job-right .job-date {
+            font-size: 12px;
+            color: var(--ios-text-tertiary);
+        }
+
+        .job-header .job-right .job-count {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--ios-text-tertiary);
+            background: var(--ios-gray-bg);
+            padding: 2px 10px;
+            border-radius: 12px;
+        }
+
+        .job-header .job-right .job-arrow {
+            font-size: 14px;
+            color: var(--ios-text-tertiary);
+            transition: transform 0.3s ease;
+        }
+
+        .job-header .job-right .job-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        /* ----- JOB BODY (interventi) ----- */
+        .job-body {
+            display: none;
+            padding: 0 16px 16px;
+            border-top: 0.5px solid var(--ios-separator);
+        }
+
+        .job-body.open {
+            display: block;
+        }
+
+        /* ----- INTERVENTO ITEM ----- */
+        .intervento-item {
+            background: var(--ios-gray-bg);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            border: 0.5px solid var(--ios-separator);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .intervento-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .intervento-item:active {
+            background: var(--ios-separator);
+        }
+
+        .intervento-item .intervento-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .intervento-item .intervento-header .intervento-tipo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--ios-text);
+        }
+
+        .intervento-item .intervento-header .intervento-tipo .tipo-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .tipo-dot.dot-reperibilita {
+            background: var(--color-reperibilita-border);
+        }
+        .tipo-dot.dot-normale {
+            background: var(--color-normale-border);
+        }
+        .tipo-dot.dot-rip-consuntivo {
+            background: var(--color-rip-consuntivo-border);
+        }
+
+        .intervento-item .intervento-header .intervento-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--ios-text-tertiary);
+        }
+
+        .intervento-item .intervento-header .intervento-meta .tecnico {
+            color: var(--ios-text-secondary);
+        }
+
+        .intervento-item .intervento-header .intervento-meta .costo {
+            font-weight: 600;
+            color: var(--ios-text);
+        }
+
+        .intervento-item .intervento-arrow {
+            font-size: 12px;
+            color: var(--ios-text-tertiary);
+            transition: transform 0.3s ease;
+        }
+
+        .intervento-item .intervento-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        /* ----- INTERVENTO DETAIL ----- */
+        .intervento-detail {
+            display: none;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 0.5px solid var(--ios-separator);
+        }
+
+        .intervento-detail.open {
+            display: block;
+        }
+
+        .intervento-detail .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            font-size: 13px;
+            border-bottom: 0.5px solid var(--ios-separator);
+        }
+
+        .intervento-detail .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .intervento-detail .detail-row .dl {
+            font-weight: 500;
+            color: var(--ios-text-tertiary);
+        }
+
+        .intervento-detail .detail-row .dv {
+            color: var(--ios-text);
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .intervento-detail .detail-row-full {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+        }
+
+        .intervento-detail .detail-row-full .dv {
+            text-align: left;
+            max-width: 100%;
+            background: var(--ios-gray-bg);
+            padding: 4px 8px;
+            border-radius: 6px;
+            width: 100%;
+        }
+
+        /* ----- EMPTY ----- */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--ios-text-tertiary);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--ios-text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .empty-state p {
+            font-size: 15px;
+        }
+
+        /* ----- LOADING ----- */
+        .loading-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--ios-separator);
+            border-top: 3px solid var(--ios-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-state p {
+            color: var(--ios-text-tertiary);
+            font-size: 15px;
+        }
+
+        /* ----- BOTTOM NAV ----- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(var(--tab-height) + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+            background: var(--ios-card);
+            border-top: 0.5px solid var(--ios-separator);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 300;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: background 0.3s ease;
+        }
+
+        .bottom-nav button {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--ios-text-tertiary);
+            transition: color 0.2s;
+            min-width: 44px;
+            min-height: 44px;
+            justify-content: center;
+        }
+
+        .bottom-nav button .nav-icon {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .bottom-nav button .nav-label {
+            font-size: 10px;
+            letter-spacing: 0.2px;
+        }
+
+        .bottom-nav button.active {
+            color: var(--ios-blue);
+        }
+
+        .bottom-nav button:active {
+            transform: scale(0.9);
+        }
+
+        /* ----- TOAST ----- */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--safe-top) + 60px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            pointer-events: none;
+            max-width: 90%;
+        }
+
+        .toast {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            animation: toastIn 0.3s ease;
+            text-align: center;
+            pointer-events: auto;
+            min-width: 120px;
+        }
+
+        .toast.out {
+            animation: toastOut 0.3s ease forwards;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 375px) {
+            .header-title {
+                font-size: 15px;
+            }
+            .job-header .job-left .job-id {
+                font-size: 13px;
+            }
+            .intervento-item .intervento-header .intervento-tipo {
+                font-size: 13px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            body {
+                background: var(--ios-gray-bg);
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                padding: 40px 20px;
+            }
+            .container {
+                max-width: 430px;
+                margin: 0 auto;
+                background: var(--ios-gray-bg);
+                border-radius: 20px;
+                box-shadow: 0 20px 60px var(--ios-shadow-heavy);
+                overflow: hidden;
+                border: 0.5px solid var(--ios-separator);
+                min-height: 90vh;
+            }
+            body.dark {
+                background: #000000;
+            }
+        }
+
+        /* ----- PRINT ----- */
+        @media print {
+            .header-actions,
+            .bottom-nav,
+            .filter-wrapper {
+                display: none;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+            }
+            .job-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                border-color: #ddd;
+            }
+            .job-body {
+                display: block !important;
+            }
+            .intervento-detail {
+                display: block !important;
+            }
+            .job-arrow,
+            .intervento-arrow {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <header class="header">
+            <div class="header-left">
+                <button class="header-back" onclick="goBack()">‹</button>
+                <span class="header-title" id="headerTitle">Interventi</span>
+            </div>
+            <div class="header-actions">
+                <button onclick="toggleTheme()" aria-label="Tema" title="Tema">🌓</button>
+                <button onclick="window.print()" aria-label="Stampa" title="Stampa">🖨️</button>
+            </div>
+        </header>
+
+        <!-- ===== IMPIANTO INFO ===== -->
+        <div class="impianto-info">
+            <div class="code" id="impiantoCode">Caricamento...</div>
+            <div class="address" id="impiantoAddress">📍 Caricamento indirizzo...</div>
+        </div>
+
+        <!-- ===== FILTERS ===== -->
+        <div class="filter-wrapper">
+            <div class="filter-scroll" id="filterScroll">
+                <button class="filter-chip active" data-filter="all" onclick="applyFilter('all')">📋 Tutti</button>
+                <button class="filter-chip" data-filter="Reperibilità" onclick="applyFilter('Reperibilità')">🆘 Reperibilità</button>
+                <button class="filter-chip" data-filter="Normale" onclick="applyFilter('Normale')">⚡ Normale</button>
+                <button class="filter-chip" data-filter="Rip a consuntivo" onclick="applyFilter('Rip a consuntivo')">🔧 Rip a consuntivo</button>
+            </div>
+        </div>
+
+        <!-- ===== LISTA ===== -->
+        <div class="list" id="listContainer">
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Caricamento interventi...</p>
+            </div>
+        </div>
+
+        <!-- ===== BOTTOM NAV ===== -->
+        <nav class="bottom-nav">
+            <button onclick="goHome()">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </button>
+            <button onclick="goSearch()">
+                <span class="nav-icon">🔍</span>
+                <span class="nav-label">Cerca</span>
+            </button>
+            <button class="active">
+                <span class="nav-icon">🛠️</span>
+                <span class="nav-label">Interventi</span>
+            </button>
+            <button onclick="toggleTheme()">
+                <span class="nav-icon" id="themeIcon">🌓</span>
+                <span class="nav-label">Tema</span>
+            </button>
+        </nav>
+
+        <!-- ===== TOAST ===== -->
+        <div class="toast-container" id="toastContainer"></div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        // TEMA
+        // ============================================================
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌓';
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark') {
+                document.body.classList.add('dark');
+            }
+            document.getElementById('themeIcon').textContent = document.body.classList.contains('dark') ? '☀️' : '🌓';
+        }
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('out');
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+        function goBack() {
+            if (document.referrer && document.referrer.includes('ricerca_m')) {
+                window.location.href = 'ricerca_m.html';
+            } else {
+                window.history.back();
+            }
+        }
+
+        function goHome() {
+            window.location.href = 'ricerca_m.html';
+        }
+
+        function goSearch() {
+            window.location.href = 'ricerca_m.html';
+        }
+
+        // ============================================================
+        // UTILITY
+        // ============================================================
+        function excelDateToJSDate(excelDate) {
+            if (!excelDate) return null;
+            if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
+                const d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+            }
+            if (typeof excelDate === 'number') {
+                const epoch = new Date(1899, 11, 30);
+                const d = new Date(epoch.getTime() + excelDate * 86400000);
+                if (!isNaN(d)) return d;
+            }
+            if (typeof excelDate === 'string') {
+                const d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+                const parts = excelDate.split(/[/.-]/);
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]);
+                    const year = parseInt(parts[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
+                        const d = new Date(year, month - 1, day);
+                        if (!isNaN(d)) return d;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function formatInterventoDate(dateValue) {
+            if (!dateValue) return 'Data non disponibile';
+            const d = excelDateToJSDate(dateValue);
+            if (!d || isNaN(d)) return 'Data non disponibile';
+            return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function formatCosto(costo) {
+            if (costo === undefined || costo === null || costo === '') return '€ 0,00';
+            const num = parseFloat(costo);
+            if (isNaN(num)) return '€ 0,00';
+            return `€ ${num.toFixed(2)}`;
+        }
+
+        // ============================================================
+        // GETTERS
+        // ============================================================
+        function getInterventoJob(item) { return item['Job'] || 'N/D'; }
+        function getInterventoType(item) { return item['LocalWorkPerformed'] || 'N/D'; }
+        function getInterventoTecnico(item) { return item['LocalEmployeeId (Job) (Job)'] || 'N/D'; }
+        function getInterventoCost(item) { const c = item['COSTO']; return (c !== undefined && c !== null) ? parseFloat(c) || 0 : 0; }
+        function getInterventoDate(item) { return item['ScheduledDate (Job) (Job)'] || ''; }
+        function getInterventoAddress(item) { return item['Indrizzo Edificio (LocalUnitId) (Impianto)'] || ''; }
+        function getInterventoCliente(item) { return item['Cliente (Job) (Job)'] || 'N/D'; }
+        function getInterventoAmministratore(item) { return item['Amministratore (LocalUnitId) (Impianto)'] || 'N/D'; }
+        function getInterventoVenditore(item) { return item['Venditore (LocalUnitId) (Impianto)'] || 'N/D'; }
+        function getInterventoWorkType(item) { return item['WorkType (Job) (Job)'] || 'N/D'; }
+        function getInterventoComponentCode(item) { return item['ComponentCode (LocalComponent) (Component)'] || 'N/D'; }
+        function getInterventoComponentCategory(item) { return item['LocalComponentCategory'] || 'N/D'; }
+        function getInterventoQuantity(item) { return item['Quantity'] || 'N/D'; }
+        function getInterventoTempoLavoro(item) { return item['Tempo Lavoro (Job) (Job)'] || 'N/D'; }
+        function getInterventoAcceptedTime(item) { return item['AcceptedTime (Job) (Job)'] || ''; }
+        function getInterventoCompletedDate(item) { return item['JobCompletedDate (Job) (Job)'] || ''; }
+        function getInterventoComponente(item) { return item['LocalComponent'] || ''; }
+        function getInterventoDescription(item) { return item['TaskDescription'] || ''; }
+
+        function getJobBadgeClass(tipi) {
+            const u = [...new Set(tipi)];
+            if (u.length === 0 || u.length > 1) return 'badge-misto';
+            switch (u[0]) {
+                case 'Reperibilità': return 'badge-reperibilita';
+                case 'Normale': return 'badge-normale';
+                case 'Rip a consuntivo': return 'badge-rip-consuntivo';
+                default: return 'badge-misto';
+            }
+        }
+
+        function getTipoDotClass(tipo) {
+            switch (tipo) {
+                case 'Reperibilità': return 'dot-reperibilita';
+                case 'Normale': return 'dot-normale';
+                case 'Rip a consuntivo': return 'dot-rip-consuntivo';
+                default: return '';
+            }
+        }
+
+        function getJobBadgeLabel(tipi) {
+            const u = [...new Set(tipi)];
+            if (u.length === 0) return 'Misto';
+            if (u.length > 1) return 'Misto';
+            return u[0];
+        }
+
+        // ============================================================
+        // RAGGRUPPA PER JOB
+        // ============================================================
+        function raggruppaPerJob(interventi) {
+            const map = new Map();
+            interventi.forEach(item => {
+                const jobId = getInterventoJob(item);
+                if (!map.has(jobId)) {
+                    map.set(jobId, {
+                        job: jobId,
+                        interventi: [],
+                        address: getInterventoAddress(item),
+                        totalCost: 0,
+                        date: getInterventoDate(item),
+                        tipi: []
+                    });
+                }
+                const g = map.get(jobId);
+                g.interventi.push(item);
+                g.totalCost += getInterventoCost(item);
+                const tipo = getInterventoType(item);
+                if (tipo && tipo !== 'N/D' && !g.tipi.includes(tipo)) g.tipi.push(tipo);
+                if (!g.date && getInterventoDate(item)) g.date = getInterventoDate(item);
+                if (!g.address && getInterventoAddress(item)) g.address = getInterventoAddress(item);
+            });
+            return Array.from(map.values()).sort((a, b) => {
+                const da = new Date(a.date);
+                const db = new Date(b.date);
+                if (isNaN(da.getTime())) return 1;
+                if (isNaN(db.getTime())) return -1;
+                return db - da;
+            });
+        }
+
+        // ============================================================
+        // RECUPERO INTERVENTI
+        // ============================================================
+        function getInterventiForImpianto(impiantoCodice) {
+            try {
+                const stored = localStorage.getItem(`interventi_${impiantoCodice}`);
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    if (data && data.length > 0) return data;
+                }
+            } catch (e) { /* ignore */ }
+
+            if (window.database && window.database.bolle) {
+                const interventi = window.database.bolle.filter(row => {
+                    const rif = row['Impiantodiriferimento (Job) (Job)'] || '';
+                    return rif.trim() === impiantoCodice.trim();
+                });
+                if (interventi.length > 0) {
+                    try {
+                        localStorage.setItem(`interventi_${impiantoCodice}`, JSON.stringify(interventi));
+                    } catch (e) { /* ignore */ }
+                    return interventi;
+                }
+            }
+            return [];
+        }
+
+        // ============================================================
+        // TOGGLE JOB / INTERVENTO
+        // ============================================================
+        let expandedJob = -1;
+        let expandedIntervento = -1;
+
+        function toggleJob(index) {
+            if (expandedJob === index) {
+                expandedJob = -1;
+                expandedIntervento = -1;
+            } else {
+                expandedJob = index;
+                expandedIntervento = -1;
+            }
+            renderJobs(filteredData);
+        }
+
+        function toggleIntervento(jobIndex, interventoIndex) {
+            const key = `${jobIndex}_${interventoIndex}`;
+            if (expandedIntervento === key) {
+                expandedIntervento = -1;
+            } else {
+                expandedIntervento = key;
+            }
+            renderJobs(filteredData);
+        }
+
+        // ============================================================
+        // FILTRI
+        // ============================================================
+        let interventiData = [];
+        let filteredData = [];
+        let currentFilter = 'all';
+
+        function applyFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active');
+                if (chip.dataset.filter === filter) chip.classList.add('active');
+            });
+
+            if (filter === 'all') {
+                filteredData = [...interventiData];
+            } else {
+                filteredData = interventiData.filter(jobGroup =>
+                    jobGroup.interventi.some(item => getInterventoType(item) === filter)
+                );
+            }
+
+            expandedJob = -1;
+            expandedIntervento = -1;
+            renderJobs(filteredData);
+        }
+
+        // ============================================================
+        // RENDER
+        // ============================================================
+        function renderJobs(jobGroups) {
+            const container = document.getElementById('listContainer');
+
+            if (!jobGroups || jobGroups.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <h3>Nessun intervento registrato</h3>
+                        <p>Per questo impianto non sono presenti interventi.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            jobGroups.forEach((jobGroup, jobIndex) => {
+                const isJobOpen = expandedJob === jobIndex;
+                const badgeClass = getJobBadgeClass(jobGroup.tipi);
+                const badgeLabel = getJobBadgeLabel(jobGroup.tipi);
+                const jobDate = formatInterventoDate(jobGroup.date);
+                const totalCost = formatCosto(jobGroup.totalCost);
+                const count = jobGroup.interventi.length;
+
+                html += `
+                    <div class="job-card">
+                        <div class="job-header" onclick="toggleJob(${jobIndex})">
+                            <div class="job-left">
+                                <span class="job-id">📋 ${jobGroup.job}</span>
+                                <span class="job-badge ${badgeClass}">${badgeLabel}</span>
+                            </div>
+                            <div class="job-right">
+                                <span class="job-date">📅 ${jobDate}</span>
+                                <span class="job-count">${count} interventi</span>
+                                <span class="job-arrow ${isJobOpen ? 'open' : ''}">${isJobOpen ? '▲' : '▼'}</span>
+                            </div>
+                        </div>
+                        <div class="job-body ${isJobOpen ? 'open' : ''}">
+                            ${jobGroup.interventi.map((item, interventoIndex) => {
+                                const tipo = getInterventoType(item);
+                                const dotClass = getTipoDotClass(tipo);
+                                const tecnico = getInterventoTecnico(item);
+                                const costo = formatCosto(getInterventoCost(item));
+                                const key = `${jobIndex}_${interventoIndex}`;
+                                const isInterventoOpen = expandedIntervento === key;
+
+                                return `
+                                    <div class="intervento-item" onclick="event.stopPropagation(); toggleIntervento(${jobIndex}, ${interventoIndex})">
+                                        <div class="intervento-header">
+                                            <div class="intervento-tipo">
+                                                <span class="tipo-dot ${dotClass}"></span>
+                                                ${tipo}
+                                            </div>
+                                            <div class="intervento-meta">
+                                                <span class="tecnico">👨‍🔧 ${tecnico}</span>
+                                                <span class="costo">${costo}</span>
+                                                <span class="intervento-arrow ${isInterventoOpen ? 'open' : ''}">${isInterventoOpen ? '▲' : '▼'}</span>
+                                            </div>
+                                        </div>
+                                        <div class="intervento-detail ${isInterventoOpen ? 'open' : ''}">
+                                            <div class="detail-row">
+                                                <span class="dl">📅 Data</span>
+                                                <span class="dv">${formatInterventoDate(getInterventoDate(item))}</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="dl">👤 Cliente</span>
+                                                <span class="dv">${getInterventoCliente(item)}</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="dl">👔 Amministratore</span>
+                                                <span class="dv">${getInterventoAmministratore(item)}</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="dl">💼 Venditore</span>
+                                                <span class="dv">${getInterventoVenditore(item)}</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="dl">📋 WorkType</span>
+                                                <span class="dv">${getInterventoWorkType(item)}</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="dl">🔧 Componente</span>
+                                                <span class="dv">${getInterventoComponentCode(item)}</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="dl">📂 Categoria</span>
+                                                <span class="dv">${getInterventoComponentCategory(item)}</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="dl">📦 Quantità</span>
+                                                <span class="dv">${getInterventoQuantity(item)}</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="dl">⏱️ Tempo Lavoro</span>
+                                                <span class="dv">${getInterventoTempoLavoro(item)} min</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="dl">🕐 Accettazione</span>
+                                                <span class="dv">${formatInterventoDate(getInterventoAcceptedTime(item))}</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="dl">✅ Completamento</span>
+                                                <span class="dv">${formatInterventoDate(getInterventoCompletedDate(item))}</span>
+                                            </div>
+                                            ${getInterventoComponente(item) ? `
+                                            <div class="detail-row detail-row-full">
+                                                <span class="dl">📌 Componente</span>
+                                                <span class="dv">${getInterventoComponente(item)}</span>
+                                            </div>
+                                            ` : ''}
+                                            ${getInterventoDescription(item) ? `
+                                            <div class="detail-row detail-row-full">
+                                                <span class="dl">📝 Descrizione</span>
+                                                <span class="dv">${getInterventoDescription(item)}</span>
+                                            </div>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // CARICAMENTO DATI
+        // ============================================================
+        async function ensureDatabase() {
+            if (window.database) return;
+            try {
+                const manifestResp = await fetch('manifest.json');
+                if (!manifestResp.ok) throw new Error('manifest.json non trovato');
+                const manifest = await manifestResp.json();
+                const chunkPromises = manifest.chunks.map(async (chunkInfo, idx) => {
+                    const fileName = chunkInfo.fileName || `chunk_${String(idx).padStart(3, '0')}.json`;
+                    const resp = await fetch(fileName);
+                    if (!resp.ok) throw new Error(`Chunk ${fileName} non trovato`);
+                    return await resp.json();
+                });
+                const chunkResults = await Promise.all(chunkPromises);
+                const database = {};
+                for (const chunkData of chunkResults) {
+                    for (const [key, value] of Object.entries(chunkData)) {
+                        if (!database[key]) {
+                            database[key] = Array.isArray(value) ? [] : {};
+                        }
+                        if (Array.isArray(value)) {
+                            database[key] = database[key].concat(value);
+                        } else if (typeof value === 'object' && value !== null) {
+                            database[key] = { ...database[key], ...value };
+                        }
+                    }
+                }
+                window.database = database;
+                console.log('✅ Database caricato da chunk');
+            } catch (err) {
+                console.error('❌ Errore caricamento database:', err);
+            }
+        }
+
+        async function loadInterventi() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const impianto = urlParams.get('impianto');
+
+            if (!impianto) {
+                document.getElementById('listContainer').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+                        <h3>Nessun impianto selezionato</h3>
+                        <p>Specificare un codice impianto: ?impianto=CODICE</p>
+                    </div>
+                `;
+                document.getElementById('impiantoCode').textContent = '⚠️ Non selezionato';
+                document.getElementById('impiantoAddress').textContent = '📍 Nessun impianto selezionato';
+                document.getElementById('headerTitle').textContent = 'Interventi';
+                return;
+            }
+
+            document.getElementById('headerTitle').textContent = `Interventi - ${impianto}`;
+            document.getElementById('impiantoCode').textContent = `🆔 ${impianto}`;
+
+            await ensureDatabase();
+
+            const rawData = getInterventiForImpianto(impianto);
+            interventiData = raggruppaPerJob(rawData);
+            filteredData = [...interventiData];
+
+            if (interventiData.length > 0 && interventiData[0].address) {
+                document.getElementById('impiantoAddress').textContent = `📍 ${interventiData[0].address}`;
+            } else {
+                document.getElementById('impiantoAddress').textContent = '📍 Indirizzo non disponibile';
+            }
+
+            expandedJob = -1;
+            expandedIntervento = -1;
+            renderJobs(filteredData);
+
+            if (rawData.length === 0) {
+                showToast('📭 Nessun intervento registrato per questo impianto', 'info');
+            } else {
+                showToast(`📦 Trovati ${rawData.length} interventi`, 'success');
+            }
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        loadTheme();
+        loadInterventi();
+
+        console.log('📱 Interventi Mobile v1.0');
+    </script>
+
+</body>
+</html>

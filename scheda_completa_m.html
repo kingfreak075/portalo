@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Scheda Impianto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           iOS NATIVE STYLE - Scheda Completa Mobile
+           ============================================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --ios-blue: #007AFF;
+            --ios-blue-dark: #0055CC;
+            --ios-red: #FF3B30;
+            --ios-green: #34C759;
+            --ios-orange: #FF9500;
+            --ios-yellow: #FFCC00;
+            --ios-gray: #8E8E93;
+            --ios-gray-light: #C7C7CC;
+            --ios-gray-bg: #F2F2F7;
+            --ios-card: #FFFFFF;
+            --ios-text: #000000;
+            --ios-text-secondary: #3C3C43;
+            --ios-text-tertiary: #8E8E93;
+            --ios-separator: #E5E5EA;
+            --ios-shadow: rgba(0, 0, 0, 0.08);
+            --ios-shadow-heavy: rgba(0, 0, 0, 0.15);
+            --safe-top: env(safe-area-inset-top, 20px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --tab-height: 50px;
+            --header-height: 52px;
+        }
+
+        body.dark {
+            --ios-gray-bg: #000000;
+            --ios-card: #1C1C1E;
+            --ios-text: #FFFFFF;
+            --ios-text-secondary: #EBEBF5;
+            --ios-text-tertiary: #8E8E93;
+            --ios-separator: #38383A;
+            --ios-shadow: rgba(255, 255, 255, 0.05);
+            --ios-shadow-heavy: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background: var(--ios-gray-bg);
+            color: var(--ios-text);
+            min-height: 100vh;
+            padding-top: var(--safe-top);
+            padding-bottom: calc(var(--tab-height) + var(--safe-bottom) + 8px);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ----- HEADER ----- */
+        .header {
+            background: var(--ios-card);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 0.5px solid var(--ios-separator);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            min-height: var(--header-height);
+            transition: background 0.3s ease;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header-back {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--ios-blue);
+            padding: 4px;
+            transition: transform 0.15s ease;
+        }
+
+        .header-back:active {
+            transform: scale(0.85);
+        }
+
+        .header-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--ios-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .header-actions button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+            color: var(--ios-blue);
+            transition: transform 0.15s ease;
+        }
+
+        .header-actions button:active {
+            transform: scale(0.85);
+        }
+
+        /* ----- BADGE IMPIANTO ----- */
+        .impianto-badge {
+            background: var(--ios-card);
+            padding: 8px 16px 12px;
+            border-bottom: 0.5px solid var(--ios-separator);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .impianto-badge .code {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ios-text);
+        }
+
+        .impianto-badge .matricola {
+            font-size: 13px;
+            color: var(--ios-text-tertiary);
+            background: var(--ios-gray-bg);
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+
+        .impianto-badge .address {
+            font-size: 13px;
+            color: var(--ios-text-secondary);
+            flex: 1;
+            min-width: 100%;
+        }
+
+        /* ----- INTERVENTI CARD (in alto) ----- */
+        .interventi-card {
+            margin: 12px 16px;
+            background: var(--ios-card);
+            border-radius: 14px;
+            border: 0.5px solid var(--ios-separator);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px var(--ios-shadow);
+        }
+
+        .interventi-card .interventi-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .interventi-card .interventi-left .icon {
+            font-size: 20px;
+        }
+
+        .interventi-card .interventi-left .label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--ios-text);
+        }
+
+        .interventi-card .interventi-left .count {
+            background: var(--ios-blue);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 1px 12px;
+            border-radius: 12px;
+        }
+
+        .interventi-card .interventi-link {
+            color: var(--ios-blue);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 4px 8px;
+        }
+
+        .interventi-card .interventi-link:active {
+            opacity: 0.6;
+        }
+
+        .interventi-card .interventi-disabled {
+            color: var(--ios-text-tertiary);
+            font-size: 13px;
+        }
+
+        /* ----- CONTENUTO PRINCIPALE (sezioni) ----- */
+        .content {
+            padding: 0 16px 20px;
+        }
+
+        .section {
+            background: var(--ios-card);
+            border-radius: 14px;
+            border: 0.5px solid var(--ios-separator);
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px var(--ios-shadow);
+            transition: background 0.3s ease;
+        }
+
+        .section-header {
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--ios-text);
+            min-height: 44px;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .section-header:active {
+            background: var(--ios-separator);
+        }
+
+        .section-header .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header .section-arrow {
+            font-size: 14px;
+            color: var(--ios-text-tertiary);
+            transition: transform 0.3s ease;
+        }
+
+        .section-header .section-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .section-body {
+            display: none;
+            padding: 12px 16px;
+            border-top: 0.5px solid var(--ios-separator);
+        }
+
+        .section-body.open {
+            display: block;
+        }
+
+        /* ----- FIELD ----- */
+        .field {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 0.5px solid var(--ios-separator);
+            font-size: 14px;
+        }
+
+        .field:last-child {
+            border-bottom: none;
+        }
+
+        .field .label {
+            font-weight: 500;
+            color: var(--ios-text-tertiary);
+        }
+
+        .field .value {
+            color: var(--ios-text);
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .field .value a {
+            color: var(--ios-blue);
+            text-decoration: none;
+        }
+
+        .field .value a:active {
+            opacity: 0.6;
+        }
+
+        /* ----- FULL WIDTH FIELD (Note) ----- */
+        .field-full {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+
+        .field-full .value {
+            text-align: left;
+            max-width: 100%;
+            background: var(--ios-gray-bg);
+            padding: 8px 12px;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 14px;
+            color: var(--ios-text-secondary);
+        }
+
+        /* ----- COMBINATORE STATUS ----- */
+        .combinatore-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.presente {
+            background: var(--ios-green);
+        }
+
+        .status-dot.assente {
+            background: var(--ios-red);
+        }
+
+        /* ----- LOADING ----- */
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--ios-separator);
+            border-top: 3px solid var(--ios-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-state p {
+            color: var(--ios-text-tertiary);
+            font-size: 15px;
+        }
+
+        /* ----- ERROR ----- */
+        .error-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .error-state .error-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .error-state h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--ios-text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .error-state p {
+            color: var(--ios-text-tertiary);
+            font-size: 15px;
+        }
+
+        /* ----- BOTTOM NAV ----- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(var(--tab-height) + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+            background: var(--ios-card);
+            border-top: 0.5px solid var(--ios-separator);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 300;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: background 0.3s ease;
+        }
+
+        .bottom-nav button {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--ios-text-tertiary);
+            transition: color 0.2s;
+            min-width: 44px;
+            min-height: 44px;
+            justify-content: center;
+        }
+
+        .bottom-nav button .nav-icon {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .bottom-nav button .nav-label {
+            font-size: 10px;
+            letter-spacing: 0.2px;
+        }
+
+        .bottom-nav button.active {
+            color: var(--ios-blue);
+        }
+
+        .bottom-nav button:active {
+            transform: scale(0.9);
+        }
+
+        /* ----- TOAST ----- */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--safe-top) + 60px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            pointer-events: none;
+            max-width: 90%;
+        }
+
+        .toast {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            animation: toastIn 0.3s ease;
+            text-align: center;
+            pointer-events: auto;
+            min-width: 120px;
+        }
+
+        .toast.out {
+            animation: toastOut 0.3s ease forwards;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 375px) {
+            .header-title {
+                font-size: 15px;
+            }
+            .field {
+                font-size: 13px;
+            }
+            .section-header {
+                font-size: 13px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            body {
+                background: var(--ios-gray-bg);
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                padding: 40px 20px;
+            }
+            .container {
+                max-width: 430px;
+                margin: 0 auto;
+                background: var(--ios-gray-bg);
+                border-radius: 20px;
+                box-shadow: 0 20px 60px var(--ios-shadow-heavy);
+                overflow: hidden;
+                border: 0.5px solid var(--ios-separator);
+                min-height: 90vh;
+            }
+            body.dark {
+                background: #000000;
+            }
+        }
+
+        /* ----- PRINT ----- */
+        @media print {
+            .header-actions,
+            .bottom-nav {
+                display: none;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+            }
+            .section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                border-color: #ddd;
+            }
+            .section-header:active {
+                background: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <header class="header">
+            <div class="header-left">
+                <button class="header-back" onclick="goBack()">‹</button>
+                <span class="header-title" id="headerTitle">Scheda Impianto</span>
+            </div>
+            <div class="header-actions">
+                <button onclick="toggleTheme()" aria-label="Tema" title="Tema">🌓</button>
+                <button onclick="window.print()" aria-label="Stampa" title="Stampa">🖨️</button>
+            </div>
+        </header>
+
+        <!-- ===== BADGE IMPIANTO ===== -->
+        <div class="impianto-badge" id="impiantoBadge">
+            <span class="code" id="impiantoCode">Caricamento...</span>
+            <span class="matricola" id="impiantoMatricola">N/A</span>
+            <span class="address" id="impiantoAddress">📍 Caricamento indirizzo...</span>
+        </div>
+
+        <!-- ===== INTERVENTI CARD ===== -->
+        <div class="interventi-card" id="interventiCard">
+            <div class="interventi-left">
+                <span class="icon">🛠️</span>
+                <span class="label">Interventi effettuati</span>
+                <span class="count" id="interventiCount">0</span>
+            </div>
+            <div id="interventiLink">
+                <span class="interventi-disabled">Caricamento...</span>
+            </div>
+        </div>
+
+        <!-- ===== CONTENUTO ===== -->
+        <div class="content" id="content">
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Caricamento dati in corso...</p>
+            </div>
+        </div>
+
+        <!-- ===== BOTTOM NAV ===== -->
+        <nav class="bottom-nav">
+            <button onclick="goHome()">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </button>
+            <button onclick="goSearch()">
+                <span class="nav-icon">🔍</span>
+                <span class="nav-label">Cerca</span>
+            </button>
+            <button class="active">
+                <span class="nav-icon">📋</span>
+                <span class="nav-label">Scheda</span>
+            </button>
+            <button onclick="toggleTheme()">
+                <span class="nav-icon" id="themeIcon">🌓</span>
+                <span class="nav-label">Tema</span>
+            </button>
+        </nav>
+
+        <!-- ===== TOAST ===== -->
+        <div class="toast-container" id="toastContainer"></div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        // TEMA
+        // ============================================================
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌓';
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark') {
+                document.body.classList.add('dark');
+            }
+            document.getElementById('themeIcon').textContent = document.body.classList.contains('dark') ? '☀️' : '🌓';
+        }
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('out');
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+        function goBack() {
+            if (document.referrer && document.referrer.includes('ricerca_m')) {
+                window.location.href = 'ricerca_m.html';
+            } else {
+                window.history.back();
+            }
+        }
+
+        function goHome() {
+            window.location.href = 'ricerca_m.html';
+        }
+
+        function goSearch() {
+            window.location.href = 'ricerca_m.html';
+        }
+
+        // ============================================================
+        // UTILITY (da ricerca_m.html)
+        // ============================================================
+        function excelDateToJSDate(excelDate) {
+            if (!excelDate) return null;
+            if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
+                const d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+            }
+            if (typeof excelDate === 'number') {
+                const epoch = new Date(1899, 11, 30);
+                const d = new Date(epoch.getTime() + excelDate * 86400000);
+                if (!isNaN(d)) return d;
+            }
+            if (typeof excelDate === 'string') {
+                const d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+                const parts = excelDate.split(/[/.-]/);
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]);
+                    const year = parseInt(parts[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
+                        const d = new Date(year, month - 1, day);
+                        if (!isNaN(d)) return d;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function formatDate(excelDate) {
+            if (!excelDate) return 'N/A';
+            const jsDate = excelDateToJSDate(excelDate);
+            if (!jsDate || isNaN(jsDate)) return 'N/A';
+            return jsDate.toLocaleDateString('it-IT');
+        }
+
+        function formatSimpleDate(dateString) {
+            if (!dateString || dateString === '') return 'N/A';
+            try {
+                const d = excelDateToJSDate(dateString);
+                if (d && !isNaN(d)) {
+                    return d.toLocaleDateString('it-IT');
+                }
+                const str = String(dateString).trim();
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return str;
+                return 'N/A';
+            } catch (e) {
+                return 'N/A';
+            }
+        }
+
+        function formatWithMapping(value, mapping) {
+            if (!value) return 'N/A';
+            const mapped = mapping[value];
+            return mapped ? `${value} - ${mapped}` : value;
+        }
+
+        function getMesiText() {
+            return ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
+            ];
+        }
+
+        function getFieldValue(obj, key, defaultValue = 'N/A') {
+            if (!obj) return defaultValue;
+            const value = obj[key];
+            return (value !== undefined && value !== null && value !== '') ? value : defaultValue;
+        }
+
+        // ============================================================
+        // INTERVENTI
+        // ============================================================
+        function getInterventiForImpianto(impiantoCodice) {
+            try {
+                const stored = localStorage.getItem(`interventi_${impiantoCodice}`);
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    if (data && data.length > 0) return data;
+                }
+            } catch (e) { /* ignore */ }
+
+            if (window.database && window.database.bolle) {
+                const interventi = window.database.bolle.filter(row => {
+                    const rif = row['Impiantodiriferimento (Job) (Job)'] || '';
+                    return rif.trim() === impiantoCodice.trim();
+                });
+                if (interventi.length > 0) {
+                    try {
+                        localStorage.setItem(`interventi_${impiantoCodice}`, JSON.stringify(interventi));
+                    } catch (e) { /* ignore */ }
+                    return interventi;
+                }
+            }
+            return [];
+        }
+
+        // ============================================================
+        // SEZIONI COLLASSABILI (espansione singola)
+        // ============================================================
+        function toggleSection(header) {
+            const body = header.nextElementSibling;
+            const arrow = header.querySelector('.section-arrow');
+
+            if (body.classList.contains('open')) {
+                body.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                document.querySelectorAll('.section-body').forEach(el => {
+                    if (el !== body) {
+                        el.classList.remove('open');
+                        const parent = el.closest('.section');
+                        if (parent) {
+                            const arr = parent.querySelector('.section-arrow');
+                            if (arr) arr.classList.remove('open');
+                        }
+                    }
+                });
+                body.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        // ============================================================
+        // CARICAMENTO DATI
+        // ============================================================
+        async function loadData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const impiantoJSON = urlParams.get('impianto');
+
+            if (!impiantoJSON) {
+                document.getElementById('content').innerHTML = `
+                    <div class="error-state">
+                        <div class="error-icon">⚠️</div>
+                        <h3>Nessun impianto selezionato</h3>
+                        <p>Torna alla ricerca e seleziona un impianto</p>
+                    </div>
+                `;
+                document.getElementById('interventiCard').style.display = 'none';
+                return;
+            }
+
+            try {
+                const datiImpianto = JSON.parse(decodeURIComponent(impiantoJSON));
+
+                // Aggiorna badge
+                document.getElementById('headerTitle').textContent = `Impianto ${datiImpianto.impianto}`;
+                document.getElementById('impiantoCode').textContent = `🆔 ${datiImpianto.impianto}`;
+                document.getElementById('impiantoMatricola').textContent = `🔢 ${datiImpianto.matricola || 'N/A'}`;
+                document.getElementById('impiantoAddress').textContent = `📍 ${datiImpianto['Indirizzo impianto'] || 'N/A'}${datiImpianto['Località impianto'] ? `, ${datiImpianto['Località impianto']}` : ''}`;
+
+                // Interventi
+                const interventi = getInterventiForImpianto(datiImpianto.impianto);
+                const count = interventi.length;
+                document.getElementById('interventiCount').textContent = count;
+
+                const linkContainer = document.getElementById('interventiLink');
+                if (count > 0) {
+                    linkContainer.innerHTML = `
+                        <a href="interventi_m.html?impianto=${encodeURIComponent(datiImpianto.impianto)}" 
+                           target="_blank" 
+                           class="interventi-link">
+                           📋 Visualizza tutti →
+                        </a>
+                    `;
+                } else {
+                    linkContainer.innerHTML = `
+                        <span class="interventi-disabled">Nessun intervento</span>
+                    `;
+                }
+
+                // Genera contenuto
+                document.getElementById('content').innerHTML = generateSections(datiImpianto);
+
+            } catch (error) {
+                console.error('Errore:', error);
+                document.getElementById('content').innerHTML = `
+                    <div class="error-state">
+                        <div class="error-icon">❌</div>
+                        <h3>Errore nel caricamento</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+                showToast('❌ Errore caricamento dati', 'error');
+            }
+        }
+
+        // ============================================================
+        // GENERA SEZIONI
+        // ============================================================
+        function generateSections(item) {
+            const commerciale = formatWithMapping(item['venditore'], window.database?.mappature?.commerciali || {});
+            const giro = formatWithMapping(item.giro, window.database?.mappature?.giri || {});
+
+            const mesi = getMesiText();
+            const meseSem = parseInt(item['mese sem']);
+            const meseSemText = mesi[meseSem - 1] || 'N/A';
+            const meseSemPrec = meseSem > 6 ? mesi[meseSem - 7] : mesi[meseSem + 5];
+            const meseSemDisplay = meseSemPrec ? `${meseSemPrec} - ${meseSemText}` : meseSemText;
+
+            const isRad = item.rad_tel === 'RAD';
+            const combinatoreStatus = isRad ?
+                `<span class="combinatore-status"><span class="status-dot presente"></span> Presente</span>` :
+                `<span class="combinatore-status"><span class="status-dot assente"></span> Non Presente</span>`;
+
+            const mapLink = item['Indirizzo impianto'] && item['Località impianto'] ?
+                `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item['Indirizzo impianto'] + ', ' + item['Località impianto'])}` :
+                '#';
+
+            const sezioni = [{
+                id: 'generali',
+                icon: '📌',
+                title: 'Informazioni Generali',
+                fields: [
+                    { label: 'Impianto', value: `<strong>${item.impianto}</strong>` },
+                    { label: 'Tipo Cliente', value: item['tipo_cliente'] || 'N/A' },
+                    { label: 'Zona', value: item.zona || 'N/A' },
+                    { label: 'Giro', value: giro },
+                    { label: 'Tecnico', value: item.tecnico || 'N/A' },
+                    { label: 'Matricola', value: `<strong>${item.matricola || 'N/A'}</strong>` },
+                    { label: 'Venditore', value: commerciale },
+                ]
+            }, {
+                id: 'indirizzi',
+                icon: '📍',
+                title: 'Indirizzi',
+                fields: [
+                    { label: 'Indirizzo Impianto', value: item['Indirizzo impianto'] || 'N/A' },
+                    { label: 'Località', value: item['Località impianto'] || 'N/A' },
+                    { label: 'Provincia', value: item.Prov || 'N/A' },
+                    { label: 'Indirizzo Cliente', value: item['Indirizzo Cliente'] || 'N/A' },
+                    { label: 'Città Cliente', value: item['Città cliente'] || 'N/A' },
+                    { label: 'Provincia Cliente', value: item['Prov Cliente'] || 'N/A' },
+                ]
+            }, {
+                id: 'cliente',
+                icon: '👤',
+                title: 'Cliente',
+                fields: [
+                    { label: 'Cliente', value: `<strong>${item.Cliente || 'N/A'}</strong>` },
+                    { label: 'Amministratore', value: item.Amministratore || 'N/A' },
+                    { label: 'Indirizzo Amm.', value: item['Indirizzo Amm'] || 'N/A' },
+                    { label: 'Città Amm.', value: item['Citta amm'] || 'N/A' },
+                    { label: 'Provincia Amm.', value: item['Prov Amm'] || 'N/A' },
+                    { label: 'CAP Amm.', value: item['Cap Amm'] || 'N/A' },
+                ]
+            }, {
+                id: 'contatti',
+                icon: '📞',
+                title: 'Contatti',
+                fields: [
+                    { label: 'Email Cliente', value: item.aa ? `<a href="mailto:${item.aa}">${item.aa}</a>` : 'N/A' },
+                    { label: 'Telefono Amm.', value: item['tel amm'] || 'N/A' },
+                    { label: 'Cellulare Amm.', value: item['cell amm'] || 'N/A' },
+                    { label: 'Email Amm.', value: item['email amm'] ? `<a href="mailto:${item['email amm']}">${item['email amm']}</a>` : 'N/A' },
+                    { label: 'Fax Amm.', value: item['fax amm'] || 'N/A' },
+                ]
+            }, {
+                id: 'manutenzione',
+                icon: '🔧',
+                title: 'Manutenzione',
+                fields: [
+                    { label: 'Manutenzione', value: item.manut || 'N/A' },
+                    { label: 'Ultima Semestrale', value: formatDate(item['ult sem']) },
+                    { label: 'Ultima Visita ENTE', value: formatDate(item['utl vp']) },
+                    { label: 'Ultima Manutenzione', value: formatDate(item['ult man']) },
+                    { label: 'Periodicità', value: item['periodicità'] || 'N/A' },
+                ]
+            }, {
+                id: 'contratto',
+                icon: '📄',
+                title: 'Contratto',
+                fields: [
+                    { label: 'Contratto', value: item.contratto || 'N/A' },
+                    { label: 'Inizio Contratto', value: formatSimpleDate(item['inizio cont']) },
+                    { label: 'Fine Contratto', value: formatSimpleDate(item['fine contratto']) },
+                    { label: 'Canone Contratto', value: item['Canone contratto'] || 'N/A' },
+                    { label: 'Canone Impianto', value: item['Canone impianto'] || 'N/A' },
+                ]
+            }, {
+                id: 'fiscali',
+                icon: '🏛️',
+                title: 'Dettagli Fiscali',
+                fields: [
+                    { label: 'Codice Fiscale', value: item.PCCODFISCALE || 'N/A' },
+                    { label: 'Partita IVA', value: item.PCPARTITAIVA || 'N/A' },
+                ]
+            }, {
+                id: 'combinatore',
+                icon: '📡',
+                title: 'Combinatore Telefonico',
+                fields: [
+                    { label: 'Stato', value: combinatoreStatus },
+                    { label: 'Canone', value: isRad ? (item.rad || 'Linea Fissa / SIM del Cliente') : 'N/A' },
+                ]
+            }];
+
+            // Costruisce HTML
+            let html = '';
+
+            sezioni.forEach((sezione, index) => {
+                const isFirst = index === 0;
+                html += `
+                    <div class="section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <span class="section-title">
+                                <span>${sezione.icon}</span>
+                                ${sezione.title}
+                            </span>
+                            <span class="section-arrow ${isFirst ? 'open' : ''}">${isFirst ? '▲' : '▼'}</span>
+                        </div>
+                        <div class="section-body ${isFirst ? 'open' : ''}">
+                            ${sezione.fields.map(f => `
+                                <div class="field ${f.full ? 'field-full' : ''}">
+                                    <span class="label">${f.label}</span>
+                                    <span class="value">${f.value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Sezione Note (full width)
+            html += `
+                <div class="section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span class="section-title">
+                            <span>📝</span>
+                            Note
+                        </span>
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="section-body">
+                        <div class="field field-full">
+                            <span class="value">${item.note || 'Nessuna nota disponibile.'}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // ============================================================
+        // CARICAMENTO DATABASE (se necessario)
+        // ============================================================
+        async function ensureDatabase() {
+            if (window.database) return;
+
+            try {
+                const manifestResp = await fetch('manifest.json');
+                if (!manifestResp.ok) throw new Error('manifest.json non trovato');
+                const manifest = await manifestResp.json();
+
+                const chunkPromises = manifest.chunks.map(async (chunkInfo, idx) => {
+                    const fileName = chunkInfo.fileName || `chunk_${String(idx).padStart(3, '0')}.json`;
+                    const resp = await fetch(fileName);
+                    if (!resp.ok) throw new Error(`Chunk ${fileName} non trovato`);
+                    return await resp.json();
+                });
+
+                const chunkResults = await Promise.all(chunkPromises);
+
+                const database = {};
+                for (const chunkData of chunkResults) {
+                    for (const [key, value] of Object.entries(chunkData)) {
+                        if (!database[key]) {
+                            database[key] = Array.isArray(value) ? [] : {};
+                        }
+                        if (Array.isArray(value)) {
+                            database[key] = database[key].concat(value);
+                        } else if (typeof value === 'object' && value !== null) {
+                            database[key] = { ...database[key], ...value };
+                        }
+                    }
+                }
+
+                window.database = database;
+                console.log('✅ Database caricato da chunk');
+
+            } catch (err) {
+                console.error('❌ Errore caricamento database:', err);
+            }
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        async function init() {
+            loadTheme();
+            await ensureDatabase();
+            loadData();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+
+        console.log('📱 Scheda Completa Mobile v1.0');
+    </script>
+
+</body>
+</html>

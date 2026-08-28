@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
-        /* ===== RESET E VARIABILI ===== */
+        /* ===== RESET E VARIABILI (come prima) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -242,6 +242,22 @@
         #interventiSection .interventi-disabled {
             color: var(--text-muted);
             font-size: 0.85rem;
+        }
+
+        #interventiSection .loading-spinner-small {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-light);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Grid delle sezioni */
@@ -602,7 +618,6 @@
         function formatExcelDate(excelDate) {
             if (!excelDate || excelDate === 0 || excelDate === '') return 'N/A';
 
-            // Se è già una stringa in formato ISO
             if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
                 const parts = excelDate.split('-');
                 const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
@@ -612,7 +627,6 @@
                 return excelDate;
             }
 
-            // Se è un numero seriale Excel
             if (typeof excelDate === 'number') {
                 const d = excelDateToJSDate(excelDate);
                 if (d && !isNaN(d)) {
@@ -621,7 +635,6 @@
                 return String(excelDate);
             }
 
-            // Se è una stringa
             if (typeof excelDate === 'string') {
                 const d = excelDateToJSDate(excelDate);
                 if (d && !isNaN(d)) {
@@ -638,13 +651,10 @@
             try {
                 const str = String(dateString).trim();
                 if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return str;
-
-                // Prova a parsare come data
                 const d = excelDateToJSDate(dateString);
                 if (d && !isNaN(d)) {
                     return d.toLocaleDateString('it-IT');
                 }
-
                 return 'N/A';
             } catch (e) {
                 return 'N/A';
@@ -658,21 +668,133 @@
         }
 
         // ============================================================
-        // FUNZIONI PER GLI INTERVENTI
+        // FUNZIONI PER GLI INTERVENTI (con fallback su window.database)
         // ============================================================
 
+        /**
+         * Recupera gli interventi per un impianto
+         * Prima controlla in localStorage, poi in window.database.bolle
+         */
         function getInterventiForImpianto(impiantoCodice) {
+            // 1. Prova a recuperare da localStorage (salvati da ricerca.html)
             try {
                 const stored = localStorage.getItem(`interventi_${impiantoCodice}`);
                 if (stored) {
                     const data = JSON.parse(stored);
-                    console.log(`📦 Recuperati ${data.length} interventi per impianto ${impiantoCodice}`);
-                    return data;
+                    if (data && data.length > 0) {
+                        console.log(`📦 Recuperati ${data.length} interventi da localStorage per impianto ${impiantoCodice}`);
+                        return data;
+                    }
                 }
             } catch (e) {
-                console.warn('⚠️ Impossibile recuperare interventi:', e);
+                console.warn('⚠️ Impossibile recuperare interventi da localStorage:', e);
             }
+
+            // 2. Se non trova in localStorage, cerca in window.database.bolle (dai chunk)
+            if (window.database && window.database.bolle) {
+                const bolle = window.database.bolle;
+                const interventi = bolle.filter(row => {
+                    const impiantoRif = row['Impiantodiriferimento (Job) (Job)'] || '';
+                    return impiantoRif.trim() === impiantoCodice.trim();
+                });
+
+                if (interventi.length > 0) {
+                    console.log(`📦 Recuperati ${interventi.length} interventi da window.database.bolle per impianto ${impiantoCodice}`);
+                    
+                    // Salva in localStorage per le prossime visite
+                    try {
+                        localStorage.setItem(`interventi_${impiantoCodice}`, JSON.stringify(interventi));
+                        console.log(`💾 Salvati ${interventi.length} interventi in localStorage per impianto ${impiantoCodice}`);
+                    } catch (e) {
+                        console.warn('⚠️ Impossibile salvare interventi in localStorage:', e);
+                    }
+                    
+                    return interventi;
+                }
+            }
+
+            // 3. Prova a caricare i chunk se window.database non esiste ancora
+            if (!window.database) {
+                console.warn('⚠️ window.database non disponibile, provo a caricare i chunk...');
+                // Chiamata asincrona per caricare i dati
+                loadDatabaseAndRetry(impiantoCodice);
+                return [];
+            }
+
+            console.log(`📭 Nessun intervento trovato per impianto ${impiantoCodice}`);
             return [];
+        }
+
+        /**
+         * Carica i chunk e riprova a recuperare gli interventi
+         */
+        async function loadDatabaseAndRetry(impiantoCodice) {
+            const linkContainer = document.getElementById('interventiLinkContainer');
+            linkContainer.innerHTML = `<span class="loading-spinner-small"></span> Caricamento...`;
+
+            try {
+                console.log('📥 Caricamento database da chunk...');
+                
+                // Carica manifest
+                const manifestResp = await fetch('manifest.json');
+                if (!manifestResp.ok) {
+                    throw new Error('manifest.json non trovato');
+                }
+                const manifest = await manifestResp.json();
+                
+                // Scarica tutti i chunk
+                const chunkPromises = manifest.chunks.map(async (chunkInfo, idx) => {
+                    const fileName = chunkInfo.fileName || `chunk_${String(idx).padStart(3, '0')}.json`;
+                    const resp = await fetch(fileName);
+                    if (!resp.ok) throw new Error(`Chunk ${fileName} non trovato`);
+                    return await resp.json();
+                });
+                
+                const chunkResults = await Promise.all(chunkPromises);
+                
+                // Unisci i dati
+                const database = {};
+                for (const chunkData of chunkResults) {
+                    for (const [key, value] of Object.entries(chunkData)) {
+                        if (!database[key]) {
+                            database[key] = Array.isArray(value) ? [] : {};
+                        }
+                        if (Array.isArray(value)) {
+                            database[key] = database[key].concat(value);
+                        } else if (typeof value === 'object' && value !== null) {
+                            database[key] = { ...database[key], ...value };
+                        }
+                    }
+                }
+                
+                window.database = database;
+                console.log('✅ Database caricato da chunk');
+                
+                // Ora riprova a recuperare gli interventi
+                const interventi = getInterventiForImpianto(impiantoCodice);
+                if (interventi.length > 0) {
+                    document.getElementById('interventiCount').textContent = interventi.length;
+                    linkContainer.innerHTML = `
+                        <a href="interventi.html?impianto=${encodeURIComponent(impiantoCodice)}" 
+                           target="_blank" 
+                           class="interventi-link">
+                           📋 Visualizza tutti →
+                        </a>
+                    `;
+                } else {
+                    document.getElementById('interventiCount').textContent = '0';
+                    linkContainer.innerHTML = `
+                        <span class="interventi-disabled">Nessun intervento registrato</span>
+                    `;
+                }
+                
+            } catch (err) {
+                console.error('❌ Errore caricamento chunk:', err);
+                document.getElementById('interventiCount').textContent = '?';
+                linkContainer.innerHTML = `
+                    <span style="color:var(--danger-color); font-size:0.85rem;">⚠️ Errore caricamento</span>
+                `;
+            }
         }
 
         // ============================================================
@@ -702,12 +824,13 @@
             try {
                 const datiImpianto = JSON.parse(decodeURIComponent(impiantoJSON));
 
-                // Recupero interventi
+                // ===== RECUPERO INTERVENTI PER IMPIANTO (con fallback) =====
                 const interventi = getInterventiForImpianto(datiImpianto.impianto);
                 const interventiCount = interventi.length;
                 const hasInterv = interventiCount > 0;
+                // ===== FINE RECUPERO INTERVENTI =====
 
-                // Aggiorna sezione interventi
+                // Aggiorna la sezione interventi
                 document.getElementById('interventiCount').textContent = interventiCount;
                 const linkContainer = document.getElementById('interventiLinkContainer');
                 if (hasInterv) {

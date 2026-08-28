@@ -9,10 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
-           iOS NATIVE STYLE - Mobile First
+           iOS NATIVE STYLE - Mobile First con Bottom Sheet
            ============================================================ */
 
-        /* ----- RESET ----- */
         * {
             margin: 0;
             padding: 0;
@@ -21,7 +20,6 @@
         }
 
         :root {
-            /* iOS Colors */
             --ios-blue: #007AFF;
             --ios-blue-dark: #0055CC;
             --ios-red: #FF3B30;
@@ -43,6 +41,7 @@
             --tab-height: 50px;
             --header-height: 52px;
             --search-height: 52px;
+            --sheet-handle: 40px;
         }
 
         /* Dark Mode */
@@ -55,6 +54,61 @@
             --ios-separator: #38383A;
             --ios-shadow: rgba(255, 255, 255, 0.05);
             --ios-shadow-heavy: rgba(255, 255, 255, 0.08);
+        }
+
+        body.dark .bottom-sheet {
+            background: var(--ios-card);
+            border-color: var(--ios-separator);
+        }
+
+        body.dark .sheet-handle {
+            background: var(--ios-separator);
+        }
+
+        body.dark .sheet-header {
+            border-color: var(--ios-separator);
+        }
+
+        body.dark .sheet-close {
+            color: var(--ios-text-tertiary);
+        }
+
+        body.dark .sheet-close:active {
+            background: var(--ios-separator);
+        }
+
+        body.dark .detail-row {
+            border-color: var(--ios-separator);
+        }
+
+        body.dark .detail-section {
+            border-color: var(--ios-separator);
+        }
+
+        body.dark .detail-section-header {
+            background: var(--ios-gray-bg);
+        }
+
+        body.dark .section-content {
+            background: var(--ios-card);
+        }
+
+        body.dark .annotazione-item {
+            background: var(--ios-gray-bg);
+            border-color: var(--ios-separator);
+        }
+
+        body.dark .doc-item {
+            border-color: var(--ios-separator);
+        }
+
+        body.dark .archivio-item {
+            background: rgba(255, 149, 0, 0.1);
+            border-color: var(--ios-separator);
+        }
+
+        body.dark .badge-tipo {
+            background: var(--ios-gray-bg);
         }
 
         /* ----- BASE ----- */
@@ -73,18 +127,7 @@
             padding-bottom: calc(var(--tab-height) + var(--safe-bottom) + 8px);
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        /* ----- STATUS BAR (iOS style) ----- */
-        .status-bar {
-            height: 0;
-            padding-top: var(--safe-top);
-            background: var(--ios-card);
-            border-bottom: 0.5px solid var(--ios-separator);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            transition: background 0.3s ease;
+            position: relative;
         }
 
         /* ----- HEADER ----- */
@@ -420,6 +463,7 @@
             padding: 0 16px 16px;
             background: var(--ios-gray-bg);
             transition: background 0.3s ease;
+            padding-bottom: 100px;
         }
 
         .result-item {
@@ -586,6 +630,418 @@
             font-size: 15px;
         }
 
+        /* ============================================================
+           BOTTOM SHEET
+           ============================================================ */
+
+        /* Overlay */
+        .sheet-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .sheet-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Bottom Sheet */
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-height: 92vh;
+            background: var(--ios-card);
+            border-radius: 20px 20px 0 0;
+            z-index: 201;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+            box-shadow: 0 -8px 40px var(--ios-shadow-heavy);
+            border: 0.5px solid var(--ios-separator);
+            border-bottom: none;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .bottom-sheet.open {
+            transform: translateY(0);
+        }
+
+        /* Drag Handle */
+        .sheet-handle {
+            width: 36px;
+            height: 5px;
+            background: var(--ios-separator);
+            border-radius: 3px;
+            margin: 8px auto 4px;
+            flex-shrink: 0;
+            cursor: grab;
+        }
+
+        .sheet-handle:active {
+            cursor: grabbing;
+        }
+
+        /* Sheet Header */
+        .sheet-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px 12px;
+            border-bottom: 0.5px solid var(--ios-separator);
+            flex-shrink: 0;
+            min-height: 44px;
+        }
+
+        .sheet-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sheet-header-left .sheet-code {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--ios-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sheet-header-left .sheet-fav {
+            font-size: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            flex-shrink: 0;
+        }
+
+        .sheet-header-left .sheet-fav:active {
+            transform: scale(0.8);
+        }
+
+        .sheet-header-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .sheet-header-right .sheet-nav-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            padding: 4px 10px;
+            cursor: pointer;
+            color: var(--ios-blue);
+            border-radius: 8px;
+            min-height: 36px;
+            min-width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .sheet-header-right .sheet-nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .sheet-header-right .sheet-nav-btn:active:not(:disabled) {
+            background: var(--ios-separator);
+            transform: scale(0.9);
+        }
+
+        .sheet-header-right .sheet-counter {
+            font-size: 13px;
+            color: var(--ios-text-tertiary);
+            padding: 0 6px;
+            font-weight: 500;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .sheet-header-right .sheet-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            padding: 4px 8px;
+            cursor: pointer;
+            color: var(--ios-text-tertiary);
+            border-radius: 8px;
+            min-height: 36px;
+            min-width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .sheet-header-right .sheet-close:active {
+            background: var(--ios-separator);
+            transform: scale(0.9);
+        }
+
+        /* Sheet Body (scrollabile) */
+        .sheet-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 16px 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Detail Row */
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 0.5px solid var(--ios-separator);
+            font-size: 14px;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row .detail-label {
+            font-weight: 500;
+            color: var(--ios-text-tertiary);
+        }
+
+        .detail-row .detail-value {
+            color: var(--ios-text);
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .detail-row .detail-value .map-link {
+            color: var(--ios-blue);
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        /* Detail Sections (collassabili) */
+        .detail-section {
+            margin-top: 12px;
+            border: 0.5px solid var(--ios-separator);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--ios-card);
+        }
+
+        .detail-section-header {
+            background: var(--ios-gray-bg);
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--ios-text);
+            transition: background 0.2s;
+            min-height: 44px;
+            user-select: none;
+        }
+
+        .detail-section-header:active {
+            background: var(--ios-separator);
+        }
+
+        .detail-section-header .section-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        .detail-section-header .section-badge {
+            background: var(--ios-blue);
+            color: white;
+            font-size: 11px;
+            padding: 1px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .detail-section-header .section-arrow {
+            font-size: 14px;
+            color: var(--ios-text-tertiary);
+            transition: transform 0.3s ease;
+        }
+
+        .detail-section-header .section-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            display: none;
+            padding: 12px 16px;
+            background: var(--ios-card);
+            border-top: 0.5px solid var(--ios-separator);
+        }
+
+        .section-content.open {
+            display: block;
+        }
+
+        /* Annotazioni */
+        .annotazione-item {
+            background: var(--ios-gray-bg);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            border: 0.5px solid var(--ios-separator);
+        }
+
+        .annotazione-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .annotazione-item .annotazione-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .annotazione-item .badge-tipo {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 12px;
+            background: var(--ios-separator);
+            color: var(--ios-text-secondary);
+        }
+
+        .badge-semestrale {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .badge-appuntamento {
+            background: #E3F2FD;
+            color: #0D47A1;
+        }
+
+        .badge-manutenzione {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        body.dark .badge-semestrale {
+            background: #1B5E20;
+            color: #A5D6A7;
+        }
+
+        body.dark .badge-appuntamento {
+            background: #0D47A1;
+            color: #90CAF9;
+        }
+
+        body.dark .badge-manutenzione {
+            background: #E65100;
+            color: #FFCC80;
+        }
+
+        .annotazione-item .tecnico {
+            font-size: 12px;
+            color: var(--ios-text-tertiary);
+        }
+
+        .annotazione-item .annotazione-note {
+            font-size: 13px;
+            color: var(--ios-text-secondary);
+            padding-left: 10px;
+            border-left: 2px solid var(--ios-separator);
+            margin-top: 4px;
+        }
+
+        /* Documenti */
+        .doc-item {
+            padding: 6px 0;
+            border-bottom: 0.5px solid var(--ios-separator);
+        }
+
+        .doc-item:last-child {
+            border-bottom: none;
+        }
+
+        .doc-item a {
+            color: var(--ios-blue);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .doc-item a:active {
+            opacity: 0.6;
+        }
+
+        /* Archivio */
+        .archivio-item {
+            background: rgba(255, 149, 0, 0.08);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            border: 0.5px solid var(--ios-separator);
+        }
+
+        .archivio-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .archivio-item .archivio-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .archivio-item .archivio-detail {
+            font-size: 13px;
+            color: var(--ios-text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Commesse */
+        .commessa-item {
+            padding: 6px 0;
+            border-bottom: 0.5px solid var(--ios-separator);
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .commessa-item:last-child {
+            border-bottom: none;
+        }
+
+        .commessa-item a {
+            color: var(--ios-blue);
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .commessa-item a:active {
+            opacity: 0.6;
+        }
+
         /* ----- SCROLL TOP BUTTON ----- */
         .scroll-top {
             position: fixed;
@@ -628,7 +1084,7 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
-            z-index: 200;
+            z-index: 300;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             transition: background 0.3s ease;
@@ -670,34 +1126,6 @@
 
         .bottom-nav button:active {
             transform: scale(0.9);
-        }
-
-        .bottom-nav button .badge-dot {
-            position: absolute;
-            top: 4px;
-            right: 6px;
-            width: 8px;
-            height: 8px;
-            background: var(--ios-red);
-            border-radius: 50%;
-            border: 1.5px solid var(--ios-card);
-        }
-
-        .bottom-nav button {
-            position: relative;
-        }
-
-        /* ----- PULL TO REFRESH ----- */
-        .pull-indicator {
-            text-align: center;
-            padding: 8px 0;
-            color: var(--ios-text-tertiary);
-            font-size: 13px;
-            display: none;
-        }
-
-        .pull-indicator.show {
-            display: block;
         }
 
         /* ----- TOAST ----- */
@@ -753,10 +1181,9 @@
         }
 
         /* ============================================================
-           RESPONSIVE - iPhone Variants
+           RESPONSIVE
            ============================================================ */
 
-        /* iPhone SE (375x667) */
         @media (max-width: 375px) {
             .dash-item {
                 flex: 0 0 100px;
@@ -777,9 +1204,6 @@
             }
         }
 
-        /* iPhone 12/13/14 (390x844) - default */
-
-        /* iPhone 14 Pro Max (430x932) */
         @media (min-width: 430px) {
             .dash-item {
                 flex: 0 0 130px;
@@ -787,13 +1211,8 @@
             .dash-item .dash-number {
                 font-size: 24px;
             }
-            .container {
-                max-width: 430px;
-                margin: 0 auto;
-            }
         }
 
-        /* iPad - mostra layout desktop (se vuoi) */
         @media (min-width: 768px) {
             body {
                 background: var(--ios-gray-bg);
@@ -822,6 +1241,19 @@
             .header {
                 border-radius: 0;
             }
+            .bottom-sheet {
+                max-width: 430px;
+                left: 50%;
+                transform: translateX(-50%) translateY(100%);
+            }
+            .bottom-sheet.open {
+                transform: translateX(-50%) translateY(0);
+            }
+            .sheet-overlay {
+                left: 50%;
+                transform: translateX(-50%);
+                max-width: 430px;
+            }
         }
 
         /* ----- UTILITY ----- */
@@ -837,7 +1269,7 @@
 
     <div class="container">
 
-        <!-- HEADER -->
+        <!-- ===== HEADER ===== -->
         <header class="header">
             <span class="header-title">🔍 Ricerca</span>
             <div class="header-actions">
@@ -846,7 +1278,7 @@
             </div>
         </header>
 
-        <!-- DASHBOARD CAROSELLO -->
+        <!-- ===== DASHBOARD ===== -->
         <div class="dashboard-wrapper" id="dashboardWrapper" style="display:none;">
             <div class="dashboard-scroll" id="dashboardScroll">
                 <div class="dash-item">
@@ -872,7 +1304,7 @@
             </div>
         </div>
 
-        <!-- SEARCH BAR (sticky) -->
+        <!-- ===== SEARCH ===== -->
         <div class="search-wrapper">
             <div class="search-bar">
                 <span class="search-icon">🔍</span>
@@ -884,7 +1316,7 @@
             </div>
         </div>
 
-        <!-- STATS TOGGLE -->
+        <!-- ===== STATS ===== -->
         <div class="stats-toggle">
             <button class="stats-toggle-btn" onclick="toggleStats()">
                 <span>📊 Statistiche</span>
@@ -914,7 +1346,7 @@
             </div>
         </div>
 
-        <!-- FILTERS -->
+        <!-- ===== FILTERS ===== -->
         <div class="filter-wrapper">
             <div class="filter-scroll" id="filterScroll">
                 <button class="filter-chip active" data-filter="all" onclick="applyFilter('all')">📋 Tutti</button>
@@ -926,7 +1358,7 @@
             </div>
         </div>
 
-        <!-- RESULTS -->
+        <!-- ===== RESULTS ===== -->
         <div class="results-container" id="resultsContainer">
             <div class="empty-state">
                 <div class="empty-icon">🔍</div>
@@ -935,10 +1367,42 @@
             </div>
         </div>
 
-        <!-- SCROLL TOP -->
+        <!-- ===== SCROLL TOP ===== -->
         <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">⬆</button>
 
-        <!-- BOTTOM NAV -->
+        <!-- ============================================================
+             BOTTOM SHEET
+             ============================================================ -->
+
+        <!-- Overlay -->
+        <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+
+        <!-- Bottom Sheet -->
+        <div class="bottom-sheet" id="bottomSheet">
+            <!-- Drag Handle -->
+            <div class="sheet-handle" id="sheetHandle"></div>
+
+            <!-- Header -->
+            <div class="sheet-header">
+                <div class="sheet-header-left">
+                    <button class="sheet-fav" id="sheetFav" onclick="sheetToggleFavorite()">☆</button>
+                    <span class="sheet-code" id="sheetCode">Impianto</span>
+                </div>
+                <div class="sheet-header-right">
+                    <button class="sheet-nav-btn" id="sheetPrev" onclick="navigateSheet(-1)">◀</button>
+                    <span class="sheet-counter" id="sheetCounter">0/0</span>
+                    <button class="sheet-nav-btn" id="sheetNext" onclick="navigateSheet(1)">▶</button>
+                    <button class="sheet-close" onclick="closeSheet()">✕</button>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="sheet-body" id="sheetBody">
+                <!-- Il contenuto viene popolato dinamicamente -->
+            </div>
+        </div>
+
+        <!-- ===== BOTTOM NAV ===== -->
         <nav class="bottom-nav">
             <button class="active" onclick="goHome()">
                 <span class="nav-icon">🏠</span>
@@ -958,7 +1422,7 @@
             </button>
         </nav>
 
-        <!-- TOAST -->
+        <!-- ===== TOAST ===== -->
         <div class="toast-container" id="toastContainer"></div>
 
     </div>
@@ -969,6 +1433,12 @@
         // ============================================================
         const state = {
             data: [],
+            elencoData: [],
+            annotazioniData: [],
+            bolleData: [],
+            archivioData: [],
+            m28Data: [],
+            mappature: { commerciali: {}, giri: {} },
             results: [],
             filtered: [],
             favorites: [],
@@ -976,6 +1446,8 @@
             currentFilter: 'all',
             currentQuery: '',
             currentIndex: -1,
+            sheetOpen: false,
+            sheetImpianto: null,
         };
 
         // ============================================================
@@ -986,7 +1458,6 @@
             const isDark = document.body.classList.contains('dark');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
             document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌓';
-            updateThemeIcon();
         }
 
         function loadTheme() {
@@ -994,12 +1465,7 @@
             if (saved === 'dark') {
                 document.body.classList.add('dark');
             }
-            updateThemeIcon();
-        }
-
-        function updateThemeIcon() {
-            const isDark = document.body.classList.contains('dark');
-            document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌓';
+            document.getElementById('themeIcon').textContent = document.body.classList.contains('dark') ? '☀️' : '🌓';
         }
 
         // ============================================================
@@ -1049,6 +1515,8 @@
         function showFavorites() {
             applyFilter('preferiti');
             showToast('⭐ Mostrando preferiti', 'info');
+            document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
+            document.querySelector('.bottom-nav button:nth-child(3)').classList.add('active');
         }
 
         // ============================================================
@@ -1079,11 +1547,28 @@
                 showToast(`⭐ Aggiunto: ${impianto}`, 'success');
             }
             saveFavorites();
+            // Aggiorna la lista e lo sheet
             renderResults(state.filtered);
+            if (state.sheetOpen && state.sheetImpianto === impianto) {
+                updateSheetFavButton(impianto);
+            }
         }
 
         function isFavorite(impianto) {
             return state.favorites.includes(impianto);
+        }
+
+        function sheetToggleFavorite() {
+            if (state.sheetImpianto) {
+                toggleFavorite(state.sheetImpianto);
+            }
+        }
+
+        function updateSheetFavButton(impianto) {
+            const btn = document.getElementById('sheetFav');
+            if (btn) {
+                btn.textContent = isFavorite(impianto) ? '⭐' : '☆';
+            }
         }
 
         // ============================================================
@@ -1189,6 +1674,7 @@
             state.results = results;
             state.filtered = results;
             state.currentFilter = 'all';
+            state.currentIndex = -1;
 
             document.querySelectorAll('.filter-chip').forEach(chip => {
                 chip.classList.remove('active', 'active-red', 'active-orange');
@@ -1241,7 +1727,7 @@
                 const showVerifica = isSemestraleScaduta(item);
 
                 html += `
-                    <div class="result-item" onclick="openDetail('${item.impianto}')">
+                    <div class="result-item" onclick="openSheet('${item.impianto}')">
                         <div class="result-code">
                             ${highlightText(item.impianto)}
                             <button class="fav-icon ${isFav ? 'fav-active' : ''}" 
@@ -1257,7 +1743,7 @@
                             ${icons.length > 0 ? `<span class="icons">${icons.join('')}</span>` : ''}
                         </div>
                         <div class="result-actions">
-                            <button onclick="event.stopPropagation(); openDetail('${item.impianto}')">📋</button>
+                            <button onclick="event.stopPropagation(); openSheet('${item.impianto}')">📋</button>
                             <button onclick="event.stopPropagation(); shareImpianto('${item.impianto}')">📧</button>
                             <button onclick="event.stopPropagation(); toggleFavorite('${item.impianto}')" 
                                     class="${isFav ? 'fav-active' : ''}">
@@ -1272,18 +1758,325 @@
         }
 
         // ============================================================
-        // APRI DETTAGLIO
+        // BOTTOM SHEET
         // ============================================================
-        function openDetail(impianto) {
+
+        function openSheet(impianto) {
             const item = state.data.find(d => d.impianto === impianto);
             if (!item) {
                 showToast('❌ Impianto non trovato', 'error');
                 return;
             }
-            const datiJSON = encodeURIComponent(JSON.stringify(item));
-            window.location.href = `scheda_completa_m.html?impianto=${datiJSON}`;
+
+            state.sheetOpen = true;
+            state.sheetImpianto = impianto;
+            state.currentIndex = state.results.findIndex(r => r.impianto === impianto);
+
+            document.getElementById('sheetOverlay').classList.add('open');
+            document.getElementById('bottomSheet').classList.add('open');
+            document.body.style.overflow = 'hidden';
+
+            renderSheetContent(item);
+            updateSheetNavigation();
+            updateSheetFavButton(impianto);
         }
 
+        function closeSheet() {
+            state.sheetOpen = false;
+            document.getElementById('sheetOverlay').classList.remove('open');
+            document.getElementById('bottomSheet').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function renderSheetContent(item) {
+            const body = document.getElementById('sheetBody');
+            document.getElementById('sheetCode').textContent = item.impianto;
+            body.innerHTML = generateDetailHTML(item);
+        }
+
+        function generateDetailHTML(item) {
+            const oggi = new Date();
+
+            const ultSemDate = excelDateToJSDate(item['ult sem']);
+            const ultVpDate = excelDateToJSDate(item['utl vp']);
+            const diffUltSem = ultSemDate ? Math.floor((oggi - ultSemDate) / (1000 * 60 * 60 * 24)) : Infinity;
+            const diffUltVp = ultVpDate ? Math.floor((oggi - ultVpDate) / (1000 * 60 * 60 * 24)) : Infinity;
+
+            const commerciale = formatWithMapping(item['venditore'], state.mappature.commerciali);
+            const giro = formatWithMapping(item.giro, state.mappature.giri);
+
+            const mesi = getMesiText();
+            const meseSem = parseInt(item['mese sem']);
+            const meseSemText = mesi[meseSem - 1] || 'N/A';
+            const meseSemPrec = meseSem > 6 ? mesi[meseSem - 7] : mesi[meseSem + 5];
+            const meseSemDisplay = meseSemPrec ? `${meseSemPrec} - ${meseSemText}` : meseSemText;
+
+            const showVerificaSem = diffUltSem > 180;
+            const showVerificaVp = diffUltVp > 730;
+
+            const mapLink = item['Indirizzo impianto'] && item['Località impianto'] ?
+                `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item['Indirizzo impianto'] + ', ' + item['Località impianto'])}` :
+                '#';
+
+            // Verbali
+            const documenti = state.elencoData.filter(d => d.IMPIANTO === item.impianto);
+            const docHTML = documenti.length > 0 ?
+                documenti.map(doc => `
+                    <div class="doc-item">
+                        <a href="https://otiselevatoreur.sharepoint.com/:f:/r/teams/ESABologna/Shared%20Documents/General/Uff_Tecnico/KING/PROGETTO%20VERBALI/VERBALO_DOWN_ARXC/${doc['NOME FILE']}" target="_blank">
+                            📄 ${doc['NOME FILE']}
+                        </a>
+                    </div>
+                `).join('') :
+                '<span class="text-muted" style="font-size:13px;">Nessun verbale trovato</span>';
+
+            // Annotazioni
+            const annotazioni = getUltimeAnnotazioni(item.impianto);
+            const annoHTML = annotazioni.length > 0 ?
+                annotazioni.map(ann => {
+                    const data = formattaDataAnnotazione(ann.giorno_ann, ann.mese_ann, ann.anno_ann);
+                    const tipo = formattaTipoAnnotazione(ann.tipo);
+                    const badgeCls = getClasseBadgeTipo(ann.tipo);
+                    return `
+                        <div class="annotazione-item">
+                            <div class="annotazione-header">
+                                <div>
+                                    <span class="badge-tipo ${badgeCls}">${tipo}</span>
+                                    <strong style="font-size:13px;">${data}</strong>
+                                </div>
+                                <span class="tecnico">👨‍🔧 ${ann.tecnico_ann || 'N/D'}</span>
+                            </div>
+                            <div class="annotazione-note">${ann.note || '<i>Nessuna nota</i>'}</div>
+                        </div>
+                    `;
+                }).join('') :
+                '<span class="text-muted" style="font-size:13px;">Nessuna annotazione nell\'ultimo anno</span>';
+
+            // Archivio
+            const codImpianto = String(item.impianto).trim();
+            const recordsArchivio = state.archivioData.filter(r => {
+                const esa = String(r['N°IMPIANTO ESA'] || '').trim();
+                return esa === codImpianto || esa === codImpianto.replace(/^0+/, '');
+            });
+            const archHTML = recordsArchivio.length > 0 ?
+                recordsArchivio.map(r => `
+                    <div class="archivio-item">
+                        <div class="archivio-title">📁 ${r['N°  PRATICA ARCHIVIO'] || 'N/D'}</div>
+                        <div class="archivio-detail">
+                            Richiesta: <b>${r['DOC RICHIESTI'] || 'N/D'}</b> il ${formatData(r['Column12'])}
+                        </div>
+                        <div class="archivio-detail">
+                            Consegna: <b>${r['DOCS PER CLIENTE CONSEGNATI'] || 'N/D'}</b> il ${formatData(r['Column17'])}
+                        </div>
+                    </div>
+                `).join('') :
+                '<span class="text-muted" style="font-size:13px;">✅ Nessuna Dichiarazione presente</span>';
+
+            // Commesse
+            const commesse = state.m28Data.filter(c => c["ID Imp."] == item.impianto);
+            const commesseHTML = commesse.length > 0 ?
+                commesse.map(c => `
+                    <div class="commessa-item">
+                        <span>📋 ${c["Numero Commessa"] || 'N/A'} - ${formatData(c["Data commessa"])}</span>
+                        <a href="commesse_m.html?commessa=${encodeURIComponent(JSON.stringify(c))}" target="_blank">🔨</a>
+                    </div>
+                `).join('') :
+                '<span class="text-muted" style="font-size:13px;">Nessuna commessa trovata</span>';
+
+            // Interventi
+            const interventiCount = countInterventiByImpianto(item.impianto);
+            const hasInterv = interventiCount > 0;
+            const interventiLink = hasInterv ?
+                `<a href="interventi_m.html?impianto=${encodeURIComponent(item.impianto)}" style="color:var(--ios-blue);text-decoration:none;font-weight:500;">📋 Visualizza tutti →</a>` :
+                `<span class="text-muted" style="font-size:13px;">Nessun intervento registrato</span>`;
+
+            return `
+                <!-- Dettagli principali -->
+                <div style="background:var(--ios-card);border-radius:12px;border:0.5px solid var(--ios-separator);padding:14px 16px;margin-bottom:12px;">
+                    <div class="detail-row">
+                        <span class="detail-label">📌 Matricola</span>
+                        <span class="detail-value">${item.matricola || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">📍 Indirizzo</span>
+                        <span class="detail-value">
+                            ${item['Indirizzo impianto']}
+                            ${item['Indirizzo impianto'] && item['Località impianto'] ? `<a href="${mapLink}" target="_blank" class="map-link">🌍 Mappa</a>` : ''}
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">🏠 Località</span>
+                        <span class="detail-value">${item['Località impianto'] || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">💼 Commerciale</span>
+                        <span class="detail-value">${commerciale}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">🔄 Giro</span>
+                        <span class="detail-value">${giro}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">📅 Mese Semestrale</span>
+                        <span class="detail-value">${meseSemDisplay}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">🟢 Ultima Semestrale</span>
+                        <span class="detail-value">${formatData(item['ult sem'])} ${showVerificaSem ? '⏰' : ''}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">🔵 Ultima Visita ENTE</span>
+                        <span class="detail-value">${formatData(item['utl vp'])} ${showVerificaVp ? '⏰' : ''}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">🔧 Manutenzione</span>
+                        <span class="detail-value">${item.manut || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">👤 Tipo Cliente</span>
+                        <span class="detail-value">${item['tipo cliente'] || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">🏢 Cliente</span>
+                        <span class="detail-value">${item.Cliente || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row" style="border-bottom:none;">
+                        <span class="detail-label">👔 Amministratore</span>
+                        <span class="detail-value">${item.Amministratore || 'N/A'}</span>
+                    </div>
+                </div>
+
+                <!-- Interventi -->
+                <div class="detail-section">
+                    <div class="detail-section-header" onclick="toggleSection(this)">
+                        <span><span class="section-icon">🛠️</span> Interventi <span class="section-badge">${interventiCount}</span></span>
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="section-content">
+                        ${interventiLink}
+                    </div>
+                </div>
+
+                <!-- Annotazioni -->
+                <div class="detail-section">
+                    <div class="detail-section-header" onclick="toggleSection(this)">
+                        <span><span class="section-icon">📝</span> Annotazioni</span>
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="section-content">
+                        ${annoHTML}
+                    </div>
+                </div>
+
+                <!-- Verbali -->
+                <div class="detail-section">
+                    <div class="detail-section-header" onclick="toggleSection(this)">
+                        <span><span class="section-icon">📄</span> Verbali <span class="section-badge">${documenti.length}</span></span>
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="section-content">
+                        ${docHTML}
+                    </div>
+                </div>
+
+                <!-- Commesse -->
+                <div class="detail-section">
+                    <div class="detail-section-header" onclick="toggleSection(this)">
+                        <span><span class="section-icon">🔧</span> Commesse <span class="section-badge">${commesse.length}</span></span>
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="section-content">
+                        ${commesseHTML}
+                    </div>
+                </div>
+
+                <!-- Archivio -->
+                <div class="detail-section">
+                    <div class="detail-section-header" onclick="toggleSection(this)">
+                        <span><span class="section-icon">📁</span> Archivio DC <span class="section-badge">${recordsArchivio.length}</span></span>
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="section-content">
+                        ${archHTML}
+                    </div>
+                </div>
+
+                <!-- Note -->
+                <div class="detail-section">
+                    <div class="detail-section-header" onclick="toggleSection(this)">
+                        <span><span class="section-icon">📝</span> Note</span>
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <span style="font-size:14px;color:var(--ios-text-secondary);">${item.note || 'Nessuna nota disponibile.'}</span>
+                    </div>
+                </div>
+
+                <!-- Link scheda completa -->
+                <div style="margin-top:16px;text-align:center;padding:12px;background:var(--ios-gray-bg);border-radius:12px;">
+                    <a href="scheda_completa_m.html?impianto=${encodeURIComponent(JSON.stringify(item))}" 
+                       target="_blank" 
+                       style="color:var(--ios-blue);text-decoration:none;font-weight:600;font-size:15px;">
+                       📋 Apri scheda completa →
+                    </a>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        // TOGGLE SECTION (collassabili)
+        // ============================================================
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const arrow = header.querySelector('.section-arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                // Chiudi tutte le altre sezioni (espansione singola)
+                document.querySelectorAll('.section-content').forEach(el => {
+                    if (el !== content) {
+                        el.classList.remove('open');
+                        const parent = el.closest('.detail-section');
+                        if (parent) {
+                            const arrow2 = parent.querySelector('.section-arrow');
+                            if (arrow2) arrow2.classList.remove('open');
+                        }
+                    }
+                });
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        // ============================================================
+        // NAVIGAZIONE SHEET
+        // ============================================================
+        function updateSheetNavigation() {
+            const total = state.results.length;
+            const pos = state.currentIndex !== -1 ? state.currentIndex + 1 : 0;
+            document.getElementById('sheetCounter').textContent = total > 0 ? `${pos}/${total}` : '0/0';
+            document.getElementById('sheetPrev').disabled = state.currentIndex <= 0;
+            document.getElementById('sheetNext').disabled = state.currentIndex >= total - 1 || state.currentIndex === -1;
+        }
+
+        function navigateSheet(direction) {
+            const newIndex = state.currentIndex + direction;
+            if (newIndex < 0 || newIndex >= state.results.length) return;
+
+            state.currentIndex = newIndex;
+            const item = state.results[newIndex];
+            state.sheetImpianto = item.impianto;
+
+            renderSheetContent(item);
+            updateSheetNavigation();
+            updateSheetFavButton(item.impianto);
+            document.getElementById('sheetCode').textContent = item.impianto;
+        }
+
+        // ============================================================
+        // SHARE
+        // ============================================================
         function shareImpianto(impianto) {
             const item = state.data.find(d => d.impianto === impianto);
             if (!item) return;
@@ -1294,7 +2087,7 @@
         }
 
         // ============================================================
-        // UTILITY (copiate da ricerca.html)
+        // UTILITY (da ricerca.html)
         // ============================================================
         const GIRO_DISDETTA = [66, 77, 88, 99];
 
@@ -1312,8 +2105,53 @@
             if (typeof excelDate === 'string') {
                 const d = new Date(excelDate);
                 if (!isNaN(d)) return d;
+                const parts = excelDate.split(/[/.-]/);
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]);
+                    const year = parseInt(parts[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
+                        const d = new Date(year, month - 1, day);
+                        if (!isNaN(d)) return d;
+                    }
+                }
             }
             return null;
+        }
+
+        function formatData(excelDate) {
+            if (!excelDate) return 'N/A';
+            const jsDate = excelDateToJSDate(excelDate);
+            if (!jsDate || isNaN(jsDate)) return 'N/A';
+            return jsDate.toLocaleDateString('it-IT');
+        }
+
+        function formatWithMapping(value, mapping) {
+            if (!value) return 'N/A';
+            const mapped = mapping[value];
+            return mapped ? `${value} - ${mapped}` : value;
+        }
+
+        function getMesiText() {
+            return ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
+            ];
+        }
+
+        function formattaTipoAnnotazione(tipo) {
+            const tipi = { 0: 'Semestrale', 1: 'Appuntamento', 2: 'Manutenzione' };
+            return tipi[tipo] || `Tipo ${tipo}`;
+        }
+
+        function getClasseBadgeTipo(tipo) {
+            const classi = { 0: 'badge-semestrale', 1: 'badge-appuntamento', 2: 'badge-manutenzione' };
+            return classi[tipo] || '';
+        }
+
+        function formattaDataAnnotazione(giorno, mese, anno) {
+            const mesi = getMesiText();
+            const meseText = mesi[parseInt(mese) - 1] || mese;
+            return `${giorno}-${meseText}-${anno}`;
         }
 
         function isGiroDisdetta(giro) {
@@ -1338,7 +2176,6 @@
         }
 
         function hasVerbali(impianto) {
-            // placeholders - verranno popolati dal caricamento
             return state.elencoData ? state.elencoData.some(d => d.IMPIANTO === impianto) : false;
         }
 
@@ -1351,6 +2188,33 @@
                 const rif = b['Impiantodiriferimento (Job) (Job)'] || '';
                 return rif.trim() === impianto.trim();
             }) : false;
+        }
+
+        function countInterventiByImpianto(impianto) {
+            return state.bolleData ? state.bolleData.filter(b => {
+                const rif = b['Impiantodiriferimento (Job) (Job)'] || '';
+                return rif.trim() === impianto.trim();
+            }).length : 0;
+        }
+
+        function getUltimeAnnotazioni(impiantoCodice, limite = 5) {
+            if (!state.annotazioniData || state.annotazioniData.length === 0) return [];
+            const oggi = new Date();
+            const unAnnoFa = new Date();
+            unAnnoFa.setFullYear(oggi.getFullYear() - 1);
+            return state.annotazioniData
+                .filter(ann => {
+                    if (ann.impianto_ann != impiantoCodice) return false;
+                    if (!ann.anno_ann || !ann.mese_ann || !ann.giorno_ann) return false;
+                    const dataAnn = new Date(ann.anno_ann, ann.mese_ann - 1, ann.giorno_ann);
+                    return dataAnn >= unAnnoFa;
+                })
+                .sort((a, b) => {
+                    const dateA = new Date(a.anno_ann, a.mese_ann - 1, a.giorno_ann);
+                    const dateB = new Date(b.anno_ann, b.mese_ann - 1, b.giorno_ann);
+                    return dateB - dateA;
+                })
+                .slice(0, limite);
         }
 
         // ============================================================
@@ -1391,6 +2255,7 @@
             document.getElementById('searchInput').focus();
             state.results = [];
             state.filtered = [];
+            state.currentIndex = -1;
             document.getElementById('resultsContainer').innerHTML = `
                 <div class="empty-state">
                     <div class="empty-icon">🔍</div>
@@ -1404,6 +2269,7 @@
                 if (chip.dataset.filter === 'all') chip.classList.add('active');
             });
             state.currentFilter = 'all';
+            if (state.sheetOpen) closeSheet();
         }
 
         // ============================================================
@@ -1411,12 +2277,10 @@
         // ============================================================
         async function loadDatabase() {
             try {
-                // Carica manifest
                 const manifestResp = await fetch('manifest.json');
                 if (!manifestResp.ok) throw new Error('manifest.json non trovato');
                 const manifest = await manifestResp.json();
 
-                // Scarica chunk
                 const chunkPromises = manifest.chunks.map(async (chunkInfo, idx) => {
                     const fileName = chunkInfo.fileName || `chunk_${String(idx).padStart(3, '0')}.json`;
                     const resp = await fetch(fileName);
@@ -1426,7 +2290,6 @@
 
                 const chunkResults = await Promise.all(chunkPromises);
 
-                // Unisci dati
                 const database = {};
                 for (const chunkData of chunkResults) {
                     for (const [key, value] of Object.entries(chunkData)) {
@@ -1447,13 +2310,13 @@
                 state.elencoData = database.elenco || [];
                 state.annotazioniData = database.annotazioni || [];
                 state.bolleData = database.bolle || [];
+                state.archivioData = database.archivio || [];
+                state.m28Data = database.m28 || [];
+                state.mappature = database.mappature || { commerciali: {}, giri: {} };
 
                 state.isLoaded = true;
 
-                // Mostra dashboard
                 document.getElementById('dashboardWrapper').style.display = 'block';
-
-                // Aggiorna dashboard
                 updateStats([]);
 
                 showToast(`✅ Caricati ${state.data.length} impianti`, 'success');
@@ -1493,28 +2356,40 @@
         });
 
         // ============================================================
-        // PULL TO REFRESH (simulato)
+        // SHEET DRAG TO CLOSE (iOS style)
         // ============================================================
-        let pullStartY = 0;
-        let pulling = false;
-        let pullIndicator = null;
+        let sheetStartY = 0;
+        let sheetCurrentY = 0;
+        let isDragging = false;
 
-        document.addEventListener('touchstart', function(e) {
-            if (window.scrollY === 0) {
-                pullStartY = e.touches[0].clientY;
-                pulling = true;
+        const sheetHandle = document.getElementById('sheetHandle');
+        const sheet = document.getElementById('bottomSheet');
+
+        sheetHandle.addEventListener('touchstart', function(e) {
+            sheetStartY = e.touches[0].clientY;
+            isDragging = true;
+            sheet.style.transition = 'none';
+        }, { passive: true });
+
+        sheetHandle.addEventListener('touchmove', function(e) {
+            if (!isDragging) return;
+            const deltaY = e.touches[0].clientY - sheetStartY;
+            if (deltaY > 0) {
+                sheetCurrentY = deltaY;
+                sheet.style.transform = `translateY(${deltaY}px)`;
             }
         }, { passive: true });
 
-        document.addEventListener('touchmove', function(e) {
-            if (pulling && window.scrollY === 0) {
-                const deltaY = e.touches[0].clientY - pullStartY;
-                if (deltaY > 60) {
-                    pulling = false;
-                    loadDatabase();
-                    showToast('🔄 Ricaricamento in corso...', 'info');
-                }
+        sheetHandle.addEventListener('touchend', function(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            sheet.style.transition = 'transform 0.4s cubic-bezier(0.32, 0.72, 0, 1)';
+            if (sheetCurrentY > 80) {
+                closeSheet();
+            } else {
+                sheet.style.transform = '';
             }
+            sheetCurrentY = 0;
         }, { passive: true });
 
         // ============================================================
@@ -1524,8 +2399,8 @@
         loadFavorites();
         loadDatabase();
 
-        console.log('📱 Ricerca Mobile v1.0 caricata');
-        console.log('📊 Funzionalità: ricerca, filtri, preferiti, tema, pull-to-refresh');
+        console.log('📱 Ricerca Mobile v2.0 - Bottom Sheet integrato');
+        console.log('📊 Funzionalità: ricerca, filtri, preferiti, tema, pull-to-refresh, bottom sheet');
     </script>
 
 </body>

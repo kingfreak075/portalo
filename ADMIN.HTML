@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Generatore Chunk Database</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js">
+    </script>
+    <style>
+        /* ===== STILI (come prima) ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1b5e20;
+            --primary-light: #4caf50;
+            --primary-dark: #0d3b12;
+            --primary-bg: #e8f5e9;
+            --danger: #d32f2f;
+            --warning: #f57c00;
+            --info: #1976d2;
+            --success: #2e7d32;
+            --text-primary: #1a2332;
+            --text-secondary: #4a5568;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-xs: 6px;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            min-height: 100vh;
+            padding: 32px;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 28px;
+            background: var(--card-bg);
+            padding: 20px 32px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        h1::before {
+            content: "⚙️";
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: -16px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 .badge {
+            background: var(--primary-bg);
+            color: var(--primary);
+            font-size: 0.7rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .card h2 .badge.secondary {
+            background: #e3f2fd;
+            color: var(--info);
+        }
+
+        .drop-zone {
+            border: 3px dashed var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.4);
+            position: relative;
+        }
+
+        .drop-zone:hover,
+        .drop-zone.dragover {
+            border-color: var(--primary-light);
+            background: rgba(76, 175, 80, 0.06);
+            transform: scale(1.01);
+        }
+
+        .drop-zone .icon {
+            font-size: 3.5rem;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .drop-zone .title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .drop-zone .sub {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .drop-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 16px;
+            padding: 12px 18px;
+            background: var(--primary-bg);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .file-info.visible {
+            display: flex;
+        }
+
+        .file-info .name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .file-info .size {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .file-info .remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0 4px;
+            transition: transform 0.3s;
+        }
+
+        .file-info .remove:hover {
+            transform: scale(1.2);
+        }
+
+        .progress-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .progress-container.visible {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--border-color);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary));
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .progress-stats .highlight {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 32px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: var(--font);
+            background: var(--primary-light);
+            color: white;
+            box-shadow: 0 2px 12px rgba(76, 175, 80, 0.25);
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(27, 94, 32, 0.3);
+            background: var(--primary);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #78909c;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: #546e7a;
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #1b5e20;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+        .btn-danger:hover:not(:disabled) {
+            background: #b71c1c;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-box .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-box .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .stat-box .number.danger {
+            color: var(--danger);
+        }
+        .stat-box .number.warning {
+            color: var(--warning);
+        }
+        .stat-box .number.info {
+            color: var(--info);
+        }
+
+        .file-list-container {
+            margin-top: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            display: none;
+        }
+
+        .file-list-container.visible {
+            display: block;
+        }
+
+        .file-list-header {
+            display: grid;
+            grid-template-columns: 50px 1fr 120px 100px 140px;
+            padding: 10px 16px;
+            background: var(--primary-bg);
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            gap: 8px;
+        }
+
+        .file-list-item {
+            display: grid;
+            grid-template-columns: 50px 1fr 120px 100px 140px;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .file-list-item:hover {
+            background: rgba(76, 175, 80, 0.04);
+        }
+
+        .file-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-list-item .file-index {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .file-list-item .file-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+        }
+
+        .file-list-item .file-size {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .file-list-item .file-records {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .file-list-item .file-actions {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+
+        .file-list-item .file-actions .btn-sm {
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            border: none;
+            border-radius: var(--radius-xs);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-family: var(--font);
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .file-list-item .file-actions .btn-sm:hover {
+            transform: scale(1.05);
+        }
+
+        .file-list-item .file-actions .btn-sm.download {
+            background: var(--info);
+        }
+        .file-list-item .file-actions .btn-sm.download:hover {
+            background: #0d47a1;
+        }
+
+        .file-list-item .file-actions .btn-sm.copy {
+            background: var(--text-muted);
+        }
+        .file-list-item .file-actions .btn-sm.copy:hover {
+            background: var(--text-secondary);
+        }
+
+        .file-list-footer {
+            padding: 12px 16px;
+            background: var(--primary-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .file-list-footer .total-size {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .log-container {
+            margin-top: 16px;
+            background: #1a2332;
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            max-height: 350px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #a0c4a8;
+            display: none;
+        }
+
+        .log-container.visible {
+            display: block;
+        }
+
+        .log-container .log-entry {
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .log-container .log-entry .time {
+            color: var(--text-muted);
+            margin-right: 12px;
+        }
+
+        .log-container .log-entry.success {
+            color: #81c784;
+        }
+        .log-container .log-entry.error {
+            color: #ef9a9a;
+        }
+        .log-container .log-entry.warning {
+            color: #ffcc80;
+        }
+        .log-container .log-entry.info {
+            color: #90caf9;
+        }
+        .log-container .log-entry.debug {
+            color: #b39ddb;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 420px;
+        }
+
+        .toast {
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.3s ease;
+            font-family: var(--font);
+            font-size: 0.9rem;
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+        .toast.error {
+            background: var(--danger);
+        }
+        .toast.warning {
+            background: var(--warning);
+        }
+        .toast.info {
+            background: var(--info);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%) scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .toast.out {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%) scale(0.95);
+                opacity: 0;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+            .card {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.4rem;
+                padding: 16px 20px;
+            }
+            .drop-zone {
+                padding: 32px 16px;
+            }
+            .drop-zone .icon {
+                font-size: 2.5rem;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .file-list-header,
+            .file-list-item {
+                grid-template-columns: 1fr;
+                gap: 4px;
+                padding: 8px 12px;
+            }
+            .file-list-header {
+                display: none;
+            }
+            .file-list-item {
+                border-bottom: 2px solid var(--border-color);
+            }
+            .file-list-item .file-actions {
+                justify-content: flex-start;
+                margin-top: 4px;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Generatore Chunk Database</h1>
+        <p class="subtitle">Carica un file Excel e genera chunk da 15MB per GitHub Pages</p>
+
+        <div class="card">
+            <h2>📂 Carica Excel <span class="badge">.xlsx / .xls</span></h2>
+
+            <div class="drop-zone" id="dropZone">
+                <span class="icon">📤</span>
+                <div class="title">Trascina il file Excel qui</div>
+                <div class="sub">oppure clicca per selezionarlo</div>
+                <input type="file" id="fileInput" accept=".xlsx,.xls" />
+            </div>
+
+            <div class="file-info" id="fileInfo">
+                <span>
+                    <span class="name" id="fileName">file.xlsx</span>
+                    <span class="size" id="fileSize">(0 KB)</span>
+                </span>
+                <button class="remove" id="removeFile" title="Rimuovi file">✕</button>
+            </div>
+
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="fill" id="progressFill"></div>
+                </div>
+                <div class="progress-stats">
+                    <span id="progressText">Elaborazione...</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn" id="generateBtn" disabled>🚀 Genera Chunk</button>
+                <button class="btn btn-success" id="downloadAllBtn" disabled>📦 Scarica Tutto (ZIP)</button>
+                <button class="btn btn-danger" id="clearBtn">🗑️ Pulisci</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📊 Statistiche</h2>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-box">
+                    <div class="number" id="statRecords">0</div>
+                    <div class="label">Record totali</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="statChunks">0</div>
+                    <div class="label">Chunk generati</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="statSize">0 MB</div>
+                    <div class="label">Dimensione totale</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number info" id="statSheets">0</div>
+                    <div class="label">Fogli letti</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📄 File Generati <span class="badge secondary" id="fileCountBadge">0 file</span></h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px;">
+                Scarica ogni file singolarmente o usa "Scarica Tutto (ZIP)" per scaricarli tutti insieme.
+            </p>
+
+            <div class="file-list-container" id="fileListContainer">
+                <div class="file-list-header">
+                    <span>#</span>
+                    <span>Nome File</span>
+                    <span>Dimensione</span>
+                    <span>Record</span>
+                    <span>Azioni</span>
+                </div>
+                <div id="fileListBody"></div>
+                <div class="file-list-footer">
+                    <span>Totale: <span class="total-size" id="totalSizeDisplay">0 MB</span></span>
+                    <span>📦 <span id="totalRecordsDisplay">0</span> record in <span id="totalFilesDisplay">0</span> file</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📋 Log</h2>
+            <div class="log-container" id="logContainer"></div>
+        </div>
+
+        <div class="card" style="border-left: 4px solid var(--warning);">
+            <h2>🔍 Debug Colonne PARCO</h2>
+            <div id="debugInfo" style="font-size:0.85rem; color: var(--text-secondary);">
+                Carica un file Excel per vedere le colonne e i primi valori.
+            </div>
+        </div>
+
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // ============================================================
+        // ADMIN.HTML - Generatore di chunk (Desktop) - CON DEBUG + FIX MESI
+        // ============================================================
+
+        // ---- DOM refs ----
+        const fileInput = document.getElementById('fileInput');
+        const dropZone = document.getElementById('dropZone');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const removeFileBtn = document.getElementById('removeFile');
+        const generateBtn = document.getElementById('generateBtn');
+        const downloadAllBtn = document.getElementById('downloadAllBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const progressPercent = document.getElementById('progressPercent');
+        const statRecords = document.getElementById('statRecords');
+        const statChunks = document.getElementById('statChunks');
+        const statSize = document.getElementById('statSize');
+        const statSheets = document.getElementById('statSheets');
+        const logContainer = document.getElementById('logContainer');
+        const toastContainer = document.getElementById('toastContainer');
+        const fileListContainer = document.getElementById('fileListContainer');
+        const fileListBody = document.getElementById('fileListBody');
+        const fileCountBadge = document.getElementById('fileCountBadge');
+        const totalSizeDisplay = document.getElementById('totalSizeDisplay');
+        const totalRecordsDisplay = document.getElementById('totalRecordsDisplay');
+        const totalFilesDisplay = document.getElementById('totalFilesDisplay');
+        const debugInfo = document.getElementById('debugInfo');
+
+        // ---- Stato ----
+        let currentFile = null;
+        let workbookData = null;
+        let database = null;
+        let chunks = [];
+        let manifest = null;
+        let isGenerating = false;
+
+        // ============================================================
+        // UTILITY: CONVERSIONE DATE (CON FIX PER MESI)
+        // ============================================================
+
+        // Colonne che NON devono essere convertite in date
+        const NON_DATE_COLUMNS = [
+            'mese sem',
+            'mese fossa',
+            'mese_ann',
+            'anno_ann',
+            'anno',
+            'mese',
+            'giorno',
+            'giorno_ann',
+            'mese_ann',
+            'anno_ann'
+        ];
+
+        function excelDateToJSDate(excelDate) {
+            if (!excelDate) return null;
+            if (excelDate instanceof Date && !isNaN(excelDate)) return excelDate;
+
+            if (typeof excelDate === 'number') {
+                const epoch = new Date(1899, 11, 30);
+                const d = new Date(epoch.getTime() + excelDate * 86400000);
+                if (!isNaN(d)) return d;
+            }
+
+            if (typeof excelDate === 'string') {
+                let d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+
+                const parts = excelDate.split(/[/.-]/);
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]);
+                    const year = parseInt(parts[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                        if (year > 2000) {
+                            d = new Date(year, month - 1, day);
+                            if (!isNaN(d)) return d;
+                        }
+                    }
+                }
+
+                const parts2 = excelDate.split(/[/.-]/);
+                if (parts2.length === 3) {
+                    const month = parseInt(parts2[0]);
+                    const day = parseInt(parts2[1]);
+                    const year = parseInt(parts2[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                        if (year > 2000) {
+                            d = new Date(year, month - 1, day);
+                            if (!isNaN(d)) return d;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        function isDateColumn(colName) {
+            if (!colName) return false;
+            const lower = colName.toLowerCase().trim();
+
+            // Se è nella lista delle colonne NON data, escludi
+            if (NON_DATE_COLUMNS.some(k => lower.includes(k.toLowerCase()))) {
+                return false;
+            }
+
+            // Altrimenti controlla se contiene keyword di data
+            const dateKeywords = ['sem', 'data', 'date', 'ult', 'visita', 'commessa', 'scadenza',
+                'scheduled', 'creation', 'modified', 'timestamp', 'vp', 'fossa', 'fatt', 'decorrenza'
+            ];
+            return dateKeywords.some(k => lower.includes(k));
+        }
+
+        function formatDateValue(val) {
+            if (!val) return null;
+
+            // Se è una stringa in formato ISO (YYYY-MM-DD)
+            if (typeof val === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(val)) {
+                return val;
+            }
+
+            // Se è un numero che potrebbe essere un mese (1-12) -> NON convertire
+            if (typeof val === 'number' && val >= 1 && val <= 12) {
+                return String(val);
+            }
+
+            // Se è un numero seriale Excel
+            if (typeof val === 'number') {
+                const d = excelDateToJSDate(val);
+                if (d) {
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    // Se l'anno è 1900, probabilmente è una conversione errata (es. mese)
+                    if (year === 1900) {
+                        return String(val); // mantieni il numero originale
+                    }
+                    return `${year}-${month}-${day}`;
+                }
+                return String(val);
+            }
+
+            // Se è una stringa
+            if (typeof val === 'string') {
+                // Prova a parsare come data
+                const d = excelDateToJSDate(val);
+                if (d) {
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    if (year === 1900) {
+                        return val; // mantieni la stringa originale
+                    }
+                    return `${year}-${month}-${day}`;
+                }
+                return val;
+            }
+
+            return null;
+        }
+
+        // ---- Utility generali ----
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        // ---- Log ----
+        function addLog(message, type = 'info') {
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<span class="time">[${time}]</span> ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            logContainer.classList.add('visible');
+        }
+
+        // ---- Toast ----
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('out');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // ---- Aggiorna statistiche ----
+        function updateStats() {
+            if (!database) {
+                statRecords.textContent = '0';
+                statChunks.textContent = '0';
+                statSize.textContent = '0 MB';
+                statSheets.textContent = '0';
+                return;
+            }
+
+            const totalRecords = Object.values(database).reduce((sum, arr) => {
+                if (Array.isArray(arr)) return sum + arr.length;
+                if (typeof arr === 'object' && arr !== null) return sum + 1;
+                return sum;
+            }, 0);
+
+            const sheetCount = Object.keys(database).filter(k => {
+                const v = database[k];
+                return Array.isArray(v) && v.length > 0;
+            }).length;
+
+            statRecords.textContent = totalRecords.toLocaleString();
+            statSheets.textContent = sheetCount;
+
+            if (chunks.length > 0) {
+                statChunks.textContent = chunks.length;
+                const totalSize = chunks.reduce((sum, c) => sum + c.size, 0);
+                statSize.textContent = formatFileSize(totalSize);
+            } else {
+                statChunks.textContent = '0';
+                statSize.textContent = '0 MB';
+            }
+        }
+
+        // ---- Render file list ----
+        function renderFileList() {
+            if (chunks.length === 0) {
+                fileListContainer.classList.remove('visible');
+                fileCountBadge.textContent = '0 file';
+                return;
+            }
+
+            fileListContainer.classList.add('visible');
+            fileCountBadge.textContent = `${chunks.length} file`;
+
+            let html = '';
+            chunks.forEach((chunk, idx) => {
+                const fileName = `chunk_${String(idx).padStart(3, '0')}.json`;
+                html += `
+                        <div class="file-list-item">
+                            <span class="file-index">#${idx}</span>
+                            <span class="file-name">${fileName}</span>
+                            <span class="file-size">${formatFileSize(chunk.size)}</span>
+                            <span class="file-records">${chunk.records || 0}</span>
+                            <div class="file-actions">
+                                <button class="btn-sm download" onclick="downloadSingleFile(${idx})">📥</button>
+                                <button class="btn-sm copy" onclick="copyFileName('${fileName}')">📋</button>
+                            </div>
+                        </div>
+                    `;
+            });
+
+            fileListBody.innerHTML = html;
+
+            const totalSize = chunks.reduce((sum, c) => sum + c.size, 0);
+            const totalRecords = chunks.reduce((sum, c) => sum + (c.records || 0), 0);
+
+            totalSizeDisplay.textContent = formatFileSize(totalSize);
+            totalRecordsDisplay.textContent = totalRecords.toLocaleString();
+            totalFilesDisplay.textContent = chunks.length;
+        }
+
+        // ---- Download single file ----
+        function downloadSingleFile(index) {
+            const chunk = chunks[index];
+            if (!chunk) return;
+            const fileName = `chunk_${String(index).padStart(3, '0')}.json`;
+            const blob = new Blob([JSON.stringify(chunk.data, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
+            link.click();
+            URL.revokeObjectURL(link.href);
+            showToast(`📥 Scaricato: ${fileName}`, 'success');
+            addLog(`📥 Scaricato: ${fileName} (${formatFileSize(chunk.size)})`, 'info');
+        }
+
+        // ---- Copy file name ----
+        function copyFileName(fileName) {
+            navigator.clipboard.writeText(fileName).then(() => {
+                showToast(`📋 Copiato: ${fileName}`, 'info');
+            }).catch(() => {
+                const input = document.createElement('input');
+                input.value = fileName;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                input.remove();
+                showToast(`📋 Copiato: ${fileName}`, 'info');
+            });
+        }
+
+        // ---- Reset ----
+        function resetAll() {
+            currentFile = null;
+            workbookData = null;
+            database = null;
+            chunks = [];
+            manifest = null;
+            isGenerating = false;
+
+            fileInfo.classList.remove('visible');
+            fileInput.value = '';
+            dropZone.style.borderColor = '';
+            progressContainer.classList.remove('visible');
+            progressFill.style.width = '0%';
+            progressText.textContent = '';
+            progressPercent.textContent = '0%';
+            generateBtn.disabled = true;
+            downloadAllBtn.disabled = true;
+            updateStats();
+            renderFileList();
+            logContainer.innerHTML = '';
+            logContainer.classList.remove('visible');
+            debugInfo.innerHTML = 'Carica un file Excel per vedere le colonne e i primi valori.';
+            addLog('🧹 Reset completato', 'info');
+        }
+
+        // ---- Debug: mostra colonne e valori ----
+        function showDebugInfo(sheetName, jsonData) {
+            if (!jsonData || jsonData.length === 0) {
+                debugInfo.innerHTML = `📋 Il foglio <strong>${sheetName}</strong> è vuoto.`;
+                return;
+            }
+
+            const columns = Object.keys(jsonData[0]);
+            const sample = jsonData.slice(0, 3);
+
+            let html = `
+                    <div style="margin-bottom:8px;">
+                        <strong>📋 Foglio: ${sheetName}</strong> - ${jsonData.length} righe
+                    </div>
+                    <div style="font-family: 'Courier New', monospace; font-size:0.8rem; background: #f5f5f5; padding:12px; border-radius:6px; overflow-x:auto;">
+                        <div style="font-weight:600; color:var(--primary); margin-bottom:4px;">Colonne trovate:</div>
+                        <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px;">
+                            ${columns.map(c => `<span style="background:var(--primary-bg); padding:2px 10px; border-radius:12px; font-size:0.75rem;">${c}</span>`).join('')}
+                        </div>
+                        <div style="font-weight:600; color:var(--primary); margin-bottom:4px;">Prime 3 righe (valori grezzi):</div>
+                        ${sample.map((row, idx) => `
+                            <div style="border-bottom:1px solid #e0e0e0; padding:4px 0;">
+                                <span style="color:var(--text-muted);">#${idx + 1}</span>
+                                ${Object.entries(row).map(([key, val]) => `
+                                    <span style="margin-left:8px;">
+                                        <span style="color:var(--info);">${key}:</span>
+                                        <span style="color:var(--text-primary);">${val === undefined || val === null ? 'NULL' : typeof val === 'string' ? `"${val}"` : val}</span>
+                                    </span>
+                                `).join('')}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div style="margin-top:8px; font-size:0.8rem; color:var(--text-muted);">
+                        💡 I valori <strong>7</strong> nelle colonne <strong>mese sem</strong> e <strong>mese fossa</strong> rappresentano il mese (Luglio) e NON vengono convertiti in date.
+                    </div>
+                `;
+
+            debugInfo.innerHTML = html;
+            addLog(`🔍 Debug: ${columns.length} colonne trovate in ${sheetName}`, 'debug');
+        }
+
+        // ---- Load file ----
+        function loadFile(file) {
+            if (!file) return;
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (!['xlsx', 'xls'].includes(ext)) {
+                showToast('❌ Formato non supportato. Usa .xlsx o .xls', 'error');
+                return;
+            }
+
+            currentFile = file;
+            fileName.textContent = file.name;
+            fileSize.textContent = `(${formatFileSize(file.size)})`;
+            fileInfo.classList.add('visible');
+            generateBtn.disabled = false;
+            dropZone.style.borderColor = '';
+
+            showToast(`📂 Caricato: ${file.name}`, 'success');
+            addLog(`📂 File caricato: ${file.name} (${formatFileSize(file.size)})`, 'info');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    workbookData = XLSX.read(data, { type: 'array' });
+                    const sheets = workbookData.SheetNames;
+                    addLog(`📊 Trovati ${sheets.length} fogli: ${sheets.join(', ')}`, 'info');
+
+                    if (sheets.includes('PARCO')) {
+                        const ws = workbookData.Sheets['PARCO'];
+                        const json = XLSX.utils.sheet_to_json(ws);
+                        showDebugInfo('PARCO', json);
+                    } else {
+                        debugInfo.innerHTML = `⚠️ Foglio "PARCO" non trovato. Fogli disponibili: ${sheets.join(', ')}`;
+                    }
+
+                    const sheetStats = sheets.map(s => {
+                        const ws = workbookData.Sheets[s];
+                        const json = XLSX.utils.sheet_to_json(ws);
+                        return `${s} (${json.length} righe)`;
+                    });
+                    addLog(`📋 ${sheetStats.join(' | ')}`, 'info');
+
+                    showToast(`✅ Letto: ${sheets.length} fogli`, 'success');
+                } catch (err) {
+                    showToast(`❌ Errore lettura: ${err.message}`, 'error');
+                    addLog(`❌ Errore: ${err.message}`, 'error');
+                    console.error(err);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // ---- Genera chunk ----
+        async function generateChunks() {
+            if (!workbookData) {
+                showToast('❌ Nessun file caricato', 'error');
+                return;
+            }
+            if (isGenerating) return;
+
+            isGenerating = true;
+            generateBtn.disabled = true;
+            generateBtn.textContent = '⏳ Generazione in corso...';
+            downloadAllBtn.disabled = true;
+
+            progressContainer.classList.add('visible');
+            progressFill.style.width = '0%';
+            progressText.textContent = 'Avvio elaborazione...';
+            progressPercent.textContent = '0%';
+
+            chunks = [];
+            manifest = null;
+            database = null;
+
+            try {
+                const sheetNames = workbookData.SheetNames;
+                const totalSheets = sheetNames.length;
+                let processed = 0;
+
+                const sheetMap = {
+                    'PARCO': 'parco',
+                    'ARCHIVIO': 'archivio',
+                    'ANNOTAZIONI': 'annotazioni',
+                    'MAPPATURE': 'mappature',
+                    'ELENCO': 'elenco',
+                    'M28': 'm28',
+                    'BOLLE': 'bolle'
+                };
+
+                database = {};
+
+                for (const sheetName of sheetNames) {
+                    const ws = workbookData.Sheets[sheetName];
+                    const json = XLSX.utils.sheet_to_json(ws);
+                    const key = sheetMap[sheetName];
+
+                    if (key) {
+                        if (key === 'mappature') {
+                            const mappature = { commerciali: {}, giri: {} };
+                            json.forEach(row => {
+                                if (row.Tipo === 'COMMERCIALE') {
+                                    mappature.commerciali[row.Codice] = row.Nome;
+                                } else if (row.Tipo === 'GIRO') {
+                                    mappature.giri[row.Codice] = row.Nome;
+                                }
+                            });
+                            database[key] = mappature;
+                            addLog(`📦 MAPPATURE: ${Object.keys(mappature.commerciali).length} commerciali, ${Object.keys(mappature.giri).length} giri`,
+                                'success');
+                        } else {
+                            // ---- PULIZIA DATI CON CONVERSIONE DATE ROBUSTA ----
+                            const cleaned = json.map((row, rowIdx) => {
+                                const clean = {};
+                                for (const [col, val] of Object.entries(row)) {
+                                    // Se è una colonna che potrebbe contenere date
+                                    if (isDateColumn(col) && val !== undefined && val !== null && val !== '') {
+                                        const formatted = formatDateValue(val);
+                                        if (formatted && formatted !== val) {
+                                            clean[col] = formatted;
+                                            if (rowIdx < 3 && (col === 'mese sem' || col === 'mese fossa')) {
+                                                addLog(`🔍 ${col} = ${val} → mantenuto come "${formatted}" (non convertito in data)`,
+                                                    'debug');
+                                            }
+                                        } else {
+                                            clean[col] = val;
+                                        }
+                                    } else {
+                                        clean[col] = val;
+                                    }
+                                }
+                                return clean;
+                            });
+
+                            let dateConversions = 0;
+                            cleaned.forEach(row => {
+                                for (const [col, val] of Object.entries(row)) {
+                                    if (isDateColumn(col) && typeof val === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(val)) {
+                                        dateConversions++;
+                                    }
+                                }
+                            });
+
+                            database[key] = cleaned;
+                            addLog(`📦 ${key.toUpperCase()}: ${cleaned.length} record (${dateConversions} valori data convertiti)`,
+                                'success');
+
+                            if (key === 'parco' && cleaned.length > 0) {
+                                const sample = cleaned[0];
+                                const dateCols = Object.keys(sample).filter(c => isDateColumn(c));
+                                addLog(`📅 Colonne data in PARCO: ${dateCols.join(', ')}`, 'info');
+                                dateCols.forEach(col => {
+                                    const val = sample[col];
+                                    const isMonth = col === 'mese sem' || col === 'mese fossa';
+                                    addLog(`   ${col}: ${val} (${typeof val})${isMonth ? ' ✅ mantenuto come numero mese' : ''}`,
+                                        'debug');
+                                });
+                            }
+                        }
+                    } else {
+                        addLog(`⚠️ Foglio "${sheetName}" ignorato (non mappato)`, 'warning');
+                    }
+
+                    processed++;
+                    const pct = Math.round((processed / totalSheets) * 30);
+                    progressFill.style.width = pct + '%';
+                    progressPercent.textContent = pct + '%';
+                    progressText.textContent = `Elaborazione fogli: ${processed}/${totalSheets}`;
+                }
+
+                // ---- Dividi in chunk ----
+                const CHUNK_SIZE_BYTES = 15 * 1024 * 1024;
+
+                const dataToChunk = {};
+                for (const [key, val] of Object.entries(database)) {
+                    if (key !== 'mappature' && Array.isArray(val) && val.length > 0) {
+                        dataToChunk[key] = val;
+                    }
+                }
+
+                let totalBytes = 0;
+                const jsonStr = JSON.stringify(dataToChunk);
+                totalBytes = new Blob([jsonStr]).size;
+
+                addLog(`📊 Dimensione totale dati: ${formatFileSize(totalBytes)}`, 'info');
+
+                if (totalBytes === 0) {
+                    showToast('❌ Nessun dato da chunkare', 'error');
+                    throw new Error('Nessun dato');
+                }
+
+                if (totalBytes <= CHUNK_SIZE_BYTES) {
+                    chunks.push({
+                        index: 0,
+                        data: { ...database },
+                        size: totalBytes,
+                        records: Object.values(database).reduce((sum, arr) => {
+                            if (Array.isArray(arr)) return sum + arr.length;
+                            return sum;
+                        }, 0)
+                    });
+                    addLog(`📦 1 chunk generato (${formatFileSize(totalBytes)})`, 'success');
+                } else {
+                    const allRecords = [];
+                    const recordMeta = [];
+
+                    for (const [key, arr] of Object.entries(dataToChunk)) {
+                        arr.forEach((record, idx) => {
+                            allRecords.push(record);
+                            recordMeta.push({ key, idx });
+                        });
+                    }
+
+                    let currentChunk = {};
+                    let currentSize = 0;
+                    let chunkIndex = 0;
+
+                    for (let i = 0; i < allRecords.length; i++) {
+                        const record = allRecords[i];
+                        const meta = recordMeta[i];
+                        const recordStr = JSON.stringify(record);
+                        const recordSize = new Blob([recordStr]).size;
+
+                        if (recordSize > CHUNK_SIZE_BYTES) {
+                            addLog(`⚠️ Record ${i} troppo grande (${formatFileSize(recordSize)}), chunk singolo`, 'warning');
+                            const singleChunk = {};
+                            singleChunk[meta.key] = [record];
+                            const chunkData = { ...singleChunk };
+                            if (database.mappature) {
+                                chunkData.mappature = database.mappature;
+                            }
+                            const chunkStr = JSON.stringify(chunkData);
+                            const chunkSize = new Blob([chunkStr]).size;
+                            chunks.push({
+                                index: chunkIndex++,
+                                data: chunkData,
+                                size: chunkSize,
+                                records: 1
+                            });
+                            continue;
+                        }
+
+                        if (currentSize + recordSize > CHUNK_SIZE_BYTES && Object.keys(currentChunk).length > 0) {
+                            const chunkData = { ...currentChunk };
+                            if (database.mappature) {
+                                chunkData.mappature = database.mappature;
+                            }
+                            const chunkStr = JSON.stringify(chunkData);
+                            const chunkSize = new Blob([chunkStr]).size;
+                            const records = Object.values(currentChunk).reduce((sum, arr) => {
+                                if (Array.isArray(arr)) return sum + arr.length;
+                                return sum;
+                            }, 0);
+                            chunks.push({
+                                index: chunkIndex++,
+                                data: chunkData,
+                                size: chunkSize,
+                                records: records
+                            });
+                            currentChunk = {};
+                            currentSize = 0;
+                        }
+
+                        if (!currentChunk[meta.key]) {
+                            currentChunk[meta.key] = [];
+                        }
+                        currentChunk[meta.key].push(record);
+                        currentSize += recordSize;
+                    }
+
+                    if (Object.keys(currentChunk).length > 0) {
+                        const chunkData = { ...currentChunk };
+                        if (database.mappature) {
+                            chunkData.mappature = database.mappature;
+                        }
+                        const chunkStr = JSON.stringify(chunkData);
+                        const chunkSize = new Blob([chunkStr]).size;
+                        const records = Object.values(currentChunk).reduce((sum, arr) => {
+                            if (Array.isArray(arr)) return sum + arr.length;
+                            return sum;
+                        }, 0);
+                        chunks.push({
+                            index: chunkIndex++,
+                            data: chunkData,
+                            size: chunkSize,
+                            records: records
+                        });
+                    }
+                }
+
+                // ---- Genera manifest ----
+                const totalChunks = chunks.length;
+                const totalSize = chunks.reduce((sum, c) => sum + c.size, 0);
+
+                manifest = {
+                    version: '1.0',
+                    fileName: currentFile ? currentFile.name : 'database.xlsx',
+                    timestamp: new Date().toISOString(),
+                    totalRecords: Object.values(database).reduce((sum, arr) => {
+                        if (Array.isArray(arr)) return sum + arr.length;
+                        return sum;
+                    }, 0),
+                    numChunks: totalChunks,
+                    maxChunkSizeMB: 15,
+                    totalSizeMB: (totalSize / (1024 * 1024)).toFixed(2),
+                    chunks: chunks.map(c => ({
+                        index: c.index,
+                        fileName: `chunk_${String(c.index).padStart(3, '0')}.json`,
+                        size: c.size,
+                        sizeMB: (c.size / (1024 * 1024)).toFixed(2),
+                        records: c.records
+                    }))
+                };
+
+                // ---- Aggiorna UI ----
+                progressFill.style.width = '100%';
+                progressPercent.textContent = '100%';
+                progressText.textContent = `✅ Completato! ${totalChunks} chunk generati`;
+
+                addLog(`✅ Generazione completata: ${totalChunks} chunk, ${formatFileSize(totalSize)} totali`, 'success');
+                showToast(`✅ Generati ${totalChunks} chunk da 15MB`, 'success');
+
+                downloadAllBtn.disabled = false;
+                updateStats();
+                renderFileList();
+
+                addLog(`📊 Riepilogo: ${totalChunks} chunk, ${manifest.totalRecords.toLocaleString()} record`, 'info');
+                chunks.forEach((c, idx) => {
+                    addLog(`   📄 chunk_${String(idx).padStart(3, '0')}.json: ${formatFileSize(c.size)} (${c.records} record)`,
+                        'info');
+                });
+
+                const manifestSize = new Blob([JSON.stringify(manifest, null, 2)]).size;
+                addLog(`📋 manifest.json: ${formatFileSize(manifestSize)}`, 'info');
+
+                // Verifica finale: controlla le colonne mese
+                if (database.parco && database.parco.length > 0) {
+                    const sample = database.parco[0];
+                    addLog(`🔍 Verifica finale: 'mese sem' = ${sample['mese sem']} (dovrebbe essere "7" o "7")`, 'debug');
+                    addLog(`🔍 Verifica finale: 'mese fossa' = ${sample['mese fossa']} (dovrebbe essere "7" o "7")`, 'debug');
+                    addLog(`🔍 Verifica finale: 'ult sem' = ${sample['ult sem']} (dovrebbe essere "2026-07-20")`, 'debug');
+                    addLog(`🔍 Verifica finale: 'utl vp' = ${sample['utl vp']} (dovrebbe essere "2026-04-09")`, 'debug');
+                }
+
+            } catch (err) {
+                showToast(`❌ Errore: ${err.message}`, 'error');
+                addLog(`❌ Errore: ${err.message}`, 'error');
+                console.error(err);
+            }
+
+            isGenerating = false;
+            generateBtn.disabled = false;
+            generateBtn.textContent = '🚀 Genera Chunk';
+        }
+
+        // ---- Download ZIP ----
+        async function downloadAllZip() {
+            if (!manifest || chunks.length === 0) {
+                showToast('❌ Nessun chunk da scaricare', 'error');
+                return;
+            }
+
+            try {
+                showToast('📦 Creazione ZIP in corso...', 'info');
+                addLog('📦 Creazione ZIP in corso...', 'info');
+
+                const zip = new JSZip();
+
+                zip.file('manifest.json', JSON.stringify(manifest, null, 2));
+
+                chunks.forEach((chunk, idx) => {
+                    const fileName = `chunk_${String(idx).padStart(3, '0')}.json`;
+                    zip.file(fileName, JSON.stringify(chunk.data, null, 2));
+                    addLog(`   📄 Aggiunto: ${fileName}`, 'info');
+                });
+
+                const zipBlob = await zip.generateAsync({ type: 'blob' });
+                const zipName = `database_chunks_${new Date().toISOString().slice(0, 10)}.zip`;
+
+                saveAs(zipBlob, zipName);
+
+                showToast(`📦 Download ZIP completato: ${formatFileSize(zipBlob.size)}`, 'success');
+                addLog(`📦 ZIP scaricato: ${zipName} (${formatFileSize(zipBlob.size)})`, 'success');
+
+            } catch (err) {
+                showToast(`❌ Errore creazione ZIP: ${err.message}`, 'error');
+                addLog(`❌ Errore ZIP: ${err.message}`, 'error');
+                console.error(err);
+            }
+        }
+
+        // ---- Eventi ----
+        fileInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                loadFile(this.files[0]);
+            }
+        });
+
+        dropZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                loadFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        removeFileBtn.addEventListener('click', function() {
+            resetAll();
+            showToast('🗑️ File rimosso', 'info');
+        });
+
+        generateBtn.addEventListener('click', generateChunks);
+
+        downloadAllBtn.addEventListener('click', downloadAllZip);
+
+        clearBtn.addEventListener('click', function() {
+            resetAll();
+            showToast('🧹 Pulisci completato', 'info');
+        });
+
+        // ---- INIT ----
+        addLog('🚀 Admin v2.3 (fix mesi) - Carica un file Excel per iniziare', 'info');
+        addLog('📦 Dimensione chunk: 15MB', 'info');
+        addLog('💡 Le colonne "mese sem" e "mese fossa" vengono mantenute come numeri (non convertite in date)', 'info');
+
+        console.log('⚙️ Admin - Generatore Chunk v2.3 (fix mesi)');
+        console.log('📦 Dimensione chunk: 15MB');
+        console.log('🔍 I valori "mese sem" e "mese fossa" NON vengono convertiti in date');
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,3953 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Ricerca Impianti - Sistema Avanzato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== RESET & VARIABILI ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1b5e20;
+            --primary-light: #4caf50;
+            --primary-dark: #0d3b12;
+            --primary-bg: #e8f5e9;
+            --secondary: #2e7d32;
+            --success: #2e7d32;
+            --warning: #f57c00;
+            --danger: #d32f2f;
+            --info: #1976d2;
+            --text-primary: #1a2332;
+            --text-secondary: #4a5568;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow: 0 4px 20px rgba(46, 125, 50, 0.12);
+            --shadow-lg: 0 8px 40px rgba(46, 125, 50, 0.18);
+            --shadow-hover: 0 12px 48px rgba(46, 125, 50, 0.22);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-xs: 6px;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-start: #a5d6a7;
+            --bg-end: #66bb6a;
+            --header-height: 64px;
+            --bottom-nav-height: 64px;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        /* ===== DARK THEME ===== */
+        body.dark-theme {
+            --bg-start: #0f1724;
+            --bg-end: #1a2332;
+            --card-bg: rgba(26, 35, 50, 0.95);
+            --text-primary: #e8edf5;
+            --text-secondary: #b0c4de;
+            --text-muted: #7a8ba3;
+            --border-color: rgba(76, 175, 80, 0.15);
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.5);
+            --primary-bg: rgba(76, 175, 80, 0.12);
+        }
+
+        body.dark-theme .column,
+        body.dark-theme .recent-searches-container,
+        body.dark-theme h1 {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+        body.dark-theme .detail-card {
+            background: rgba(40, 50, 65, 0.9);
+        }
+        body.dark-theme .results-container {
+            background: rgba(40, 50, 65, 0.9);
+            border-color: var(--border-color);
+        }
+        body.dark-theme .results-container .result-item {
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+        body.dark-theme .results-container .result-item:hover {
+            background: rgba(76, 175, 80, 0.12);
+        }
+        body.dark-theme .detail-row {
+            border-color: rgba(255, 255, 255, 0.06);
+        }
+        body.dark-theme .annotazione-item {
+            background: rgba(50, 60, 80, 0.85);
+        }
+        body.dark-theme .annotazione-item:hover {
+            background: rgba(60, 70, 90, 0.9);
+        }
+        body.dark-theme .archivio-item {
+            background: rgba(60, 50, 30, 0.8);
+        }
+        body.dark-theme .badge-status {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        body.dark-theme .text-muted {
+            color: var(--text-muted);
+        }
+        body.dark-theme .dashboard-container {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+        }
+        body.dark-theme .dashboard-item {
+            background: rgba(40, 50, 65, 0.6);
+        }
+        body.dark-theme .stats-container {
+            background: rgba(76, 175, 80, 0.08);
+        }
+        body.dark-theme .stat-item {
+            background: rgba(40, 50, 65, 0.6);
+        }
+        body.dark-theme .filter-chips {
+            background: rgba(76, 175, 80, 0.08);
+        }
+        body.dark-theme .filter-chip {
+            background: rgba(40, 50, 65, 0.7);
+            color: var(--text-secondary);
+        }
+        body.dark-theme .documenti-container {
+            background: rgba(25, 118, 210, 0.08);
+        }
+        body.dark-theme .annotazioni-container {
+            background: rgba(156, 39, 176, 0.08);
+        }
+        body.dark-theme .interventi-container {
+            background: rgba(33, 150, 243, 0.08);
+        }
+        body.dark-theme .results-header {
+            background: rgba(76, 175, 80, 0.08);
+        }
+        body.dark-theme .favorites-container {
+            background: rgba(255, 215, 0, 0.08);
+            border-color: rgba(255, 215, 0, 0.15);
+        }
+        body.dark-theme .bottom-nav {
+            background: rgba(26, 35, 50, 0.95);
+            border-color: var(--border-color);
+        }
+        body.dark-theme .bottom-nav button {
+            color: var(--text-muted);
+        }
+        body.dark-theme .bottom-nav button.active {
+            color: var(--primary-light);
+        }
+        body.dark-theme .search-input-wrapper {
+            background: rgba(40, 50, 65, 0.8);
+            border-color: var(--border-color);
+        }
+        body.dark-theme .search-input-wrapper input {
+            color: var(--text-primary);
+        }
+        body.dark-theme .bottom-sheet {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+        }
+        body.dark-theme .bottom-sheet .sheet-handle {
+            background: var(--text-muted);
+        }
+        body.dark-theme .bottom-sheet .sheet-header {
+            border-color: var(--border-color);
+        }
+        body.dark-theme .bottom-sheet .sheet-close {
+            color: var(--text-muted);
+        }
+        body.dark-theme .bottom-sheet .sheet-close:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        body.dark-theme .scroll-top-btn {
+            background: var(--primary-light);
+            color: white;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+        body.dark-theme .scroll-top-btn:hover {
+            background: var(--primary);
+        }
+        body.dark-theme .toast {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        body.dark-theme .toast.success {
+            background: var(--success);
+            color: white;
+        }
+        body.dark-theme .toast.error {
+            background: var(--danger);
+            color: white;
+        }
+        body.dark-theme .toast.warning {
+            background: var(--warning);
+            color: white;
+        }
+        body.dark-theme .toast.info {
+            background: var(--info);
+            color: white;
+        }
+
+        /* ===== BASE ===== */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font);
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            min-height: 100vh;
+            padding: 16px 16px calc(var(--bottom-nav-height) + 16px + var(--safe-bottom));
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background var(--transition);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* ===== UTILITY ===== */
+        .text-muted {
+            color: var(--text-muted);
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-danger {
+            color: var(--danger);
+        }
+        .text-success {
+            color: var(--success);
+        }
+        .text-warning {
+            color: var(--warning);
+        }
+        .mt-10 {
+            margin-top: 10px;
+        }
+        .mt-15 {
+            margin-top: 15px;
+        }
+        .mt-20 {
+            margin-top: 20px;
+        }
+        .mb-10 {
+            margin-bottom: 10px;
+        }
+        .mb-15 {
+            margin-bottom: 15px;
+        }
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .gap-12 {
+            gap: 12px;
+        }
+
+        /* ===== HEADER ===== */
+        h1 {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            padding: 14px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            letter-spacing: -0.3px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 .header-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        h1 .header-actions button {
+            background: rgba(76, 175, 80, 0.08);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xs);
+            padding: 4px 12px;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-family: var(--font);
+            touch-action: manipulation;
+        }
+
+        h1 .header-actions button:hover {
+            background: var(--primary-light);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        h1 .header-actions button:active {
+            transform: scale(0.95);
+        }
+
+        h1::before {
+            content: "🔍";
+            font-size: 1.4rem;
+        }
+
+        /* ===== ROW (Desktop 2 colonne) ===== */
+        .row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 1024px) {
+            .row {
+                grid-template-columns: 1.4fr 1fr;
+                gap: 28px;
+            }
+        }
+
+        .column {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: box-shadow var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .column:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ===== FORM E INPUT ===== */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--primary);
+            font-size: 0.85rem;
+            letter-spacing: 0.2px;
+        }
+
+        label .required {
+            color: var(--danger);
+            margin-left: 4px;
+        }
+
+        select,
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.6);
+            transition: all var(--transition);
+            color: var(--text-primary);
+            font-family: var(--font);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        body.dark-theme select,
+        body.dark-theme input[type="text"] {
+            background: rgba(40, 50, 65, 0.8);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        select:focus,
+        input[type="text"]:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.12);
+            outline: none;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        /* ===== BOTTONI ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 24px;
+            background: var(--primary-light);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            transition: all var(--transition);
+            box-shadow: 0 2px 12px rgba(76, 175, 80, 0.25);
+            font-family: var(--font);
+            width: 100%;
+            touch-action: manipulation;
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(27, 94, 32, 0.3);
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-secondary {
+            background: #78909c;
+        }
+        .btn-secondary:hover {
+            background: #546e7a;
+        }
+
+        /* ===== LOADING INDICATOR ===== */
+        #loadingIndicator {
+            text-align: center;
+            padding: 20px 16px;
+            background: var(--primary-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        #loadingIndicator .loading-spinner {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-light);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #loadingIndicator .loading-title {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        #loadingIndicator .loading-progress {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        #dataStatus {
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        /* ===== DASHBOARD COMPATTA ===== */
+        .dashboard-container {
+            background: var(--card-bg);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow);
+            margin-top: 12px;
+            border: 1px solid var(--border-color);
+            display: none;
+            transition: all var(--transition);
+        }
+
+        .dashboard-container.visible {
+            display: block;
+        }
+
+        .dashboard-container .dash-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-container .dash-status {
+            font-size: 0.8rem;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .dashboard-item {
+            text-align: center;
+            padding: 6px 8px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: var(--radius-xs);
+            transition: all var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        body.dark-theme .dashboard-item {
+            background: rgba(40, 50, 65, 0.4);
+        }
+
+        .dashboard-item:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        body.dark-theme .dashboard-item:hover {
+            background: rgba(50, 60, 80, 0.6);
+        }
+
+        .dashboard-item .dashboard-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+
+        .dashboard-item .dashboard-number.danger {
+            color: var(--danger);
+        }
+        .dashboard-item .dashboard-number.warning {
+            color: var(--warning);
+        }
+        .dashboard-item .dashboard-number.success {
+            color: var(--success);
+        }
+        .dashboard-item .dashboard-number.info {
+            color: var(--info);
+        }
+
+        .dashboard-item .dashboard-label {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-weight: 500;
+        }
+
+        .dashboard-item .dashboard-icon {
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-right: 2px;
+        }
+
+        /* ===== FILTRI CHIPS ===== */
+        .filter-chips {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 6px;
+            margin: 12px 0 14px 0;
+            padding: 8px 12px;
+            background: var(--primary-bg);
+            border-radius: var(--radius-sm);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .filter-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-chip {
+            flex-shrink: 0;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-secondary);
+            user-select: none;
+            font-family: var(--font);
+            touch-action: manipulation;
+            white-space: nowrap;
+        }
+
+        body.dark-theme .filter-chip {
+            background: rgba(40, 50, 65, 0.6);
+            color: var(--text-secondary);
+        }
+
+        .filter-chip:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .filter-chip:active {
+            transform: scale(0.95);
+        }
+
+        .filter-chip.active {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filter-chip.active-disdetta {
+            background: var(--danger);
+            color: white;
+            border-color: #b71c1c;
+        }
+
+        .filter-chip.active-warning {
+            background: var(--warning);
+            color: white;
+            border-color: #e65100;
+        }
+
+        /* ===== STATISTICHE (collassabili) ===== */
+        .stats-toggle {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: var(--primary-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            transition: all var(--transition);
+            touch-action: manipulation;
+        }
+
+        .stats-toggle:hover {
+            background: rgba(76, 175, 80, 0.15);
+        }
+
+        .stats-toggle .stats-toggle-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-toggle .stats-toggle-icon {
+            font-size: 1rem;
+            transition: transform var(--transition);
+            color: var(--text-muted);
+        }
+
+        .stats-toggle .stats-toggle-icon.open {
+            transform: rotate(180deg);
+        }
+
+        .stats-container {
+            display: none;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            margin-top: 10px;
+            padding: 10px 12px;
+            background: var(--primary-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .stats-container.open {
+            display: grid;
+        }
+
+        @media (min-width: 768px) {
+            .stats-container {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 6px 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-xs);
+            transition: transform var(--transition);
+        }
+
+        body.dark-theme .stat-item {
+            background: rgba(40, 50, 65, 0.5);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-item .stat-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-item .stat-number.danger {
+            color: var(--danger);
+        }
+        .stat-item .stat-number.warning {
+            color: var(--warning);
+        }
+        .stat-item .stat-number.success {
+            color: var(--success);
+        }
+
+        .stat-item .stat-label {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-weight: 500;
+        }
+
+        /* ===== PREFERITI ===== */
+        .favorites-container {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: rgba(255, 215, 0, 0.06);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            display: none;
+        }
+
+        .favorites-container.visible {
+            display: block;
+        }
+
+        .favorites-container h4 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #f57c00;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        .favorite-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.08);
+        }
+
+        .favorite-item:last-child {
+            border-bottom: none;
+        }
+
+        .favorite-item .fav-code {
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            touch-action: manipulation;
+        }
+
+        .favorite-item .fav-code:hover {
+            color: var(--primary-light);
+        }
+
+        .favorite-item .fav-remove {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            touch-action: manipulation;
+            padding: 4px;
+        }
+
+        .favorite-item .fav-remove:hover {
+            color: var(--danger);
+        }
+
+        /* ===== RISULTATI ===== */
+        .results-container {
+            margin-top: 14px;
+            max-height: 480px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.4);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 768px) {
+            .results-container {
+                max-height: 400px;
+            }
+        }
+
+        .results-header {
+            padding: 8px 14px;
+            background: var(--primary-bg);
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .results-header .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .results-header .header-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .results-header .sort-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xs);
+            padding: 2px 10px;
+            cursor: pointer;
+            font-size: 0.65rem;
+            transition: all var(--transition);
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-family: var(--font);
+            touch-action: manipulation;
+        }
+
+        .results-header .sort-btn:hover {
+            background: rgba(76, 175, 80, 0.08);
+        }
+
+        .results-header .sort-btn.active {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .result-item {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-item:hover {
+            background: var(--primary-bg);
+            transform: translateX(4px);
+        }
+
+        .result-item:active {
+            transform: scale(0.98);
+        }
+
+        .result-item .result-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .result-item .result-main strong {
+            color: var(--primary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .result-item .result-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            align-items: center;
+            margin-top: 2px;
+        }
+
+        .result-item .result-meta .giro-info {
+            font-weight: 600;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            background: var(--primary-bg);
+            color: var(--primary);
+        }
+
+        .result-item .result-meta .giro-info.disdetta {
+            background: #ffebee;
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .result-item .result-icons {
+            display: flex;
+            gap: 3px;
+            font-size: 0.75rem;
+        }
+
+        .result-item .result-actions {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .result-item .badge-verifica {
+            font-size: 0.55rem;
+            color: var(--warning);
+            background: #fff3e0;
+            padding: 1px 8px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        body.dark-theme .result-item .badge-verifica {
+            background: rgba(245, 124, 0, 0.15);
+        }
+
+        .favorite-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: transform var(--transition);
+            padding: 4px;
+            touch-action: manipulation;
+        }
+
+        .favorite-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .favorite-btn:active {
+            transform: scale(0.9);
+        }
+
+        .favorite-btn.active {
+            color: #ffc107;
+        }
+
+        .view-details {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 4px;
+            border-radius: var(--radius-xs);
+            transition: background var(--transition);
+            display: inline-block;
+            touch-action: manipulation;
+        }
+
+        .view-details:hover {
+            background: rgba(76, 175, 80, 0.12);
+        }
+
+        .view-details:active {
+            transform: scale(0.9);
+        }
+
+        .mail-link {
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 4px;
+            border-radius: var(--radius-xs);
+            transition: background var(--transition);
+            display: inline-block;
+            touch-action: manipulation;
+        }
+
+        .mail-link:hover {
+            background: rgba(25, 118, 210, 0.12);
+        }
+
+        .mail-link:active {
+            transform: scale(0.9);
+        }
+
+        .result-item .copy-impianto {
+            cursor: pointer;
+        }
+
+        .result-item .copy-impianto:active {
+            opacity: 0.6;
+        }
+
+        .highlight {
+            background: #ffeb3b;
+            padding: 0 3px;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+
+        body.dark-theme .highlight {
+            background: #f9a825;
+            color: #1a2332;
+        }
+
+        .result-item.active-result {
+            background: var(--primary-bg) !important;
+            border-left: 4px solid var(--primary);
+            transform: translateX(4px);
+        }
+
+        body.dark-theme .result-item.active-result {
+            background: rgba(76, 175, 80, 0.15) !important;
+        }
+
+        .result-item[data-tooltip] {
+            position: relative;
+        }
+
+        .result-item[data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a2332;
+            color: white;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.72rem;
+            white-space: nowrap;
+            z-index: 100;
+            max-width: 380px;
+            white-space: normal;
+            box-shadow: var(--shadow-lg);
+            pointer-events: none;
+            text-align: left;
+            line-height: 1.4;
+            font-family: var(--font);
+        }
+
+        body.dark-theme .result-item[data-tooltip]:hover::after {
+            background: #2d3748;
+        }
+
+        /* ===== DETTAGLIO IMPIANTO ===== */
+        #impiantoDetails {
+            margin-top: 12px;
+        }
+
+        #impiantoDetails .placeholder {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+            padding: 30px 16px;
+            font-size: 0.9rem;
+        }
+
+        .detail-card {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary-light);
+            border: 1px solid var(--border-color);
+        }
+
+        body.dark-theme .detail-card {
+            background: rgba(40, 50, 65, 0.7);
+        }
+
+        .detail-card .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .detail-card .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-card .detail-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .detail-card .detail-value {
+            color: var(--text-primary);
+            text-align: right;
+            font-size: 0.8rem;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .detail-header .detail-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .detail-header .detail-title h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .detail-nav {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .detail-nav button {
+            background: var(--primary-light);
+            color: white;
+            border: none;
+            border-radius: var(--radius-xs);
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: var(--font);
+            touch-action: manipulation;
+        }
+
+        .detail-nav button:hover:not(:disabled) {
+            background: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .detail-nav button:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .detail-nav .nav-counter {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            padding: 0 6px;
+            font-weight: 500;
+        }
+
+        .map-link {
+            color: var(--info);
+            text-decoration: none;
+            font-size: 0.75rem;
+            margin-left: 4px;
+        }
+
+        .map-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== CONTAINER COMUNI ===== */
+        .annotazioni-container,
+        .documenti-container,
+        .interventi-container {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .annotazioni-container {
+            background: rgba(156, 39, 176, 0.06);
+            border-left: 4px solid #9c27b0;
+        }
+
+        .documenti-container {
+            background: rgba(25, 118, 210, 0.06);
+            border-left: 4px solid var(--info);
+        }
+
+        .interventi-container {
+            background: rgba(33, 150, 243, 0.06);
+            border-left: 4px solid #2196f3;
+        }
+
+        body.dark-theme .annotazioni-container {
+            background: rgba(156, 39, 176, 0.08);
+        }
+        body.dark-theme .documenti-container {
+            background: rgba(25, 118, 210, 0.08);
+        }
+        body.dark-theme .interventi-container {
+            background: rgba(33, 150, 243, 0.08);
+        }
+
+        .annotazioni-container h4,
+        .documenti-container h4,
+        .interventi-container h4 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            color: var(--primary);
+        }
+
+        .badge-interventi {
+            background: #1976d2;
+            color: white;
+            padding: 0 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .interventi-container .interventi-link {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 0;
+            transition: all var(--transition);
+            touch-action: manipulation;
+        }
+
+        .interventi-container .interventi-link:hover {
+            color: #0d47a1;
+            text-decoration: underline;
+        }
+
+        .interventi-container .interventi-link:active {
+            transform: scale(0.97);
+        }
+
+        .annotazione-item {
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: var(--radius-xs);
+            transition: all var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .annotazione-item:hover {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: var(--shadow);
+        }
+
+        .annotazione-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .annotazione-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .annotazione-header .badge-tipo {
+            padding: 1px 10px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+        .badge-semestrale {
+            background: #c8e6c9;
+            color: #1b5e20;
+        }
+        .badge-appuntamento {
+            background: #bbdefb;
+            color: #0d47a1;
+        }
+        .badge-manutenzione {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .tecnico {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            background: rgba(0, 0, 0, 0.04);
+            padding: 1px 10px;
+            border-radius: 12px;
+        }
+
+        .annotazione-note {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            padding-left: 10px;
+            border-left: 3px solid var(--border-color);
+            line-height: 1.4;
+        }
+
+        .archivio-item {
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            background: #fffde7;
+            border-left: 4px solid var(--warning);
+            border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .archivio-item:last-child {
+            margin-bottom: 0;
+        }
+
+        body.dark-theme .archivio-item {
+            background: rgba(60, 50, 30, 0.7);
+        }
+
+        .doc-item {
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .doc-item:last-child {
+            border-bottom: none;
+        }
+
+        .doc-item a {
+            color: var(--info);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: background var(--transition);
+            padding: 2px 6px;
+            border-radius: var(--radius-xs);
+            display: inline-block;
+        }
+
+        .doc-item a:hover {
+            background: rgba(25, 118, 210, 0.08);
+            text-decoration: underline;
+        }
+
+        #listaCommesse {
+            list-style: none;
+            padding: 0;
+        }
+
+        #listaCommesse li {
+            padding: 4px 10px;
+            margin-bottom: 4px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: var(--radius-xs);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+
+        #listaCommesse li:last-child {
+            border-bottom: none;
+        }
+
+        #listaCommesse li a {
+            color: var(--info);
+            text-decoration: none;
+            padding: 2px 6px;
+            border-radius: var(--radius-xs);
+            transition: background var(--transition);
+        }
+
+        #listaCommesse li a:hover {
+            background: rgba(25, 118, 210, 0.08);
+        }
+
+        /* ===== RICERCHE RECENTI ===== */
+        .recent-searches-container {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--warning);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .recent-searches-container h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: var(--primary);
+        }
+
+        #recentSearches {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        #recentSearches li {
+            padding: 4px 14px;
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all var(--transition);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            touch-action: manipulation;
+        }
+
+        body.dark-theme #recentSearches li {
+            background: rgba(40, 50, 65, 0.6);
+            color: var(--text-secondary);
+        }
+
+        #recentSearches li:hover {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        #recentSearches li:active {
+            transform: scale(0.97);
+        }
+
+        #recentSearches li .delete-search {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            padding: 0 4px;
+            touch-action: manipulation;
+        }
+
+        #recentSearches li .delete-search:hover {
+            color: var(--danger);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            position: fixed;
+            bottom: calc(var(--bottom-nav-height) + var(--safe-bottom));
+            left: 0;
+            right: 0;
+            width: 100%;
+            font-size: 11px;
+            z-index: 900;
+            backdrop-filter: blur(10px);
+            font-family: var(--font);
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            .footer {
+                display: block;
+                position: static;
+                margin-top: 20px;
+                border-radius: var(--radius);
+            }
+        }
+
+        /* ===== BOTTOM NAV (mobile) ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(var(--bottom-nav-height) + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        @media (min-width: 1024px) {
+            .bottom-nav {
+                display: none;
+            }
+        }
+
+        .bottom-nav button {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            transition: all var(--transition);
+            font-family: var(--font);
+            touch-action: manipulation;
+            position: relative;
+        }
+
+        .bottom-nav button .nav-icon {
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        .bottom-nav button .nav-label {
+            font-size: 0.55rem;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .bottom-nav button.active {
+            color: var(--primary-light);
+        }
+
+        .bottom-nav button:active {
+            transform: scale(0.9);
+        }
+
+        .bottom-nav button .badge-dot {
+            position: absolute;
+            top: 2px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid var(--card-bg);
+        }
+
+        /* ===== BOTTOM SHEET ===== */
+        .bottom-sheet-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .bottom-sheet-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-height: 92vh;
+            background: var(--card-bg);
+            border-radius: var(--radius) var(--radius) 0 0;
+            z-index: 2001;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+        }
+
+        .bottom-sheet.open {
+            transform: translateY(0);
+        }
+
+        .bottom-sheet .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            margin: 8px auto 4px;
+            flex-shrink: 0;
+        }
+
+        .bottom-sheet .sheet-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px 12px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .bottom-sheet .sheet-header .sheet-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--primary);
+        }
+
+        .bottom-sheet .sheet-header .sheet-title .favorite-btn {
+            font-size: 1rem;
+        }
+
+        .bottom-sheet .sheet-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: var(--radius-xs);
+            color: var(--text-muted);
+            transition: all var(--transition);
+            touch-action: manipulation;
+        }
+
+        .bottom-sheet .sheet-close:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .bottom-sheet .sheet-close:active {
+            transform: scale(0.9);
+        }
+
+        .bottom-sheet .sheet-body {
+            padding: 12px 16px 20px;
+            overflow-y: auto;
+            flex: 1;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .bottom-sheet .sheet-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 4px 0 8px;
+            flex-shrink: 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .bottom-sheet .sheet-nav button {
+            background: var(--primary-light);
+            color: white;
+            border: none;
+            border-radius: var(--radius-xs);
+            padding: 6px 16px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all var(--transition);
+            font-family: var(--font);
+            touch-action: manipulation;
+        }
+
+        .bottom-sheet .sheet-nav button:hover:not(:disabled) {
+            background: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .bottom-sheet .sheet-nav button:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .bottom-sheet .sheet-nav .sheet-counter {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            padding: 0 8px;
+            font-weight: 500;
+        }
+
+        /* ===== SCROLL TOP BUTTON ===== */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: calc(var(--bottom-nav-height) + 20px + var(--safe-bottom));
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+            transition: all var(--transition);
+            z-index: 800;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            touch-action: manipulation;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scroll-top-btn.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .scroll-top-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 6px 24px rgba(76, 175, 80, 0.4);
+        }
+
+        .scroll-top-btn:active {
+            transform: scale(0.9);
+        }
+
+        @media (min-width: 1024px) {
+            .scroll-top-btn {
+                bottom: 24px;
+                right: 24px;
+            }
+        }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            left: 16px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-width: 420px;
+            margin: 0 auto;
+            pointer-events: none;
+        }
+
+        @media (min-width: 768px) {
+            .toast-container {
+                left: auto;
+                right: 20px;
+                max-width: 380px;
+            }
+        }
+
+        .toast {
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.3s ease;
+            font-family: var(--font);
+            font-size: 0.85rem;
+            pointer-events: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+        .toast.error {
+            background: var(--danger);
+        }
+        .toast.warning {
+            background: var(--warning);
+        }
+        .toast.info {
+            background: var(--info);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%) scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .toast.out {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%) scale(0.95);
+                opacity: 0;
+            }
+        }
+
+        /* ===== SWIPE INDICATOR ===== */
+        .swipe-hint {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            padding: 2px 8px;
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            opacity: 0.6;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px 12px calc(var(--bottom-nav-height) + 12px + var(--safe-bottom));
+            }
+
+            h1 {
+                font-size: 1.2rem;
+                padding: 10px 16px;
+                border-radius: var(--radius-sm);
+            }
+
+            h1::before {
+                font-size: 1.2rem;
+            }
+
+            h1 .header-actions button {
+                font-size: 0.7rem;
+                padding: 3px 10px;
+            }
+
+            .column {
+                padding: 14px;
+                border-radius: var(--radius-sm);
+            }
+
+            .detail-card .detail-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2px;
+            }
+
+            .detail-card .detail-value {
+                text-align: left;
+                width: 100%;
+            }
+
+            .results-container .result-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+
+            .results-container .result-item .result-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .annotazione-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .results-container .result-item .result-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 3px;
+            }
+
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+                font-size: 0.7rem;
+            }
+
+            .results-header .header-right {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .detail-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .recent-searches-container {
+                padding: 12px 16px;
+                border-radius: var(--radius-sm);
+            }
+
+            .dashboard-container {
+                padding: 8px 12px;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px;
+                padding: 8px 10px;
+            }
+
+            .bottom-sheet .sheet-body {
+                padding: 8px 12px 16px;
+            }
+
+            .filter-chips {
+                padding: 6px 10px;
+                gap: 4px;
+            }
+
+            .filter-chip {
+                font-size: 0.65rem;
+                padding: 3px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 8px 8px calc(var(--bottom-nav-height) + 8px + var(--safe-bottom));
+            }
+
+            h1 {
+                font-size: 1rem;
+                padding: 8px 12px;
+            }
+
+            .column {
+                padding: 10px;
+            }
+
+            .btn {
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px;
+            }
+
+            .dashboard-item .dashboard-number {
+                font-size: 1rem;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px;
+                padding: 6px 8px;
+            }
+
+            .stat-item .stat-number {
+                font-size: 1rem;
+            }
+
+            .results-container {
+                max-height: 320px;
+            }
+
+            .result-item {
+                padding: 8px 10px;
+            }
+
+            .result-item .result-main strong {
+                font-size: 0.85rem;
+            }
+
+            .bottom-nav button {
+                padding: 2px 8px;
+            }
+
+            .bottom-nav button .nav-icon {
+                font-size: 1.1rem;
+            }
+
+            .bottom-nav button .nav-label {
+                font-size: 0.5rem;
+            }
+
+            .bottom-sheet {
+                max-height: 95vh;
+            }
+
+            .bottom-sheet .sheet-header {
+                padding: 6px 12px 10px;
+            }
+
+            .bottom-sheet .sheet-body {
+                padding: 6px 10px 12px;
+            }
+
+            .detail-card {
+                padding: 10px 12px;
+            }
+
+            .detail-card .detail-label,
+            .detail-card .detail-value {
+                font-size: 0.75rem;
+            }
+
+            .annotazioni-container,
+            .documenti-container,
+            .interventi-container {
+                padding: 8px 10px;
+            }
+
+            .scroll-top-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+                bottom: calc(var(--bottom-nav-height) + 12px + var(--safe-bottom));
+                right: 10px;
+            }
+        }
+
+        /* ===== ANIMAZIONI ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item {
+            animation: fadeInUp 0.3s ease forwards;
+        }
+
+        /* ===== STAMPA ===== */
+        @media print {
+            .bottom-nav,
+            .scroll-top-btn,
+            .footer {
+                display: none !important;
+            }
+            body {
+                padding: 16px;
+                background: white;
+            }
+            .column {
+                box-shadow: none !important;
+                border: 1px solid #ddd;
+            }
+            .dashboard-container {
+                display: block !important;
+            }
+            .stats-container {
+                display: grid !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <h1>
+            Ricerca Impianti
+            <span class="header-actions">
+                <button onclick="toggleTheme()" title="Cambia tema">🌓</button>
+                <button onclick="exportResults()" title="Esporta risultati">📤</button>
+                <button onclick="toggleFavorites()" title="Preferiti">⭐</button>
+                <button onclick="resetSearch()" title="Reset">🔄</button>
+            </span>
+        </h1>
+
+        <!-- ===== ROW ===== -->
+        <div class="row">
+
+            <!-- COLONNA SINISTRA -->
+            <div class="column search-column">
+
+                <!-- LOADING INDICATOR -->
+                <div id="loadingIndicator">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-title">📥 Caricamento dati in corso...</div>
+                    <div class="loading-progress" id="loadingProgress">Attesa...</div>
+                </div>
+                <div id="dataStatus" class="text-muted mt-10" style="font-size:0.85rem;"></div>
+
+                <!-- DASHBOARD -->
+                <div class="dashboard-container" id="dashboardContainer">
+                    <div class="dash-header">
+                        <span class="dash-status" id="dashStatus">✅ Caricato con successo! (0 impianti)</span>
+                    </div>
+                    <div class="dashboard-grid">
+                        <div class="dashboard-item">
+                            <span class="dashboard-icon">📊</span>
+                            <span class="dashboard-number" id="dashTotal">0</span>
+                            <div class="dashboard-label">Totale</div>
+                        </div>
+                        <div class="dashboard-item">
+                            <span class="dashboard-icon">🚫</span>
+                            <span class="dashboard-number danger" id="dashDisdette">0</span>
+                            <div class="dashboard-label">Disdette</div>
+                        </div>
+                        <div class="dashboard-item">
+                            <span class="dashboard-icon">⏰</span>
+                            <span class="dashboard-number warning" id="dashScadute">0</span>
+                            <div class="dashboard-label">Scadute</div>
+                        </div>
+                        <div class="dashboard-item">
+                            <span class="dashboard-icon">📄</span>
+                            <span class="dashboard-number info" id="dashConVerbali">0</span>
+                            <div class="dashboard-label">Con Verbali</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RICERCA -->
+                <form id="searchForm">
+                    <div class="form-group">
+                        <label for="zona">📍 Zona</label>
+                        <select id="zona" name="zona">
+                            <option value="" selected>🌍 Tutte le zone</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="query">🔎 Cerca Codice Impianto, Indirizzo o Matricola <span class="required">*</span></label>
+                        <input type="text" id="query" name="query" minlength="4" placeholder="Inserisci almeno 4 caratteri" autocomplete="off" />
+                        <small class="text-muted" style="display:block; margin-top:4px;">Usa * come wildcard (es: "123*" o "*456")</small>
+                    </div>
+                    <button type="submit" class="btn">🔍 Cerca</button>
+                </form>
+
+                <!-- FILTRI -->
+                <div class="filter-chips" id="filterChips">
+                    <span class="filter-chip active" data-filter="all" onclick="applyFilter('all')">📋 Tutti</span>
+                    <span class="filter-chip" data-filter="disdette" onclick="applyFilter('disdette')">🚫 Disdette</span>
+                    <span class="filter-chip" data-filter="scadute" onclick="applyFilter('scadute')">⏰ Scadute</span>
+                    <span class="filter-chip" data-filter="converbali" onclick="applyFilter('converbali')">📄 Con verbali</span>
+                    <span class="filter-chip" data-filter="senzaannotazioni" onclick="applyFilter('senzaannotazioni')">📝 Senza annot.</span>
+                    <span class="filter-chip" data-filter="preferiti" onclick="applyFilter('preferiti')">⭐ Preferiti</span>
+                </div>
+
+                <!-- STATISTICHE (collassabili) -->
+                <div class="stats-toggle" onclick="toggleStats()">
+                    <span class="stats-toggle-label">📊 Statistiche</span>
+                    <span class="stats-toggle-icon" id="statsToggleIcon">▼</span>
+                </div>
+                <div class="stats-container" id="statsContainer">
+                    <div class="stat-item">
+                        <div class="stat-number" id="statTotal">0</div>
+                        <div class="stat-label">Totale</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number danger" id="statDisdette">0</div>
+                        <div class="stat-label">🚫 Disdette</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number warning" id="statScadute">0</div>
+                        <div class="stat-label">⏰ Scadute</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number success" id="statConVerbali">0</div>
+                        <div class="stat-label">📄 Con verbali</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="statSenzaAnnotazioni">0</div>
+                        <div class="stat-label">📝 Senza annot.</div>
+                    </div>
+                </div>
+
+                <!-- PREFERITI -->
+                <div class="favorites-container" id="favoritesContainer">
+                    <h4>⭐ Preferiti</h4>
+                    <div id="favoritesList"></div>
+                </div>
+
+                <!-- RISULTATI -->
+                <div id="results" class="results-container">
+                    <p class="text-muted text-center" style="padding:30px 20px;">Inserisci almeno 4 caratteri per iniziare la ricerca.</p>
+                </div>
+            </div>
+
+            <!-- COLONNA DESTRA (Desktop) -->
+            <div class="column details-column" id="desktopDetails">
+                <h2 id="dettagliTitle">📋 Scheda Impianto</h2>
+                <div id="impiantoDetails">
+                    <p class="placeholder">Seleziona un impianto dai risultati per vedere i dettagli.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RICERCHE RECENTI -->
+        <div class="recent-searches-container">
+            <h3>🕐 Ricerche salvate</h3>
+            <ul id="recentSearches"></ul>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>📊 Sistema di Ricerca Impianti v3.0 &bull; Dati caricati: <span id="dataInfo">Nessun file caricato</span></p>
+        </div>
+
+    </div>
+
+    <!-- ===== BOTTOM NAV (mobile) ===== -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button onclick="focusSearch()" id="navSearch" class="active">
+            <span class="nav-icon">🔍</span>
+            <span class="nav-label">Cerca</span>
+        </button>
+        <button onclick="toggleFavorites()" id="navFav">
+            <span class="nav-icon">⭐</span>
+            <span class="nav-label">Preferiti</span>
+            <span class="badge-dot" id="favBadge" style="display:none;"></span>
+        </button>
+        <button onclick="scrollToTop()" id="navTop">
+            <span class="nav-icon">⬆</span>
+            <span class="nav-label">Top</span>
+        </button>
+        <button onclick="toggleTheme()" id="navTheme">
+            <span class="nav-icon">🌓</span>
+            <span class="nav-label">Tema</span>
+        </button>
+    </nav>
+
+    <!-- ===== SCROLL TOP BUTTON ===== -->
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()" title="Torna su">⬆</button>
+
+    <!-- ===== BOTTOM SHEET (mobile dettaglio) ===== -->
+    <div class="bottom-sheet-overlay" id="bottomSheetOverlay" onclick="closeBottomSheet()"></div>
+    <div class="bottom-sheet" id="bottomSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+            <div class="sheet-title" id="sheetTitle">
+                <span>📋</span>
+                <span id="sheetImpiantoCode">Impianto</span>
+                <button class="favorite-btn" id="sheetFavBtn" onclick="sheetToggleFavorite()">☆</button>
+            </div>
+            <button class="sheet-close" onclick="closeBottomSheet()">✕</button>
+        </div>
+        <div class="sheet-body" id="sheetBody">
+            <!-- Il contenuto del dettaglio viene inserito qui -->
+        </div>
+        <div class="sheet-nav">
+            <button id="sheetPrev" onclick="navigateImpianto(-1)">◀</button>
+            <span class="sheet-counter" id="sheetCounter">0/0</span>
+            <button id="sheetNext" onclick="navigateImpianto(1)">▶</button>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+
+    <!-- ============================================================ -->
+    <!-- ===== JAVASCRIPT ===== -->
+    <!-- ============================================================ -->
+    <script>
+        // ============================================================
+        // CONFIGURAZIONE
+        // ============================================================
+        const CONFIG = {
+            MAX_RECENT_SEARCHES: 10,
+            DEBOUNCE_DELAY: 300,
+            MAX_RESULTS_SHOW: 50,
+            GIRO_DISDETTA: [66, 77, 88, 99],
+            FAVORITES_KEY: 'impiantiFavorites',
+            THEME_KEY: 'impiantiTheme',
+            RECENT_SEARCHES_KEY: 'impiantiRecentSearches',
+        };
+
+        // ============================================================
+        // STATO
+        // ============================================================
+        let state = {
+            data: [],
+            elencoData: [],
+            m28Data: [],
+            annotazioniData: [],
+            archivioData: [],
+            bolleData: [],
+            mappature: { commerciali: {}, giri: {} },
+            recentSearches: [],
+            favorites: [],
+            isLoaded: false,
+            currentResults: [],
+            currentFilter: 'all',
+            currentSort: 'default',
+            currentZona: '',
+            currentQuery: '',
+            viewHistory: [],
+            currentIndex: -1,
+            sheetOpen: false,
+            currentSheetImpianto: null,
+        };
+
+        // ============================================================
+        // DOM REFS
+        // ============================================================
+        const DOM = {
+            zona: document.getElementById('zona'),
+            query: document.getElementById('query'),
+            searchForm: document.getElementById('searchForm'),
+            results: document.getElementById('results'),
+            details: document.getElementById('impiantoDetails'),
+            recentSearches: document.getElementById('recentSearches'),
+            dataInfo: document.getElementById('dataInfo'),
+            dataStatus: document.getElementById('dataStatus'),
+            statsContainer: document.getElementById('statsContainer'),
+            favoritesContainer: document.getElementById('favoritesContainer'),
+            favoritesList: document.getElementById('favoritesList'),
+            toastContainer: document.getElementById('toastContainer'),
+            dashboardContainer: document.getElementById('dashboardContainer'),
+            loadingIndicator: document.getElementById('loadingIndicator'),
+            loadingProgress: document.getElementById('loadingProgress'),
+            bottomSheet: document.getElementById('bottomSheet'),
+            bottomSheetOverlay: document.getElementById('bottomSheetOverlay'),
+            sheetBody: document.getElementById('sheetBody'),
+            sheetTitle: document.getElementById('sheetTitle'),
+            sheetImpiantoCode: document.getElementById('sheetImpiantoCode'),
+            sheetFavBtn: document.getElementById('sheetFavBtn'),
+            sheetCounter: document.getElementById('sheetCounter'),
+            sheetPrev: document.getElementById('sheetPrev'),
+            sheetNext: document.getElementById('sheetNext'),
+            scrollTopBtn: document.getElementById('scrollTopBtn'),
+            statsToggleIcon: document.getElementById('statsToggleIcon'),
+            favBadge: document.getElementById('favBadge'),
+        };
+
+// ===== FUNZIONI UTILITY =====
+function excelDateToJSDate(excelDate) {
+    if (!excelDate) return null;
+    // Se è già una data JS
+    if (excelDate instanceof Date && !isNaN(excelDate)) return excelDate;
+    // Se è una stringa in formato ISO (YYYY-MM-DD)
+    if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
+        const d = new Date(excelDate);
+        if (!isNaN(d)) return d;
+    }
+    // Se è un numero seriale Excel
+    if (typeof excelDate === 'number') {
+        const epoch = new Date(1899, 11, 30);
+        const d = new Date(epoch.getTime() + excelDate * 86400000);
+        if (!isNaN(d)) return d;
+    }
+    // Se è una stringa, prova a parsarla
+    if (typeof excelDate === 'string') {
+        const d = new Date(excelDate);
+        if (!isNaN(d)) return d;
+        // Prova formato italiano (gg/mm/aaaa)
+        const parts = excelDate.split(/[/.-]/);
+        if (parts.length === 3) {
+            const day = parseInt(parts[0]);
+            const month = parseInt(parts[1]);
+            const year = parseInt(parts[2]);
+            if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
+                const d = new Date(year, month - 1, day);
+                if (!isNaN(d)) return d;
+            }
+        }
+    }
+    return null;
+}
+
+function formatData(excelDate) {
+    if (!excelDate) return 'N/A';
+    // Se è già una stringa in formato ISO (YYYY-MM-DD)
+    if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
+        const parts = excelDate.split('-');
+        const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        if (!isNaN(d)) {
+            return d.toLocaleDateString('it-IT');
+        }
+        return excelDate;
+    }
+    // Se è un numero seriale Excel
+    if (typeof excelDate === 'number') {
+        const jsDate = excelDateToJSDate(excelDate);
+        if (jsDate && !isNaN(jsDate)) {
+            return jsDate.toLocaleDateString('it-IT');
+        }
+        return String(excelDate);
+    }
+    // Se è una stringa, prova a parsarla
+    if (typeof excelDate === 'string') {
+        const jsDate = excelDateToJSDate(excelDate);
+        if (jsDate && !isNaN(jsDate)) {
+            return jsDate.toLocaleDateString('it-IT');
+        }
+        return excelDate;
+    }
+    return 'N/A';
+}
+
+function formatDateToDDMMYYYY(excelDate) {
+    if (!excelDate) return 'N/A';
+    // Se è già una stringa in formato ISO
+    if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
+        const parts = excelDate.split('-');
+        const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        if (!isNaN(d)) {
+            return d.toLocaleDateString('it-IT');
+        }
+        return excelDate;
+    }
+    const jsDate = excelDateToJSDate(excelDate);
+    if (!jsDate || isNaN(jsDate)) return 'N/A';
+    return jsDate.toLocaleDateString('it-IT');
+}
+
+// La funzione formatWithMapping rimane uguale
+function formatWithMapping(value, mapping) {
+    if (!value) return 'N/A';
+    const mapped = mapping[value];
+    return mapped ? `${value} - ${mapped}` : value;
+}
+        function formatWithMapping(value, mapping) {
+            if (!value) return 'N/A';
+            const mapped = mapping[value];
+            return mapped ? `${value} - ${mapped}` : value;
+        }
+
+        function getMesiText() {
+            return ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
+            ];
+        }
+
+        function formattaTipoAnnotazione(tipo) {
+            const tipi = { 0: 'Semestrale', 1: 'Appuntamento', 2: 'Manutenzione' };
+            return tipi[tipo] || `Tipo ${tipo}`;
+        }
+
+        function getClasseBadgeTipo(tipo) {
+            const classi = { 0: 'badge-semestrale', 1: 'badge-appuntamento', 2: 'badge-manutenzione' };
+            return classi[tipo] || '';
+        }
+
+        function formattaDataAnnotazione(giorno, mese, anno) {
+            const mesi = getMesiText();
+            const meseText = mesi[parseInt(mese) - 1] || mese;
+            return `${giorno}-${meseText}-${anno}`;
+        }
+
+        function isGiroDisdetta(giro) {
+            return CONFIG.GIRO_DISDETTA.includes(parseInt(giro));
+        }
+
+        function getGiroDisplay(giro) {
+            if (!giro) return 'N/A';
+            const giroNum = parseInt(giro);
+            if (isGiroDisdetta(giroNum)) {
+                return `<span class="giro-info disdetta">🚫 DISDETTA</span>`;
+            }
+            const mapped = state.mappature.giri[giro];
+            return `<span class="giro-info">🔄 ${mapped ? `${giro} - ${mapped}` : giro}</span>`;
+        }
+
+        function getGiroText(giro) {
+            if (!giro) return 'N/A';
+            const giroNum = parseInt(giro);
+            if (isGiroDisdetta(giroNum)) return 'DISDETTA';
+            const mapped = state.mappature.giri[giro];
+            return mapped ? `${giro} - ${mapped}` : giro;
+        }
+
+        function isSemestraleScaduta(item) {
+            const oggi = new Date();
+            const ultSemDate = excelDateToJSDate(new Date(item['ult sem']));
+            if (!ultSemDate) return false;
+            const diff = Math.floor((oggi - ultSemDate) / (1000 * 60 * 60 * 24));
+            return diff > 180;
+        }
+
+        function hasVerbali(impianto) {
+            return state.elencoData.some(doc => doc.IMPIANTO === impianto);
+        }
+
+        function hasAnnotazioni(impianto) {
+            return state.annotazioniData.some(ann => ann.impianto_ann === impianto);
+        }
+
+        function countInterventiByImpianto(impiantoCodice) {
+            if (!state.bolleData || state.bolleData.length === 0) return 0;
+            return state.bolleData.filter(row => {
+                const impiantoRif = row['Impiantodiriferimento (Job) (Job)'] || '';
+                return impiantoRif.trim() === impiantoCodice.trim();
+            }).length;
+        }
+
+        function hasInterventi(impiantoCodice) {
+            return countInterventiByImpianto(impiantoCodice) > 0;
+        }
+
+        function getUltimeAnnotazioni(impiantoCodice, limite = 5) {
+            if (!state.annotazioniData || state.annotazioniData.length === 0) return [];
+            const oggi = new Date();
+            const unAnnoFa = new Date();
+            unAnnoFa.setFullYear(oggi.getFullYear() - 1);
+            return state.annotazioniData
+                .filter(ann => {
+                    if (ann.impianto_ann != impiantoCodice) return false;
+                    if (!ann.anno_ann || !ann.mese_ann || !ann.giorno_ann) return false;
+                    const dataAnn = new Date(ann.anno_ann, ann.mese_ann - 1, ann.giorno_ann);
+                    return dataAnn >= unAnnoFa;
+                })
+                .sort((a, b) => {
+                    const dateA = new Date(a.anno_ann, a.mese_ann - 1, a.giorno_ann);
+                    const dateB = new Date(b.anno_ann, b.mese_ann - 1, b.giorno_ann);
+                    return dateB - dateA;
+                })
+                .slice(0, limite);
+        }
+
+        function getCommesseHTML(impiantoCodice) {
+            const commesse = state.m28Data.filter(c => c["ID Imp."] == impiantoCodice);
+            if (commesse.length === 0) {
+                return '<p class="text-muted" style="font-size:0.85rem;">Nessuna commessa trovata</p>';
+            }
+            return commesse.map(c => `
+                    <li>
+                        <span>📋 ${c["Numero Commessa"] || 'N/A'} - ${formatDateToDDMMYYYY(c["Data commessa"])} - ${c["Stato comm."] || 'N/A'} - ${c["Tipo"] || 'N/A'}</span>
+                        <a href="commesse.html?commessa=${encodeURIComponent(JSON.stringify(c))}" target="_blank" title="Visualizza dettagli">🔨</a>
+                    </li>
+                `).join('');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            DOM.toastContainer.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('out');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ============================================================
+        // THEME
+        // ============================================================
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem(CONFIG.THEME_KEY, isDark ? 'dark' : 'light');
+            updateNavTheme();
+            showToast(isDark ? '🌙 Tema scuro attivato' : '☀️ Tema chiaro attivato', 'info');
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem(CONFIG.THEME_KEY);
+            if (saved === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+            updateNavTheme();
+        }
+
+        function updateNavTheme() {
+            const btn = document.getElementById('navTheme');
+            if (btn) {
+                btn.querySelector('.nav-icon').textContent = document.body.classList.contains('dark-theme') ? '☀️' : '🌓';
+            }
+        }
+
+        // ============================================================
+        // FAVORITI
+        // ============================================================
+        function loadFavorites() {
+            try {
+                const saved = localStorage.getItem(CONFIG.FAVORITES_KEY);
+                if (saved) {
+                    state.favorites = JSON.parse(saved);
+                }
+            } catch (e) { /* ignore */ }
+            renderFavorites();
+            updateFavBadge();
+        }
+
+        function saveFavorites() {
+            try {
+                localStorage.setItem(CONFIG.FAVORITES_KEY, JSON.stringify(state.favorites));
+            } catch (e) { /* ignore */ }
+            updateFavBadge();
+        }
+
+        function toggleFavorite(impianto) {
+            const idx = state.favorites.indexOf(impianto);
+            if (idx > -1) {
+                state.favorites.splice(idx, 1);
+                showToast(`⭐ Rimosso dai preferiti: ${impianto}`, 'info');
+            } else {
+                state.favorites.push(impianto);
+                showToast(`⭐ Aggiunto ai preferiti: ${impianto}`, 'success');
+            }
+            saveFavorites();
+            renderFavorites();
+            // Aggiorna sheet se aperto
+            if (state.sheetOpen && state.currentSheetImpianto === impianto) {
+                updateSheetFavButton(impianto);
+            }
+            if (state.currentFilter === 'preferiti') {
+                applyFilter('preferiti');
+            } else {
+                renderResults(state.currentResults, state.currentQuery);
+            }
+        }
+
+        function isFavorite(impianto) {
+            return state.favorites.includes(impianto);
+        }
+
+        function renderFavorites() {
+            const container = DOM.favoritesList;
+            if (state.favorites.length === 0) {
+                container.innerHTML = '<p class="text-muted" style="font-size:0.85rem;">Nessun preferito</p>';
+                return;
+            }
+            container.innerHTML = state.favorites.map(fav => `
+                    <div class="favorite-item">
+                        <span class="fav-code" onclick="loadFavoriteImpianto('${fav}')">${fav}</span>
+                        <button class="fav-remove" onclick="toggleFavorite('${fav}')">✕</button>
+                    </div>
+                `).join('');
+        }
+
+        function updateFavBadge() {
+            if (DOM.favBadge) {
+                DOM.favBadge.style.display = state.favorites.length > 0 ? 'block' : 'none';
+            }
+        }
+
+        function loadFavoriteImpianto(codice) {
+            const item = state.data.find(d => d.impianto === codice);
+            if (item) {
+                showImpiantoDetails(item);
+                // Highlight nella lista
+                document.querySelectorAll('.result-item').forEach(el => {
+                    if (el.dataset.impianto === codice) {
+                        el.style.background = 'rgba(255, 215, 0, 0.15)';
+                        setTimeout(() => {
+                            el.style.background = '';
+                        }, 2000);
+                    }
+                });
+                // Se mobile, chiudi preferiti e apri sheet
+                if (window.innerWidth < 1024) {
+                    DOM.favoritesContainer.classList.remove('visible');
+                    openBottomSheet(item);
+                }
+            }
+        }
+
+        function toggleFavorites() {
+            DOM.favoritesContainer.classList.toggle('visible');
+            if (DOM.favoritesContainer.classList.contains('visible')) {
+                // Aggiorna nav
+                document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
+                document.getElementById('navFav')?.classList.add('active');
+            }
+        }
+
+        function updateSheetFavButton(impianto) {
+            if (DOM.sheetFavBtn) {
+                DOM.sheetFavBtn.textContent = isFavorite(impianto) ? '⭐' : '☆';
+                DOM.sheetFavBtn.classList.toggle('active', isFavorite(impianto));
+            }
+        }
+
+        function sheetToggleFavorite() {
+            if (state.currentSheetImpianto) {
+                toggleFavorite(state.currentSheetImpianto);
+            }
+        }
+
+        // ============================================================
+        // RICERCHE RECENTI
+        // ============================================================
+        function loadRecentSearches() {
+            try {
+                const saved = localStorage.getItem(CONFIG.RECENT_SEARCHES_KEY);
+                if (saved) {
+                    state.recentSearches = JSON.parse(saved);
+                }
+            } catch (e) { /* ignore */ }
+            renderRecentSearches();
+        }
+
+        function saveRecentSearches() {
+            try {
+                localStorage.setItem(CONFIG.RECENT_SEARCHES_KEY, JSON.stringify(state.recentSearches));
+            } catch (e) { /* ignore */ }
+        }
+
+        function saveRecentSearch(zona, query) {
+            const entry = { zona, query, timestamp: Date.now() };
+            state.recentSearches = state.recentSearches.filter(s => !(s.zona === zona && s.query === query));
+            state.recentSearches.unshift(entry);
+            if (state.recentSearches.length > CONFIG.MAX_RECENT_SEARCHES) {
+                state.recentSearches.pop();
+            }
+            saveRecentSearches();
+            renderRecentSearches();
+        }
+
+        function renderRecentSearches() {
+            DOM.recentSearches.innerHTML = '';
+            if (state.recentSearches.length === 0) {
+                DOM.recentSearches.innerHTML = '<li class="text-muted">Nessuna ricerca salvata</li>';
+                return;
+            }
+            state.recentSearches.forEach((search, index) => {
+                const li = document.createElement('li');
+                const name = search.nome || `${search.zona} - ${search.query}`;
+                li.innerHTML = `
+                        ${name}
+                        <button class="delete-search" onclick="deleteRecentSearch(${index})">✕</button>
+                    `;
+                li.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('delete-search')) return;
+                    DOM.zona.value = search.zona;
+                    DOM.query.value = search.query;
+                    performSearch();
+                    // Su mobile, focus sulla ricerca
+                    if (window.innerWidth < 1024) {
+                        DOM.query.focus();
+                    }
+                });
+                DOM.recentSearches.appendChild(li);
+            });
+        }
+
+        function deleteRecentSearch(index) {
+            state.recentSearches.splice(index, 1);
+            saveRecentSearches();
+            renderRecentSearches();
+        }
+
+        // ============================================================
+        // STATISTICHE (collassabili)
+        // ============================================================
+        let statsOpen = false;
+
+        function toggleStats() {
+            statsOpen = !statsOpen;
+            DOM.statsContainer.classList.toggle('open', statsOpen);
+            DOM.statsToggleIcon.classList.toggle('open', statsOpen);
+            DOM.statsToggleIcon.textContent = statsOpen ? '▲' : '▼';
+        }
+
+        function updateStats(results) {
+            const total = results.length;
+            const disdette = results.filter(item => isGiroDisdetta(item.giro)).length;
+            const scadute = results.filter(item => isSemestraleScaduta(item)).length;
+            const converbali = results.filter(item => hasVerbali(item.impianto)).length;
+            const senzaAnnotazioni = results.filter(item => !hasAnnotazioni(item.impianto)).length;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statDisdette').textContent = disdette;
+            document.getElementById('statScadute').textContent = scadute;
+            document.getElementById('statConVerbali').textContent = converbali;
+            document.getElementById('statSenzaAnnotazioni').textContent = senzaAnnotazioni;
+        }
+
+        // ============================================================
+        // DASHBOARD
+        // ============================================================
+        function updateDashboard() {
+            if (!state.isLoaded || state.data.length === 0) {
+                DOM.dashboardContainer.classList.remove('visible');
+                return;
+            }
+
+            const total = state.data.length;
+            const disdette = state.data.filter(item => isGiroDisdetta(item.giro)).length;
+            const scadute = state.data.filter(item => isSemestraleScaduta(item)).length;
+            const conVerbali = state.data.filter(item => hasVerbali(item.impianto)).length;
+
+            document.getElementById('dashTotal').textContent = total;
+            document.getElementById('dashDisdette').textContent = disdette;
+            document.getElementById('dashScadute').textContent = scadute;
+            document.getElementById('dashConVerbali').textContent = conVerbali;
+
+            const statusText = `✅ Caricato con successo! (${total} impianti)`;
+            document.getElementById('dashStatus').textContent = statusText;
+
+            DOM.dashboardContainer.classList.add('visible');
+        }
+
+        // ============================================================
+        // CARICAMENTO CHUNK
+        // ============================================================
+        async function loadDatabaseFromChunks() {
+            const statusEl = DOM.dataStatus;
+            const loadingEl = DOM.loadingIndicator;
+            const progressEl = DOM.loadingProgress;
+
+            loadingEl.style.display = 'block';
+            statusEl.textContent = '📥 Caricamento dati in corso...';
+
+            try {
+                progressEl.textContent = 'Caricamento manifest...';
+                const manifestResp = await fetch('manifest.json');
+                if (!manifestResp.ok) {
+                    throw new Error('manifest.json non trovato');
+                }
+                const manifest = await manifestResp.json();
+                console.log('📋 Manifest caricato:', manifest);
+
+                const totalChunks = manifest.numChunks || manifest.chunks.length;
+                progressEl.textContent = `Trovati ${totalChunks} chunk, download in corso...`;
+
+                // Scarica tutti i chunk in parallelo
+                const chunkPromises = manifest.chunks.map(async (chunkInfo, idx) => {
+                    const fileName = chunkInfo.fileName || `chunk_${String(idx).padStart(3, '0')}.json`;
+                    const resp = await fetch(fileName);
+                    if (!resp.ok) throw new Error(`Chunk ${fileName} non trovato`);
+                    const data = await resp.json();
+                    return { index: idx, data };
+                });
+
+                let loaded = 0;
+                const total = chunkPromises.length;
+                const chunkResults = [];
+
+                for (const promise of chunkPromises) {
+                    const result = await promise;
+                    chunkResults.push(result);
+                    loaded++;
+                    progressEl.textContent = `Download chunk ${loaded}/${total}...`;
+                }
+
+                // Unisci i dati
+                progressEl.textContent = 'Unione dati in corso...';
+                const database = {};
+
+                chunkResults.sort((a, b) => a.index - b.index);
+
+                for (const result of chunkResults) {
+                    const chunkData = result.data;
+                    for (const [key, value] of Object.entries(chunkData)) {
+                        if (!database[key]) {
+                            database[key] = Array.isArray(value) ? [] : {};
+                        }
+                        if (Array.isArray(value)) {
+                            database[key] = database[key].concat(value);
+                        } else if (typeof value === 'object' && value !== null) {
+                            database[key] = { ...database[key], ...value };
+                        }
+                    }
+                }
+
+                // Salva in window.database
+                window.database = database;
+
+                // Ponte verso state
+                state.data = database.parco || [];
+                state.elencoData = database.elenco || [];
+                state.m28Data = database.m28 || [];
+                state.annotazioniData = database.annotazioni || [];
+                state.archivioData = database.archivio || [];
+                state.bolleData = database.bolle || [];
+                state.mappature = database.mappature || { commerciali: {}, giri: {} };
+                state.isLoaded = true;
+
+                // Popola zone
+                const zone = [...new Set(state.data.map(item => item.zona).filter(Boolean))].sort();
+                DOM.zona.innerHTML = '<option value="">🌍 Tutte le zone</option>';
+                zone.forEach(z => {
+                    const opt = document.createElement('option');
+                    opt.value = z;
+                    opt.textContent = z;
+                    DOM.zona.appendChild(opt);
+                });
+
+                // Aggiorna UI
+                DOM.dataInfo.textContent = `${manifest.fileName || 'Database'} - ${manifest.timestamp ? new Date(manifest.timestamp).toLocaleString() : 'caricato da chunk'}`;
+                statusEl.innerHTML = `✅ Dati caricati: ${state.data.length} impianti`;
+                loadingEl.style.display = 'none';
+
+                updateDashboard();
+                showToast(`✅ Database caricato: ${state.data.length} impianti`, 'success');
+                console.log('✅ Database caricato da chunk:', {
+                    parco: state.data.length,
+                    elenco: state.elencoData.length,
+                    m28: state.m28Data.length,
+                    annotazioni: state.annotazioniData.length,
+                    archivio: state.archivioData.length,
+                    bolle: state.bolleData.length
+                });
+
+                // Se c'è una ricerca salvata, eseguila
+                if (DOM.zona.value && DOM.query.value && DOM.query.value.length >= 4) {
+                    performSearch();
+                } else {
+                    DOM.results.innerHTML =
+                        '<p class="text-muted text-center" style="padding:30px 20px;">Inserisci almeno 4 caratteri per iniziare la ricerca.</p>';
+                }
+
+            } catch (err) {
+                console.error('❌ Errore caricamento chunk:', err);
+                loadingEl.style.display = 'none';
+                statusEl.innerHTML = '❌ Database non trovato. Contattare l\'amministratore.';
+                showToast('❌ Database non trovato. Contattare l\'amministratore.', 'error');
+                DOM.dataInfo.textContent = '❌ Database non disponibile';
+                DOM.results.innerHTML =
+                    `<p class="text-danger text-center" style="padding:30px 20px;">❌ Database non disponibile. Contattare l'amministratore.</p>`;
+            }
+        }
+
+        // ============================================================
+        // SCROLL TOP
+        // ============================================================
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Se c'è una bottom sheet aperta, chiudila
+            if (state.sheetOpen) {
+                closeBottomSheet();
+            }
+        }
+
+        // Mostra/nascondi pulsante scroll top
+        window.addEventListener('scroll', function() {
+            const btn = DOM.scrollTopBtn;
+            if (window.scrollY > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        // ============================================================
+        // BOTTOM SHEET (mobile)
+        // ============================================================
+        function openBottomSheet(impianto) {
+            if (!impianto) return;
+            state.sheetOpen = true;
+            state.currentSheetImpianto = impianto.impianto;
+
+            DOM.bottomSheetOverlay.classList.add('open');
+            DOM.bottomSheet.classList.add('open');
+
+            // Popola il contenuto
+            renderSheetContent(impianto);
+
+            // Aggiorna navigazione
+            updateSheetNav();
+
+            // Blocca scroll body
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBottomSheet() {
+            state.sheetOpen = false;
+            DOM.bottomSheetOverlay.classList.remove('open');
+            DOM.bottomSheet.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function renderSheetContent(impianto) {
+            // Genera HTML del dettaglio
+            const html = generateDetailHTML(impianto);
+            DOM.sheetBody.innerHTML = html;
+
+            // Aggiorna titolo
+            DOM.sheetImpiantoCode.textContent = impianto.impianto;
+            updateSheetFavButton(impianto.impianto);
+
+            // Aggiorna counter
+            updateSheetNav();
+        }
+
+        function updateSheetNav() {
+            const total = state.currentResults.length;
+            const pos = state.currentIndex !== -1 ? state.currentIndex + 1 : 0;
+            DOM.sheetCounter.textContent = total > 0 ? `${pos}/${total}` : '0/0';
+            DOM.sheetPrev.disabled = state.currentIndex <= 0;
+            DOM.sheetNext.disabled = state.currentIndex >= total - 1 || state.currentIndex === -1;
+        }
+
+        function updateSheetFavButton(impianto) {
+            DOM.sheetFavBtn.textContent = isFavorite(impianto) ? '⭐' : '☆';
+            DOM.sheetFavBtn.classList.toggle('active', isFavorite(impianto));
+        }
+
+        // ============================================================
+        // GENERA HTML DETTAGLIO (riutilizzato per desktop e sheet)
+        // ============================================================
+        function generateDetailHTML(impianto) {
+            const oggi = new Date();
+
+            const ultSemDate = excelDateToJSDate(new Date(impianto['ult sem']));
+            const ultVpDate = excelDateToJSDate(new Date(impianto['utl vp']));
+            const diffUltSem = ultSemDate ? Math.floor((oggi - ultSemDate) / (1000 * 60 * 60 * 24)) : Infinity;
+            const diffUltVp = ultVpDate ? Math.floor((oggi - ultVpDate) / (1000 * 60 * 60 * 24)) : Infinity;
+
+            const commerciale = formatWithMapping(impianto['venditore'], state.mappature.commerciali);
+            const giro = formatWithMapping(impianto.giro, state.mappature.giri);
+
+            const mesi = getMesiText();
+            const meseSem = parseInt(impianto['mese sem']);
+            const meseSemText = mesi[meseSem - 1] || 'N/A';
+            const meseSemPrec = meseSem > 6 ? mesi[meseSem - 7] : mesi[meseSem + 5];
+            const meseSemDisplay = meseSemPrec ? `${meseSemPrec} - ${meseSemText}` : meseSemText;
+
+            const showVerificaSem = diffUltSem > 180;
+            const showVerificaVp = diffUltVp > 730;
+
+            const mapLink = impianto['Indirizzo impianto'] && impianto['Località impianto'] ?
+                `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(impianto['Indirizzo impianto'] + ', ' + impianto['Località impianto'])}` :
+                '#';
+
+            const documenti = state.elencoData.filter(item => item.IMPIANTO === impianto.impianto);
+            const docHTML = documenti.length > 0 ?
+                documenti.map(doc => `
+                        <div class="doc-item">
+                            <a href="https://otiselevatoreur.sharepoint.com/:f:/r/teams/ESABologna/Shared%20Documents/General/Uff_Tecnico/KING/PROGETTO%20VERBALI/VERBALO_DOWN_ARXC/${doc['NOME FILE']}" target="_blank">
+                                📄 ${doc['NOME FILE']}
+                            </a>
+                        </div>
+                    `).join('') :
+                '<p class="text-muted">Nessun verbale trovato</p>';
+
+            const annotazioni = getUltimeAnnotazioni(impianto.impianto);
+            const annoHTML = annotazioni.length > 0 ?
+                annotazioni.map(ann => {
+                    const data = formattaDataAnnotazione(ann.giorno_ann, ann.mese_ann, ann.anno_ann);
+                    const tipo = formattaTipoAnnotazione(ann.tipo);
+                    const badgeCls = getClasseBadgeTipo(ann.tipo);
+                    return `
+                            <div class="annotazione-item">
+                                <div class="annotazione-header">
+                                    <div>
+                                        <span class="badge-tipo ${badgeCls}">${tipo}</span>
+                                        <strong>${data}</strong>
+                                    </div>
+                                    <span class="tecnico">👨‍🔧 ${ann.tecnico_ann || 'N/D'}</span>
+                                </div>
+                                <div class="annotazione-note">${ann.note || '<i>Nessuna nota</i>'}</div>
+                            </div>
+                        `;
+                }).join('') :
+                '<p class="text-muted">Nessuna annotazione nell\'ultimo anno</p>';
+
+            const codImpianto = String(impianto.impianto).trim();
+            const recordsArchivio = state.archivioData.filter(r => {
+                const esa = String(r['N°IMPIANTO ESA'] || '').trim();
+                return esa === codImpianto || esa === codImpianto.replace(/^0+/, '');
+            });
+            const archHTML = recordsArchivio.length > 0 ?
+                recordsArchivio.map(r => `
+                        <div class="archivio-item">
+                            <strong>📁 N° PRATICA: ${r['N°  PRATICA ARCHIVIO'] || 'N/D'}</strong>
+                            <div style="margin-top:4px; font-size:0.85rem;">
+                                <div>Richiesta: <b>${r['DOC RICHIESTI'] || 'N/D'}</b> il ${formatData(r['Column12'])}</div>
+                                <div>Consegna: <b>${r['DOCS PER CLIENTE CONSEGNATI'] || 'N/D'}</b> il ${formatData(r['Column17'])}</div>
+                            </div>
+                        </div>
+                    `).join('') :
+                '<p class="text-muted">✅ Nessuna Dichiarazione presente</p>';
+
+            const commesseHTML = getCommesseHTML(impianto.impianto);
+            const interventiCount = countInterventiByImpianto(impianto.impianto);
+            const hasInterv = interventiCount > 0;
+
+            return `
+                    <div class="detail-card">
+                        <div class="detail-row">
+                            <span class="detail-label">📌 Matricola</span>
+                            <span class="detail-value">${impianto.matricola || 'N/A'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">📍 Indirizzo</span>
+                            <span class="detail-value">
+                                ${impianto['Indirizzo impianto']}
+                                ${impianto['Indirizzo impianto'] && impianto['Località impianto'] ? `<a href="${mapLink}" target="_blank" class="map-link">🌍 Mappa</a>` : ''}
+                            </span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">🏠 Località</span>
+                            <span class="detail-value">${impianto['Località impianto'] || 'N/A'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">💼 Commerciale</span>
+                            <span class="detail-value">${commerciale}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">🔄 Giro</span>
+                            <span class="detail-value">${giro}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">📅 Mese Semestrale</span>
+                            <span class="detail-value">${meseSemDisplay}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">🟢 Ultima Semestrale</span>
+                            <span class="detail-value">${formatData(impianto['ult sem'])} ${showVerificaSem ? '⏰ Verifica Scadenze' : ''}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">🔵 Ultima Visita ENTE</span>
+                            <span class="detail-value">${formatData(impianto['utl vp'])} ${showVerificaVp ? '⏰ Verifica Scadenze' : ''}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">🔧 Manutenzione</span>
+                            <span class="detail-value">${impianto.manut || 'N/A'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">👤 Tipo Cliente</span>
+                            <span class="detail-value">${impianto['tipo cliente'] || 'N/A'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">🏢 Cliente</span>
+                            <span class="detail-value">${impianto.Cliente || 'N/A'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">👔 Amministratore</span>
+                            <span class="detail-value">${impianto.Amministratore || 'N/A'}</span>
+                        </div>
+                        <div class="detail-row" style="border-bottom:none;">
+                            <span class="detail-label">📝 Note</span>
+                            <span class="detail-value">${impianto.note || 'N/A'}</span>
+                        </div>
+                    </div>
+
+                    <div class="annotazioni-container">
+                        <h4>📝 ULTIME ANNOTAZIONI (ultimo anno)</h4>
+                        ${annoHTML}
+                    </div>
+
+                    <div class="interventi-container">
+                        <h4>
+                            🛠️ INTERVENTI EFFETTUATI
+                            <span class="badge-interventi">${interventiCount}</span>
+                        </h4>
+                        ${hasInterv 
+                            ? `<a href="interventi.html?impianto=${encodeURIComponent(impianto.impianto)}" target="_blank" class="interventi-link">📋 Visualizza tutti →</a>`
+                            : `<span class="text-muted" style="font-size:0.85rem;">Nessun intervento registrato</span>`
+                        }
+                    </div>
+
+                    <div class="documenti-container">
+                        <h4>📄 VERBALI TROVATI (${documenti.length})</h4>
+                        ${docHTML}
+                    </div>
+
+                    <div class="documenti-container" style="border-left-color: #ff6f00;">
+                        <h4>🔧 COMMESSE PRESENTI</h4>
+                        <div id="listaCommesse">${commesseHTML}</div>
+                    </div>
+
+                    <div class="annotazioni-container" style="border-left-color: #f57c00;">
+                        <h4>📄 ARCHIVIO DC</h4>
+                        ${archHTML}
+                    </div>
+                `;
+        }
+
+        // ============================================================
+        // MOSTRA DETTAGLI IMPIANTO (Desktop + Sheet)
+        // ============================================================
+        function showImpiantoDetails(impianto) {
+            if (!impianto) {
+                DOM.details.innerHTML = '<p class="placeholder">Impianto non trovato.</p>';
+                return;
+            }
+
+            // Aggiorna titolo con link a scheda completa
+            const datiImpiantoJSON = encodeURIComponent(JSON.stringify(impianto));
+            document.getElementById('dettagliTitle').innerHTML = `
+                    Scheda Impianto
+                    <a href="scheda_completa.html?impianto=${datiImpiantoJSON}"
+                       target="_blank"
+                       title="Apri scheda completa"
+                       style="text-decoration:none;margin-left:8px;font-size:1.1rem;">
+                       📋
+                    </a>`;
+
+            // Genera HTML
+            const html = generateDetailHTML(impianto);
+
+            // Desktop: inserisci nel dettaglio
+            DOM.details.innerHTML = html;
+
+            // Mobile: se lo sheet è aperto, aggiorna il contenuto
+            if (state.sheetOpen) {
+                DOM.sheetBody.innerHTML = html;
+                DOM.sheetImpiantoCode.textContent = impianto.impianto;
+                updateSheetFavButton(impianto.impianto);
+                updateSheetNav();
+            }
+
+            // Aggiorna history
+            state.viewHistory.push({ impianto: impianto.impianto, timestamp: Date.now() });
+        }
+
+        // ============================================================
+        // NAVIGAZIONE IMPIANTO
+        // ============================================================
+        function navigateImpianto(direction) {
+            if (!state.currentResults || state.currentResults.length === 0) {
+                showToast('Nessun risultato disponibile per navigare', 'warning');
+                return;
+            }
+
+            const newIndex = state.currentIndex + direction;
+            if (newIndex < 0 || newIndex >= state.currentResults.length) {
+                return;
+            }
+
+            state.currentIndex = newIndex;
+            const impianto = state.currentResults[newIndex];
+            showImpiantoDetails(impianto);
+            highlightActiveResult(newIndex);
+
+            // Se mobile e sheet aperto, aggiorna sheet
+            if (window.innerWidth < 1024 && state.sheetOpen) {
+                // già aggiornato da showImpiantoDetails
+            }
+
+            updateSheetNav();
+        }
+
+        function highlightActiveResult(index) {
+            document.querySelectorAll('.result-item').forEach((el, i) => {
+                el.classList.toggle('active-result', i === index);
+            });
+            const items = document.querySelectorAll('.result-item');
+            if (items[index]) {
+                items[index].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }
+
+        // ============================================================
+        // RICERCA
+        // ============================================================
+        let searchTimeout = null;
+
+        function performSearch() {
+            const zona = DOM.zona.value;
+            const query = DOM.query.value.trim().toLowerCase();
+
+            if (!query || query.length < 4) {
+                DOM.results.innerHTML =
+                    `<p class="text-muted text-center" style="padding:30px 20px;">Inserisci almeno 4 caratteri.</p>`;
+                state.currentResults = [];
+                state.currentIndex = -1;
+                updateStats([]);
+                return;
+            }
+
+            state.currentZona = zona;
+            state.currentQuery = query;
+
+            let isWildcard = query.includes('*');
+            let regex = null;
+            if (isWildcard) {
+                const pattern = query.replace(/\*/g, '.*');
+                regex = new RegExp(`^${pattern}$`, 'i');
+            }
+
+            const results = state.data.filter(item => {
+                if (zona && zona !== '') {
+                    if (item.zona != zona) return false;
+                }
+
+                const impianto = (item.impianto || '').toLowerCase();
+                const indirizzo = (item['Indirizzo impianto'] || '').toLowerCase();
+                const matricola = (item.matricola || '').toLowerCase();
+
+                if (regex) {
+                    return regex.test(impianto) || regex.test(indirizzo) || regex.test(matricola);
+                }
+                return impianto.includes(query) || indirizzo.includes(query) || matricola.includes(query);
+            });
+
+            state.currentResults = results;
+            state.currentIndex = -1;
+            state.currentFilter = 'all';
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active', 'active-disdetta', 'active-warning');
+                if (chip.dataset.filter === 'all') chip.classList.add('active');
+            });
+
+            saveRecentSearch(zona || 'Tutte', query);
+
+            renderFilteredResults(results, query);
+            updateStats(results);
+        }
+
+        function renderFilteredResults(results, query) {
+            const total = results.length;
+            const toShow = results.slice(0, CONFIG.MAX_RESULTS_SHOW);
+            const hasMore = total > CONFIG.MAX_RESULTS_SHOW;
+
+            if (total === 0) {
+                DOM.results.innerHTML =
+                    `<p class="text-muted text-center" style="padding:30px 20px;">🔍 Nessun risultato trovato.</p>`;
+                return;
+            }
+
+            let html = `
+                    <div class="results-header">
+                        <div class="header-left">
+                            <span>📊 ${total} risultato${total > 1 ? 'i' : ''}</span>
+                            ${hasMore ? `<span class="text-muted">Mostrati ${CONFIG.MAX_RESULTS_SHOW} su ${total}</span>` : ''}
+                        </div>
+                        <div class="header-right">
+                            <span style="font-size:0.65rem;">Ordina:</span>
+                            <button class="sort-btn ${state.currentSort === 'default' ? 'active' : ''}" onclick="sortResults('default')">📋 Default</button>
+                            <button class="sort-btn ${state.currentSort === 'codice' ? 'active' : ''}" onclick="sortResults('codice')">🔤 Codice</button>
+                            <button class="sort-btn ${state.currentSort === 'semestrale' ? 'active' : ''}" onclick="sortResults('semestrale')">📅 Semestrale</button>
+                            <button class="sort-btn ${state.currentSort === 'giro' ? 'active' : ''}" onclick="sortResults('giro')">🔄 Giro</button>
+                        </div>
+                    </div>
+                `;
+
+            toShow.forEach((item, index) => {
+                const oggi = new Date();
+                const ultSemDate = excelDateToJSDate(new Date(item['ult sem']));
+                const diffUltSem = ultSemDate ? Math.floor((oggi - ultSemDate) / (1000 * 60 * 60 * 24)) : Infinity;
+
+                const showVerifica = diffUltSem > 180;
+                const verificaBadge = showVerifica ?
+                    `<span class="badge-verifica">⏰ Verifica Scadenze</span>` :
+                    '';
+
+                const displayQuery = (query || '').replace(/\*/g, '');
+                const highlightText = (text) => {
+                    if (!text || !displayQuery) return text || 'N/A';
+                    const regex = new RegExp(`(${displayQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                    return String(text).replace(regex, '<span class="highlight">$1</span>');
+                };
+
+                const impiantoDisplay = highlightText(item.impianto);
+                const indirizzoDisplay = highlightText(item['Indirizzo impianto']);
+                const matricolaDisplay = item.matricola ? highlightText(item.matricola) : '';
+
+                const giroDisplay = getGiroDisplay(item.giro);
+                const isFav = isFavorite(item.impianto);
+                const favIcon = isFav ? '⭐' : '☆';
+                const mailSubject = encodeURIComponent(
+                    `${item.impianto} - ${item['Indirizzo impianto'] || ''} - ${item['Località impianto'] || ''} - ${item.matricola || ''}`
+                );
+                let icons = '';
+                if (hasVerbali(item.impianto)) icons += '📄';
+                if (hasAnnotazioni(item.impianto)) icons += '💬';
+                if (state.m28Data.some(c => c["ID Imp."] == item.impianto)) icons += '🔧';
+
+                const tooltip =
+                    `Commerciale: ${formatWithMapping(item['venditore'], state.mappature.commerciali)}\nUltima sem.: ${formatData(item['ult sem'])}\nNote: ${(item.note || 'Nessuna').substring(0, 50)}${(item.note || '').length > 50 ? '...' : ''}`;
+
+                const isActive = state.currentIndex === index;
+
+                // Azioni per mobile (swipe reveal)
+                const actionsHTML = `
+                        <div class="result-actions">
+                            ${verificaBadge}
+                            <button class="favorite-btn ${isFav ? 'active' : ''}"
+                                    onclick="toggleFavorite('${item.impianto}')"
+                                    title="Preferito">
+                                ${favIcon}
+                            </button>
+                            <a href="mailto:?subject=${mailSubject}"
+                               class="mail-link"
+                               title="Nuova email">
+                                📧
+                            </a>
+                            <a href="#"
+                               class="view-details"
+                               data-impianto="${item.impianto}"
+                               title="Scheda impianto">
+                                📋
+                            </a>
+                        </div>
+                    `;
+
+                html += `
+                        <div class="result-item ${isActive ? 'active-result' : ''}" 
+                             data-impianto="${item.impianto}" 
+                             data-tooltip="${tooltip}" 
+                             style="animation-delay: ${index * 0.03}s;"
+                             onclick="onResultTap('${item.impianto}')">
+                            <div class="result-main">
+                                <strong class="copy-impianto" data-code="${item.impianto}" title="Clicca per copiare il codice impianto">
+                                    ${impiantoDisplay}
+                                </strong>
+                                <div class="result-meta">
+                                    <span>${indirizzoDisplay}</span>
+                                    ${item['Località impianto'] ? `<span>• ${item['Località impianto']}</span>` : ''}
+                                    ${matricolaDisplay ? `<span>• 🔢 ${matricolaDisplay}</span>` : ''}
+                                    ${giroDisplay}
+                                    <span class="result-icons">${icons}</span>
+                                    ${window.innerWidth < 768 ? `<span class="swipe-hint">👈 swipe</span>` : ''}
+                                </div>
+                            </div>
+                            ${actionsHTML}
+                        </div>
+                    `;
+            });
+
+            DOM.results.innerHTML = html;
+
+            // Event listeners per view-details
+            document.querySelectorAll('.view-details').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const impianto = this.getAttribute('data-impianto');
+                    const index = state.currentResults.findIndex(item => item.impianto === impianto);
+                    if (index !== -1) {
+                        state.currentIndex = index;
+                        const item = state.currentResults[index];
+                        if (window.innerWidth < 1024) {
+                            openBottomSheet(item);
+                        } else {
+                            showImpiantoDetails(item);
+                        }
+                        highlightActiveResult(index);
+                    }
+                });
+            });
+
+            // Copy impianto
+            document.querySelectorAll('.copy-impianto').forEach(el => {
+                el.addEventListener('click', async function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    const codice = this.dataset.code;
+                    try {
+                        await navigator.clipboard.writeText(codice);
+                        showToast(`📋 Codice copiato: ${codice}`, 'success');
+                    } catch (err) {
+                        console.error(err);
+                        showToast('❌ Errore durante la copia', 'error');
+                    }
+                }, true);
+            });
+
+            // Mobile: swipe gesture per risultati
+            if (window.innerWidth < 1024) {
+                setupSwipeGestures();
+            }
+        }
+
+        // ============================================================
+        // SWIPE GESTURES (mobile)
+        // ============================================================
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let currentSwipeItem = null;
+
+        function setupSwipeGestures() {
+            const items = document.querySelectorAll('.result-item');
+            items.forEach(item => {
+                // Rimuovi event listener precedenti per evitare duplicati
+                item.removeEventListener('touchstart', handleTouchStart);
+                item.removeEventListener('touchmove', handleTouchMove);
+                item.removeEventListener('touchend', handleTouchEnd);
+
+                item.addEventListener('touchstart', handleTouchStart, { passive: true });
+                item.addEventListener('touchmove', handleTouchMove, { passive: false });
+                item.addEventListener('touchend', handleTouchEnd, { passive: true });
+            });
+        }
+
+        function handleTouchStart(e) {
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            currentSwipeItem = this;
+        }
+
+        function handleTouchMove(e) {
+            if (!currentSwipeItem) return;
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+
+            // Se lo swipe è principalmente verticale, non fare nulla
+            if (Math.abs(deltaY) > Math.abs(deltaX) * 1.5) {
+                return;
+            }
+
+            // Solo swipe a sinistra
+            if (deltaX < -30) {
+                e.preventDefault();
+                const actions = currentSwipeItem.querySelector('.result-actions');
+                if (actions) {
+                    actions.style.transform = `translateX(${Math.max(deltaX, -120)}px)`;
+                    actions.style.opacity = Math.min(1, Math.abs(deltaX) / 60);
+                }
+            } else if (deltaX > 0) {
+                const actions = currentSwipeItem.querySelector('.result-actions');
+                if (actions) {
+                    actions.style.transform = 'translateX(0)';
+                    actions.style.opacity = '0';
+                }
+            }
+        }
+
+        function handleTouchEnd(e) {
+            if (!currentSwipeItem) return;
+            const actions = currentSwipeItem.querySelector('.result-actions');
+            if (actions) {
+                const transform = actions.style.transform;
+                const match = transform.match(/translateX\(([^)]+)\)/);
+                if (match && parseFloat(match[1]) < -60) {
+                    actions.style.transform = 'translateX(-120px)';
+                    actions.style.opacity = '1';
+                } else {
+                    actions.style.transform = 'translateX(0)';
+                    actions.style.opacity = '0';
+                }
+            }
+            currentSwipeItem = null;
+            touchStartX = 0;
+            touchStartY = 0;
+        }
+
+        // ============================================================
+        // ON RESULT TAP
+        // ============================================================
+        function onResultTap(impianto) {
+            const index = state.currentResults.findIndex(item => item.impianto === impianto);
+            if (index === -1) return;
+            state.currentIndex = index;
+            const item = state.currentResults[index];
+            if (window.innerWidth < 1024) {
+                openBottomSheet(item);
+            } else {
+                showImpiantoDetails(item);
+            }
+            highlightActiveResult(index);
+        }
+
+        // ============================================================
+        // SORT
+        // ============================================================
+        function sortResults(type) {
+            state.currentSort = type;
+            if (!state.currentResults || state.currentResults.length === 0) {
+                showToast('Nessun risultato da ordinare', 'warning');
+                return;
+            }
+
+            const sorted = [...state.currentResults];
+            switch (type) {
+                case 'codice':
+                    sorted.sort((a, b) => (a.impianto || '').localeCompare(b.impianto || ''));
+                    break;
+                case 'semestrale':
+                    sorted.sort((a, b) => {
+                        const dateA = excelDateToJSDate(new Date(a['ult sem']));
+                        const dateB = excelDateToJSDate(new Date(b['ult sem']));
+                        if (!dateA && !dateB) return 0;
+                        if (!dateA) return 1;
+                        if (!dateB) return -1;
+                        return dateB - dateA;
+                    });
+                    break;
+                case 'giro':
+                    sorted.sort((a, b) => (parseInt(a.giro) || 0) - (parseInt(b.giro) || 0));
+                    break;
+                default:
+                    break;
+            }
+
+            state.currentResults = sorted;
+            state.currentIndex = -1;
+            if (state.currentFilter !== 'all') {
+                applyFilter(state.currentFilter);
+            } else {
+                renderFilteredResults(sorted, state.currentQuery);
+            }
+            showToast(`📊 Ordinato per: ${type}`, 'info');
+        }
+
+        // ============================================================
+        // FILTRI
+        // ============================================================
+        function applyFilter(filter) {
+            state.currentFilter = filter;
+
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active', 'active-disdetta', 'active-warning');
+                if (chip.dataset.filter === filter) {
+                    if (filter === 'disdette') chip.classList.add('active-disdetta');
+                    else if (filter === 'scadute') chip.classList.add('active-warning');
+                    else chip.classList.add('active');
+                }
+            });
+
+            if (!state.currentResults || state.currentResults.length === 0) {
+                showToast('Nessun risultato da filtrare', 'warning');
+                return;
+            }
+
+            let filtered = [...state.currentResults];
+
+            switch (filter) {
+                case 'disdette':
+                    filtered = filtered.filter(item => isGiroDisdetta(item.giro));
+                    break;
+                case 'scadute':
+                    filtered = filtered.filter(item => isSemestraleScaduta(item));
+                    break;
+                case 'converbali':
+                    filtered = filtered.filter(item => hasVerbali(item.impianto));
+                    break;
+                case 'senzaannotazioni':
+                    filtered = filtered.filter(item => !hasAnnotazioni(item.impianto));
+                    break;
+                case 'preferiti':
+                    filtered = filtered.filter(item => state.favorites.includes(item.impianto));
+                    break;
+                case 'all':
+                default:
+                    break;
+            }
+
+            renderFilteredResults(filtered, state.currentQuery);
+            updateStats(filtered);
+
+            const filterNames = {
+                'all': 'Tutti',
+                'disdette': 'Disdette',
+                'scadute': 'Scadute',
+                'converbali': 'Con verbali',
+                'senzaannotazioni': 'Senza annotazioni',
+                'preferiti': 'Preferiti'
+            };
+            showToast(`🔍 Filtro: ${filterNames[filter] || filter} (${filtered.length} risultati)`, 'info');
+        }
+
+        // ============================================================
+        // RENDER RESULTS (wrapper)
+        // ============================================================
+        function renderResults(results, query) {
+            renderFilteredResults(results, query);
+        }
+
+        // ============================================================
+        // ESPORTAZIONE
+        // ============================================================
+        function exportResults() {
+            if (!state.currentResults || state.currentResults.length === 0) {
+                showToast('Nessun risultato da esportare', 'warning');
+                return;
+            }
+
+            const data = state.currentResults.map(item => ({
+                'Codice': item.impianto,
+                'Indirizzo': item['Indirizzo impianto'],
+                'Località': item['Località impianto'] || '',
+                'Matricola': item.matricola || '',
+                'Commerciale': formatWithMapping(item['venditore'], state.mappature.commerciali),
+                'Giro': getGiroText(item.giro),
+                'Ultima Semestrale': formatData(item['ult sem']),
+                'Ultima Visita ENTE': formatData(item['utl vp']),
+                'Manutenzione': item.manut || '',
+                'Cliente': item.Cliente || '',
+                'Note': item.note || '',
+            }));
+
+            const headers = Object.keys(data[0]);
+            let csv = headers.join(',') + '\n';
+            data.forEach(row => {
+                csv += headers.map(h => `"${(row[h] || '').replace(/"/g, '""')}"`).join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `risultati_ricerca_${new Date().toISOString().slice(0, 10)}.csv`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+            showToast(`📤 Esportati ${data.length} risultati in CSV`, 'success');
+        }
+
+        // ============================================================
+        // RESET
+        // ============================================================
+        function resetSearch() {
+            DOM.zona.value = '';
+            DOM.query.value = '';
+            state.currentResults = [];
+            state.currentFilter = 'all';
+            state.currentIndex = -1;
+            DOM.results.innerHTML =
+                '<p class="text-muted text-center" style="padding:30px 20px;">Inserisci almeno 4 caratteri per iniziare la ricerca.</p>';
+            DOM.details.innerHTML = '<p class="placeholder">Seleziona un impianto dai risultati per vedere i dettagli.</p>';
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active', 'active-disdetta', 'active-warning');
+                if (chip.dataset.filter === 'all') chip.classList.add('active');
+            });
+            updateStats([]);
+            if (state.sheetOpen) {
+                closeBottomSheet();
+            }
+            showToast('🔄 Ricerca resettata', 'info');
+        }
+
+        // ============================================================
+        // FOCUS SEARCH (mobile)
+        // ============================================================
+        function focusSearch() {
+            DOM.query.focus();
+            DOM.query.select();
+            document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById('navSearch')?.classList.add('active');
+            // Chiudi preferiti se aperti
+            DOM.favoritesContainer.classList.remove('visible');
+        }
+
+        // ============================================================
+        // EVENTI RICERCA
+        // ============================================================
+        DOM.searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            performSearch();
+        });
+
+        DOM.query.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(performSearch, CONFIG.DEBOUNCE_DELAY);
+            // Aggiorna nav
+            document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById('navSearch')?.classList.add('active');
+        });
+
+        // ============================================================
+        // KEYBOARD SHORTCUTS
+        // ============================================================
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                DOM.query.focus();
+                DOM.query.select();
+            }
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                performSearch();
+            }
+            if (e.key === 'Escape') {
+                resetSearch();
+                DOM.query.blur();
+                if (state.sheetOpen) {
+                    closeBottomSheet();
+                }
+            }
+            if (state.currentResults && state.currentResults.length > 0 && state.currentIndex !== -1) {
+                if (e.key === 'ArrowLeft' && !e.ctrlKey && !e.altKey && !e.shiftKey) {
+                    if (document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                        e.preventDefault();
+                        navigateImpianto(-1);
+                    }
+                }
+                if (e.key === 'ArrowRight' && !e.ctrlKey && !e.altKey && !e.shiftKey) {
+                    if (document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+                        e.preventDefault();
+                        navigateImpianto(1);
+                    }
+                }
+            }
+        });
+
+        // ============================================================
+        // CHIUDI SHEET CON BACK BUTTON (mobile)
+        // ============================================================
+        window.addEventListener('popstate', function(e) {
+            if (state.sheetOpen) {
+                closeBottomSheet();
+            }
+        });
+
+        // ============================================================
+        // RESIZE HANDLER
+        // ============================================================
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (window.innerWidth >= 1024 && state.sheetOpen) {
+                    closeBottomSheet();
+                    // Se c'è un impianto selezionato, mostralo su desktop
+                    if (state.currentIndex !== -1 && state.currentResults[state.currentIndex]) {
+                        showImpiantoDetails(state.currentResults[state.currentIndex]);
+                    }
+                }
+            }, 300);
+        });
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        async function init() {
+            loadTheme();
+            loadFavorites();
+            loadRecentSearches();
+
+            // Mostra loading
+            DOM.loadingIndicator.style.display = 'block';
+            DOM.dataStatus.textContent = '📥 Caricamento dati in corso...';
+
+            await loadDatabaseFromChunks();
+
+            // Se i dati sono caricati
+            if (state.isLoaded) {
+                if (DOM.query.value && DOM.query.value.length >= 4) {
+                    performSearch();
+                } else {
+                    DOM.results.innerHTML =
+                        '<p class="text-muted text-center" style="padding:30px 20px;">Inserisci almeno 4 caratteri per iniziare la ricerca.</p>';
+                }
+            }
+
+            // Aggiorna nav
+            updateNavTheme();
+
+            console.log('🚀 Sistema Ricerca Impianti v3.0 caricato');
+            console.log('📊 Funzionalità attive:');
+            console.log('  - Caricamento chunk da manifest.json');
+            console.log('  - Desktop: 2 colonne');
+            console.log('  - Mobile: bottom sheet per dettagli');
+            console.log('  - Swipe per azioni (mobile)');
+            console.log('  - Statistiche collassabili');
+            console.log('  - Scroll to top');
+            console.log('  - Bottom navigation');
+        }
+
+        // Avvia
+        init();
+    </script>
+</body>
+</html>

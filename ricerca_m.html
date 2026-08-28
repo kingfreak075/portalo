@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Ricerca Impianti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           iOS NATIVE STYLE - Mobile First
+           ============================================================ */
+
+        /* ----- RESET ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            /* iOS Colors */
+            --ios-blue: #007AFF;
+            --ios-blue-dark: #0055CC;
+            --ios-red: #FF3B30;
+            --ios-green: #34C759;
+            --ios-orange: #FF9500;
+            --ios-yellow: #FFCC00;
+            --ios-gray: #8E8E93;
+            --ios-gray-light: #C7C7CC;
+            --ios-gray-bg: #F2F2F7;
+            --ios-card: #FFFFFF;
+            --ios-text: #000000;
+            --ios-text-secondary: #3C3C43;
+            --ios-text-tertiary: #8E8E93;
+            --ios-separator: #E5E5EA;
+            --ios-shadow: rgba(0, 0, 0, 0.08);
+            --ios-shadow-heavy: rgba(0, 0, 0, 0.15);
+            --safe-top: env(safe-area-inset-top, 20px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --tab-height: 50px;
+            --header-height: 52px;
+            --search-height: 52px;
+        }
+
+        /* Dark Mode */
+        body.dark {
+            --ios-gray-bg: #000000;
+            --ios-card: #1C1C1E;
+            --ios-text: #FFFFFF;
+            --ios-text-secondary: #EBEBF5;
+            --ios-text-tertiary: #8E8E93;
+            --ios-separator: #38383A;
+            --ios-shadow: rgba(255, 255, 255, 0.05);
+            --ios-shadow-heavy: rgba(255, 255, 255, 0.08);
+        }
+
+        /* ----- BASE ----- */
+        html {
+            -webkit-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background: var(--ios-gray-bg);
+            color: var(--ios-text);
+            min-height: 100vh;
+            padding-top: var(--safe-top);
+            padding-bottom: calc(var(--tab-height) + var(--safe-bottom) + 8px);
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ----- STATUS BAR (iOS style) ----- */
+        .status-bar {
+            height: 0;
+            padding-top: var(--safe-top);
+            background: var(--ios-card);
+            border-bottom: 0.5px solid var(--ios-separator);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background 0.3s ease;
+        }
+
+        /* ----- HEADER ----- */
+        .header {
+            background: var(--ios-card);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 0.5px solid var(--ios-separator);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            min-height: var(--header-height);
+            transition: background 0.3s ease;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--ios-text);
+            letter-spacing: -0.3px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .header-actions button {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 4px;
+            color: var(--ios-blue);
+            transition: transform 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .header-actions button:active {
+            transform: scale(0.85);
+        }
+
+        /* ----- DASHBOARD CAROSELLO ----- */
+        .dashboard-wrapper {
+            padding: 12px 0 8px 16px;
+            background: var(--ios-gray-bg);
+            transition: background 0.3s ease;
+        }
+
+        .dashboard-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-right: 16px;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .dashboard-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .dash-item {
+            flex: 0 0 120px;
+            background: var(--ios-card);
+            border-radius: 14px;
+            padding: 14px 12px;
+            text-align: center;
+            scroll-snap-align: start;
+            border: 0.5px solid var(--ios-separator);
+            box-shadow: 0 1px 3px var(--ios-shadow);
+            transition: background 0.3s ease, border-color 0.3s ease;
+            min-height: 72px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dash-item .dash-number {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--ios-text);
+            line-height: 1.2;
+        }
+
+        .dash-item .dash-number.blue { color: var(--ios-blue); }
+        .dash-item .dash-number.red { color: var(--ios-red); }
+        .dash-item .dash-number.green { color: var(--ios-green); }
+        .dash-item .dash-number.orange { color: var(--ios-orange); }
+
+        .dash-item .dash-icon {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        .dash-item .dash-label {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--ios-text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+
+        /* ----- SEARCH BAR (sticky) ----- */
+        .search-wrapper {
+            background: var(--ios-gray-bg);
+            padding: 8px 16px 12px;
+            position: sticky;
+            top: var(--header-height);
+            z-index: 90;
+            transition: background 0.3s ease;
+        }
+
+        .search-bar {
+            background: var(--ios-card);
+            border-radius: 12px;
+            border: 1px solid var(--ios-separator);
+            padding: 4px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 1px 3px var(--ios-shadow);
+            min-height: 44px;
+        }
+
+        .search-bar:focus-within {
+            border-color: var(--ios-blue);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+        }
+
+        .search-bar .search-icon {
+            font-size: 18px;
+            color: var(--ios-text-tertiary);
+            flex-shrink: 0;
+        }
+
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 17px;
+            font-family: inherit;
+            color: var(--ios-text);
+            background: transparent;
+            min-height: 36px;
+            padding: 4px 0;
+        }
+
+        .search-bar input::placeholder {
+            color: var(--ios-text-tertiary);
+        }
+
+        .search-bar .clear-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: var(--ios-text-tertiary);
+            cursor: pointer;
+            padding: 4px;
+            display: none;
+        }
+
+        .search-bar .clear-btn.visible {
+            display: block;
+        }
+
+        .search-bar .search-submit {
+            background: var(--ios-blue);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            padding: 6px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+            flex-shrink: 0;
+            min-height: 32px;
+        }
+
+        .search-bar .search-submit:active {
+            background: var(--ios-blue-dark);
+            transform: scale(0.95);
+        }
+
+        /* ----- STATS TOGGLE ----- */
+        .stats-toggle {
+            padding: 0 16px 12px;
+            background: var(--ios-gray-bg);
+            transition: background 0.3s ease;
+        }
+
+        .stats-toggle-btn {
+            background: var(--ios-card);
+            border: 0.5px solid var(--ios-separator);
+            border-radius: 12px;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ios-text);
+            transition: all 0.3s;
+            box-shadow: 0 1px 3px var(--ios-shadow);
+            min-height: 44px;
+        }
+
+        .stats-toggle-btn:active {
+            transform: scale(0.98);
+        }
+
+        .stats-toggle-btn .stats-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .stats-toggle-btn .stats-icon.open {
+            transform: rotate(180deg);
+        }
+
+        .stats-grid {
+            display: none;
+            background: var(--ios-card);
+            border-radius: 12px;
+            border: 0.5px solid var(--ios-separator);
+            padding: 12px 16px;
+            margin-top: 8px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            box-shadow: 0 1px 3px var(--ios-shadow);
+        }
+
+        .stats-grid.open {
+            display: grid;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 6px 4px;
+        }
+
+        .stat-item .stat-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ios-text);
+        }
+
+        .stat-item .stat-number.red { color: var(--ios-red); }
+        .stat-item .stat-number.orange { color: var(--ios-orange); }
+        .stat-item .stat-number.green { color: var(--ios-green); }
+        .stat-item .stat-number.blue { color: var(--ios-blue); }
+
+        .stat-item .stat-label {
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--ios-text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* ----- FILTER CHIPS ----- */
+        .filter-wrapper {
+            padding: 0 16px 12px;
+            background: var(--ios-gray-bg);
+            transition: background 0.3s ease;
+        }
+
+        .filter-scroll {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 2px 0 4px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .filter-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-chip {
+            flex-shrink: 0;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            background: var(--ios-card);
+            border: 0.5px solid var(--ios-separator);
+            color: var(--ios-text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+            box-shadow: 0 1px 2px var(--ios-shadow);
+            min-height: 32px;
+        }
+
+        .filter-chip:active {
+            transform: scale(0.95);
+        }
+
+        .filter-chip.active {
+            background: var(--ios-blue);
+            color: white;
+            border-color: var(--ios-blue);
+        }
+
+        .filter-chip.active-red {
+            background: var(--ios-red);
+            color: white;
+            border-color: var(--ios-red);
+        }
+
+        .filter-chip.active-orange {
+            background: var(--ios-orange);
+            color: white;
+            border-color: var(--ios-orange);
+        }
+
+        /* ----- RESULTS ----- */
+        .results-container {
+            padding: 0 16px 16px;
+            background: var(--ios-gray-bg);
+            transition: background 0.3s ease;
+        }
+
+        .result-item {
+            background: var(--ios-card);
+            border-radius: 14px;
+            border: 0.5px solid var(--ios-separator);
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px var(--ios-shadow);
+            transition: all 0.2s;
+            cursor: pointer;
+            -webkit-touch-callout: none;
+        }
+
+        .result-item:active {
+            transform: scale(0.98);
+        }
+
+        .result-item .result-code {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--ios-text);
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .result-item .result-code .fav-icon {
+            font-size: 16px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .result-item .result-code .fav-icon:active {
+            transform: scale(0.8);
+        }
+
+        .result-item .result-address {
+            font-size: 14px;
+            color: var(--ios-text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .result-item .result-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            font-size: 12px;
+            color: var(--ios-text-tertiary);
+        }
+
+        .result-item .result-meta .badge-giro {
+            background: var(--ios-gray-bg);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 11px;
+            color: var(--ios-text-secondary);
+        }
+
+        .result-item .result-meta .badge-giro.disdetta {
+            background: #FFE5E5;
+            color: var(--ios-red);
+        }
+
+        .result-item .result-meta .badge-verifica {
+            background: #FFF3E0;
+            color: var(--ios-orange);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .result-item .result-meta .icons {
+            font-size: 13px;
+            display: flex;
+            gap: 2px;
+            margin-left: auto;
+        }
+
+        .result-item .result-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 0.5px solid var(--ios-separator);
+        }
+
+        .result-item .result-actions button {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+            color: var(--ios-text-tertiary);
+            min-height: 36px;
+            min-width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-item .result-actions button:active {
+            background: var(--ios-separator);
+            transform: scale(0.9);
+        }
+
+        .result-item .result-actions button.fav-active {
+            color: var(--ios-yellow);
+        }
+
+        /* ----- EMPTY STATE ----- */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--ios-text-tertiary);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--ios-text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .empty-state p {
+            font-size: 15px;
+        }
+
+        /* ----- LOADING ----- */
+        .loading-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--ios-separator);
+            border-top: 3px solid var(--ios-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-state p {
+            color: var(--ios-text-tertiary);
+            font-size: 15px;
+        }
+
+        /* ----- SCROLL TOP BUTTON ----- */
+        .scroll-top {
+            position: fixed;
+            bottom: calc(var(--tab-height) + var(--safe-bottom) + 20px);
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--ios-card);
+            border: 0.5px solid var(--ios-separator);
+            box-shadow: 0 4px 12px var(--ios-shadow-heavy);
+            font-size: 20px;
+            color: var(--ios-blue);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 80;
+        }
+
+        .scroll-top:active {
+            transform: scale(0.85);
+        }
+
+        .scroll-top.visible {
+            display: flex;
+        }
+
+        /* ----- BOTTOM NAV (Tab Bar) ----- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(var(--tab-height) + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+            background: var(--ios-card);
+            border-top: 0.5px solid var(--ios-separator);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 200;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: background 0.3s ease;
+        }
+
+        .bottom-nav button {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--ios-text-tertiary);
+            transition: color 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            min-width: 44px;
+            min-height: 44px;
+            justify-content: center;
+        }
+
+        .bottom-nav button .nav-icon {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .bottom-nav button .nav-label {
+            font-size: 10px;
+            letter-spacing: 0.2px;
+        }
+
+        .bottom-nav button.active {
+            color: var(--ios-blue);
+        }
+
+        .bottom-nav button:active {
+            transform: scale(0.9);
+        }
+
+        .bottom-nav button .badge-dot {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: var(--ios-red);
+            border-radius: 50%;
+            border: 1.5px solid var(--ios-card);
+        }
+
+        .bottom-nav button {
+            position: relative;
+        }
+
+        /* ----- PULL TO REFRESH ----- */
+        .pull-indicator {
+            text-align: center;
+            padding: 8px 0;
+            color: var(--ios-text-tertiary);
+            font-size: 13px;
+            display: none;
+        }
+
+        .pull-indicator.show {
+            display: block;
+        }
+
+        /* ----- TOAST ----- */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--safe-top) + 60px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            pointer-events: none;
+            max-width: 90%;
+        }
+
+        .toast {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            animation: toastIn 0.3s ease;
+            text-align: center;
+            pointer-events: auto;
+            min-width: 120px;
+        }
+
+        .toast.out {
+            animation: toastOut 0.3s ease forwards;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+        }
+
+        /* ============================================================
+           RESPONSIVE - iPhone Variants
+           ============================================================ */
+
+        /* iPhone SE (375x667) */
+        @media (max-width: 375px) {
+            .dash-item {
+                flex: 0 0 100px;
+                padding: 10px 8px;
+                min-height: 60px;
+            }
+            .dash-item .dash-number {
+                font-size: 18px;
+            }
+            .header-title {
+                font-size: 17px;
+            }
+            .search-bar input {
+                font-size: 15px;
+            }
+            .result-item .result-code {
+                font-size: 15px;
+            }
+        }
+
+        /* iPhone 12/13/14 (390x844) - default */
+
+        /* iPhone 14 Pro Max (430x932) */
+        @media (min-width: 430px) {
+            .dash-item {
+                flex: 0 0 130px;
+            }
+            .dash-item .dash-number {
+                font-size: 24px;
+            }
+            .container {
+                max-width: 430px;
+                margin: 0 auto;
+            }
+        }
+
+        /* iPad - mostra layout desktop (se vuoi) */
+        @media (min-width: 768px) {
+            body {
+                background: var(--ios-gray-bg);
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                padding: 40px 20px;
+            }
+            .container {
+                max-width: 430px;
+                margin: 0 auto;
+                background: var(--ios-gray-bg);
+                border-radius: 20px;
+                box-shadow: 0 20px 60px var(--ios-shadow-heavy);
+                overflow: hidden;
+                border: 0.5px solid var(--ios-separator);
+                min-height: 90vh;
+            }
+            body {
+                padding: 20px;
+                background: #E5E5EA;
+            }
+            body.dark {
+                background: #000000;
+            }
+            .header {
+                border-radius: 0;
+            }
+        }
+
+        /* ----- UTILITY ----- */
+        .text-muted {
+            color: var(--ios-text-tertiary);
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <header class="header">
+            <span class="header-title">🔍 Ricerca</span>
+            <div class="header-actions">
+                <button onclick="toggleTheme()" aria-label="Tema" title="Tema">🌓</button>
+                <button onclick="showFavorites()" aria-label="Preferiti" title="Preferiti">⭐</button>
+            </div>
+        </header>
+
+        <!-- DASHBOARD CAROSELLO -->
+        <div class="dashboard-wrapper" id="dashboardWrapper" style="display:none;">
+            <div class="dashboard-scroll" id="dashboardScroll">
+                <div class="dash-item">
+                    <div class="dash-number blue" id="dashTotal">0</div>
+                    <div class="dash-icon">📊</div>
+                    <div class="dash-label">Totale</div>
+                </div>
+                <div class="dash-item">
+                    <div class="dash-number red" id="dashDisdette">0</div>
+                    <div class="dash-icon">🚫</div>
+                    <div class="dash-label">Disdette</div>
+                </div>
+                <div class="dash-item">
+                    <div class="dash-number orange" id="dashScadute">0</div>
+                    <div class="dash-icon">⏰</div>
+                    <div class="dash-label">Scadute</div>
+                </div>
+                <div class="dash-item">
+                    <div class="dash-number green" id="dashVerbali">0</div>
+                    <div class="dash-icon">📄</div>
+                    <div class="dash-label">Verbali</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEARCH BAR (sticky) -->
+        <div class="search-wrapper">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Cerca impianto..." 
+                       inputmode="search" autocorrect="off" autocapitalize="off" 
+                       enterkeyhint="search" />
+                <button class="clear-btn" id="clearBtn" onclick="clearSearch()">✕</button>
+                <button class="search-submit" onclick="performSearch()">Cerca</button>
+            </div>
+        </div>
+
+        <!-- STATS TOGGLE -->
+        <div class="stats-toggle">
+            <button class="stats-toggle-btn" onclick="toggleStats()">
+                <span>📊 Statistiche</span>
+                <span class="stats-icon" id="statsIcon">▼</span>
+            </button>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-item">
+                    <div class="stat-number" id="statTotal">0</div>
+                    <div class="stat-label">Totale</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number red" id="statDisdette">0</div>
+                    <div class="stat-label">Disdette</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number orange" id="statScadute">0</div>
+                    <div class="stat-label">Scadute</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number green" id="statVerbali">0</div>
+                    <div class="stat-label">Verbali</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statSenza">0</div>
+                    <div class="stat-label">Senza annot.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filter-wrapper">
+            <div class="filter-scroll" id="filterScroll">
+                <button class="filter-chip active" data-filter="all" onclick="applyFilter('all')">📋 Tutti</button>
+                <button class="filter-chip" data-filter="disdette" onclick="applyFilter('disdette')">🚫 Disdette</button>
+                <button class="filter-chip" data-filter="scadute" onclick="applyFilter('scadute')">⏰ Scadute</button>
+                <button class="filter-chip" data-filter="verbali" onclick="applyFilter('verbali')">📄 Verbali</button>
+                <button class="filter-chip" data-filter="senza" onclick="applyFilter('senza')">📝 Senza</button>
+                <button class="filter-chip" data-filter="preferiti" onclick="applyFilter('preferiti')">⭐ Preferiti</button>
+            </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="results-container" id="resultsContainer">
+            <div class="empty-state">
+                <div class="empty-icon">🔍</div>
+                <h3>Cerca un impianto</h3>
+                <p>Inserisci almeno 4 caratteri per iniziare</p>
+            </div>
+        </div>
+
+        <!-- SCROLL TOP -->
+        <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">⬆</button>
+
+        <!-- BOTTOM NAV -->
+        <nav class="bottom-nav">
+            <button class="active" onclick="goHome()">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </button>
+            <button onclick="focusSearch()">
+                <span class="nav-icon">🔍</span>
+                <span class="nav-label">Cerca</span>
+            </button>
+            <button onclick="showFavorites()">
+                <span class="nav-icon">⭐</span>
+                <span class="nav-label">Preferiti</span>
+            </button>
+            <button onclick="toggleTheme()">
+                <span class="nav-icon" id="themeIcon">🌓</span>
+                <span class="nav-label">Tema</span>
+            </button>
+        </nav>
+
+        <!-- TOAST -->
+        <div class="toast-container" id="toastContainer"></div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        // STATO
+        // ============================================================
+        const state = {
+            data: [],
+            results: [],
+            filtered: [],
+            favorites: [],
+            isLoaded: false,
+            currentFilter: 'all',
+            currentQuery: '',
+            currentIndex: -1,
+        };
+
+        // ============================================================
+        // TEMA
+        // ============================================================
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌓';
+            updateThemeIcon();
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark') {
+                document.body.classList.add('dark');
+            }
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const isDark = document.body.classList.contains('dark');
+            document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌓';
+        }
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('out');
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        // ============================================================
+        // SCROLL TOP
+        // ============================================================
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', function() {
+            const btn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+        function goHome() {
+            window.location.href = 'ricerca_m.html';
+        }
+
+        function focusSearch() {
+            document.getElementById('searchInput').focus();
+            document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
+            document.querySelector('.bottom-nav button:nth-child(2)').classList.add('active');
+        }
+
+        function showFavorites() {
+            applyFilter('preferiti');
+            showToast('⭐ Mostrando preferiti', 'info');
+        }
+
+        // ============================================================
+        // FAVORITI
+        // ============================================================
+        function loadFavorites() {
+            try {
+                const saved = localStorage.getItem('impiantiFavorites');
+                if (saved) {
+                    state.favorites = JSON.parse(saved);
+                }
+            } catch (e) { /* ignore */ }
+        }
+
+        function saveFavorites() {
+            try {
+                localStorage.setItem('impiantiFavorites', JSON.stringify(state.favorites));
+            } catch (e) { /* ignore */ }
+        }
+
+        function toggleFavorite(impianto) {
+            const idx = state.favorites.indexOf(impianto);
+            if (idx > -1) {
+                state.favorites.splice(idx, 1);
+                showToast(`⭐ Rimosso: ${impianto}`, 'info');
+            } else {
+                state.favorites.push(impianto);
+                showToast(`⭐ Aggiunto: ${impianto}`, 'success');
+            }
+            saveFavorites();
+            renderResults(state.filtered);
+        }
+
+        function isFavorite(impianto) {
+            return state.favorites.includes(impianto);
+        }
+
+        // ============================================================
+        // FILTRI
+        // ============================================================
+        function applyFilter(filter) {
+            state.currentFilter = filter;
+
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active', 'active-red', 'active-orange');
+                if (chip.dataset.filter === filter) {
+                    if (filter === 'disdette') chip.classList.add('active-red');
+                    else if (filter === 'scadute') chip.classList.add('active-orange');
+                    else chip.classList.add('active');
+                }
+            });
+
+            if (!state.results || state.results.length === 0) {
+                showToast('Nessun risultato da filtrare', 'warning');
+                return;
+            }
+
+            let filtered = [...state.results];
+
+            switch (filter) {
+                case 'disdette':
+                    filtered = filtered.filter(item => isGiroDisdetta(item.giro));
+                    break;
+                case 'scadute':
+                    filtered = filtered.filter(item => isSemestraleScaduta(item));
+                    break;
+                case 'verbali':
+                    filtered = filtered.filter(item => hasVerbali(item.impianto));
+                    break;
+                case 'senza':
+                    filtered = filtered.filter(item => !hasAnnotazioni(item.impianto));
+                    break;
+                case 'preferiti':
+                    filtered = filtered.filter(item => state.favorites.includes(item.impianto));
+                    break;
+                case 'all':
+                default:
+                    break;
+            }
+
+            state.filtered = filtered;
+            renderResults(filtered);
+            updateStats(filtered);
+
+            const filterNames = {
+                'all': 'Tutti',
+                'disdette': 'Disdette',
+                'scadute': 'Scadute',
+                'verbali': 'Con verbali',
+                'senza': 'Senza annotazioni',
+                'preferiti': 'Preferiti'
+            };
+            showToast(`🔍 ${filterNames[filter]}: ${filtered.length} risultati`, 'info');
+        }
+
+        // ============================================================
+        // RICERCA
+        // ============================================================
+        let searchTimeout = null;
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+
+            if (!query || query.length < 4) {
+                document.getElementById('resultsContainer').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔍</div>
+                        <h3>Inserisci almeno 4 caratteri</h3>
+                        <p>Codice impianto, indirizzo o matricola</p>
+                    </div>
+                `;
+                state.results = [];
+                state.filtered = [];
+                updateStats([]);
+                return;
+            }
+
+            state.currentQuery = query;
+
+            let isWildcard = query.includes('*');
+            let regex = null;
+            if (isWildcard) {
+                const pattern = query.replace(/\*/g, '.*');
+                regex = new RegExp(`^${pattern}$`, 'i');
+            }
+
+            const results = state.data.filter(item => {
+                const impianto = (item.impianto || '').toLowerCase();
+                const indirizzo = (item['Indirizzo impianto'] || '').toLowerCase();
+                const matricola = (item.matricola || '').toLowerCase();
+
+                if (regex) {
+                    return regex.test(impianto) || regex.test(indirizzo) || regex.test(matricola);
+                }
+                return impianto.includes(query) || indirizzo.includes(query) || matricola.includes(query);
+            });
+
+            state.results = results;
+            state.filtered = results;
+            state.currentFilter = 'all';
+
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active', 'active-red', 'active-orange');
+                if (chip.dataset.filter === 'all') chip.classList.add('active');
+            });
+
+            renderResults(results);
+            updateStats(results);
+
+            if (results.length === 0) {
+                showToast('🔍 Nessun risultato trovato', 'info');
+            } else {
+                showToast(`🔍 Trovati ${results.length} risultati`, 'success');
+            }
+        }
+
+        // ============================================================
+        // RENDER RISULTATI
+        // ============================================================
+        function renderResults(results) {
+            const container = document.getElementById('resultsContainer');
+
+            if (!results || results.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <h3>Nessun risultato</h3>
+                        <p>Prova a modificare la ricerca o i filtri</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const query = state.currentQuery.replace(/\*/g, '');
+            const highlightText = (text) => {
+                if (!text || !query) return text || 'N/A';
+                const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                return String(text).replace(regex, '<span style="background:#FFE57F;padding:0 3px;border-radius:3px;font-weight:600;">$1</span>');
+            };
+
+            let html = '';
+            results.forEach((item, index) => {
+                const isFav = isFavorite(item.impianto);
+                const giroDisplay = getGiroDisplay(item.giro);
+                const icons = [];
+                if (hasVerbali(item.impianto)) icons.push('📄');
+                if (hasAnnotazioni(item.impianto)) icons.push('💬');
+                if (hasInterventi(item.impianto)) icons.push('🛠️');
+
+                const showVerifica = isSemestraleScaduta(item);
+
+                html += `
+                    <div class="result-item" onclick="openDetail('${item.impianto}')">
+                        <div class="result-code">
+                            ${highlightText(item.impianto)}
+                            <button class="fav-icon ${isFav ? 'fav-active' : ''}" 
+                                    onclick="event.stopPropagation(); toggleFavorite('${item.impianto}')">
+                                ${isFav ? '⭐' : '☆'}
+                            </button>
+                        </div>
+                        <div class="result-address">${highlightText(item['Indirizzo impianto'])}${item['Località impianto'] ? `, ${item['Località impianto']}` : ''}</div>
+                        <div class="result-meta">
+                            ${item.matricola ? `<span>🔢 ${highlightText(item.matricola)}</span>` : ''}
+                            ${giroDisplay}
+                            ${showVerifica ? `<span class="badge-verifica">⏰ Verifica</span>` : ''}
+                            ${icons.length > 0 ? `<span class="icons">${icons.join('')}</span>` : ''}
+                        </div>
+                        <div class="result-actions">
+                            <button onclick="event.stopPropagation(); openDetail('${item.impianto}')">📋</button>
+                            <button onclick="event.stopPropagation(); shareImpianto('${item.impianto}')">📧</button>
+                            <button onclick="event.stopPropagation(); toggleFavorite('${item.impianto}')" 
+                                    class="${isFav ? 'fav-active' : ''}">
+                                ${isFav ? '⭐' : '☆'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // APRI DETTAGLIO
+        // ============================================================
+        function openDetail(impianto) {
+            const item = state.data.find(d => d.impianto === impianto);
+            if (!item) {
+                showToast('❌ Impianto non trovato', 'error');
+                return;
+            }
+            const datiJSON = encodeURIComponent(JSON.stringify(item));
+            window.location.href = `scheda_completa_m.html?impianto=${datiJSON}`;
+        }
+
+        function shareImpianto(impianto) {
+            const item = state.data.find(d => d.impianto === impianto);
+            if (!item) return;
+            const subject = encodeURIComponent(
+                `${item.impianto} - ${item['Indirizzo impianto'] || ''} - ${item.matricola || ''}`
+            );
+            window.location.href = `mailto:?subject=${subject}`;
+        }
+
+        // ============================================================
+        // UTILITY (copiate da ricerca.html)
+        // ============================================================
+        const GIRO_DISDETTA = [66, 77, 88, 99];
+
+        function excelDateToJSDate(excelDate) {
+            if (!excelDate) return null;
+            if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
+                const d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+            }
+            if (typeof excelDate === 'number') {
+                const epoch = new Date(1899, 11, 30);
+                const d = new Date(epoch.getTime() + excelDate * 86400000);
+                if (!isNaN(d)) return d;
+            }
+            if (typeof excelDate === 'string') {
+                const d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+            }
+            return null;
+        }
+
+        function isGiroDisdetta(giro) {
+            return GIRO_DISDETTA.includes(parseInt(giro));
+        }
+
+        function getGiroDisplay(giro) {
+            if (!giro) return 'N/A';
+            const giroNum = parseInt(giro);
+            if (isGiroDisdetta(giroNum)) {
+                return `<span class="badge-giro disdetta">🚫 DISDETTA</span>`;
+            }
+            return `<span class="badge-giro">🔄 Giro ${giro}</span>`;
+        }
+
+        function isSemestraleScaduta(item) {
+            const oggi = new Date();
+            const ultSemDate = excelDateToJSDate(item['ult sem']);
+            if (!ultSemDate) return false;
+            const diff = Math.floor((oggi - ultSemDate) / (1000 * 60 * 60 * 24));
+            return diff > 180;
+        }
+
+        function hasVerbali(impianto) {
+            // placeholders - verranno popolati dal caricamento
+            return state.elencoData ? state.elencoData.some(d => d.IMPIANTO === impianto) : false;
+        }
+
+        function hasAnnotazioni(impianto) {
+            return state.annotazioniData ? state.annotazioniData.some(a => a.impianto_ann === impianto) : false;
+        }
+
+        function hasInterventi(impianto) {
+            return state.bolleData ? state.bolleData.some(b => {
+                const rif = b['Impiantodiriferimento (Job) (Job)'] || '';
+                return rif.trim() === impianto.trim();
+            }) : false;
+        }
+
+        // ============================================================
+        // STATISTICHE
+        // ============================================================
+        function updateStats(results) {
+            const total = results.length;
+            const disdette = results.filter(item => isGiroDisdetta(item.giro)).length;
+            const scadute = results.filter(item => isSemestraleScaduta(item)).length;
+            const verbali = results.filter(item => hasVerbali(item.impianto)).length;
+            const senza = results.filter(item => !hasAnnotazioni(item.impianto)).length;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statDisdette').textContent = disdette;
+            document.getElementById('statScadute').textContent = scadute;
+            document.getElementById('statVerbali').textContent = verbali;
+            document.getElementById('statSenza').textContent = senza;
+
+            document.getElementById('dashTotal').textContent = total;
+            document.getElementById('dashDisdette').textContent = disdette;
+            document.getElementById('dashScadute').textContent = scadute;
+            document.getElementById('dashVerbali').textContent = verbali;
+        }
+
+        function toggleStats() {
+            const grid = document.getElementById('statsGrid');
+            const icon = document.getElementById('statsIcon');
+            grid.classList.toggle('open');
+            icon.classList.toggle('open');
+        }
+
+        // ============================================================
+        // CLEAR SEARCH
+        // ============================================================
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearBtn').classList.remove('visible');
+            document.getElementById('searchInput').focus();
+            state.results = [];
+            state.filtered = [];
+            document.getElementById('resultsContainer').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">🔍</div>
+                    <h3>Cerca un impianto</h3>
+                    <p>Inserisci almeno 4 caratteri per iniziare</p>
+                </div>
+            `;
+            updateStats([]);
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active', 'active-red', 'active-orange');
+                if (chip.dataset.filter === 'all') chip.classList.add('active');
+            });
+            state.currentFilter = 'all';
+        }
+
+        // ============================================================
+        // CARICAMENTO DATI
+        // ============================================================
+        async function loadDatabase() {
+            try {
+                // Carica manifest
+                const manifestResp = await fetch('manifest.json');
+                if (!manifestResp.ok) throw new Error('manifest.json non trovato');
+                const manifest = await manifestResp.json();
+
+                // Scarica chunk
+                const chunkPromises = manifest.chunks.map(async (chunkInfo, idx) => {
+                    const fileName = chunkInfo.fileName || `chunk_${String(idx).padStart(3, '0')}.json`;
+                    const resp = await fetch(fileName);
+                    if (!resp.ok) throw new Error(`Chunk ${fileName} non trovato`);
+                    return await resp.json();
+                });
+
+                const chunkResults = await Promise.all(chunkPromises);
+
+                // Unisci dati
+                const database = {};
+                for (const chunkData of chunkResults) {
+                    for (const [key, value] of Object.entries(chunkData)) {
+                        if (!database[key]) {
+                            database[key] = Array.isArray(value) ? [] : {};
+                        }
+                        if (Array.isArray(value)) {
+                            database[key] = database[key].concat(value);
+                        } else if (typeof value === 'object' && value !== null) {
+                            database[key] = { ...database[key], ...value };
+                        }
+                    }
+                }
+
+                window.database = database;
+
+                state.data = database.parco || [];
+                state.elencoData = database.elenco || [];
+                state.annotazioniData = database.annotazioni || [];
+                state.bolleData = database.bolle || [];
+
+                state.isLoaded = true;
+
+                // Mostra dashboard
+                document.getElementById('dashboardWrapper').style.display = 'block';
+
+                // Aggiorna dashboard
+                updateStats([]);
+
+                showToast(`✅ Caricati ${state.data.length} impianti`, 'success');
+
+            } catch (err) {
+                console.error('Errore caricamento:', err);
+                document.getElementById('resultsContainer').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <h3>Database non disponibile</h3>
+                        <p>Contattare l'amministratore</p>
+                    </div>
+                `;
+                showToast('❌ Database non trovato', 'error');
+            }
+        }
+
+        // ============================================================
+        // SEARCH INPUT EVENTS
+        // ============================================================
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const clearBtn = document.getElementById('clearBtn');
+            if (this.value.length > 0) {
+                clearBtn.classList.add('visible');
+            } else {
+                clearBtn.classList.remove('visible');
+            }
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(performSearch, 300);
+        });
+
+        document.getElementById('searchInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                performSearch();
+            }
+        });
+
+        // ============================================================
+        // PULL TO REFRESH (simulato)
+        // ============================================================
+        let pullStartY = 0;
+        let pulling = false;
+        let pullIndicator = null;
+
+        document.addEventListener('touchstart', function(e) {
+            if (window.scrollY === 0) {
+                pullStartY = e.touches[0].clientY;
+                pulling = true;
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchmove', function(e) {
+            if (pulling && window.scrollY === 0) {
+                const deltaY = e.touches[0].clientY - pullStartY;
+                if (deltaY > 60) {
+                    pulling = false;
+                    loadDatabase();
+                    showToast('🔄 Ricaricamento in corso...', 'info');
+                }
+            }
+        }, { passive: true });
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        loadTheme();
+        loadFavorites();
+        loadDatabase();
+
+        console.log('📱 Ricerca Mobile v1.0 caricata');
+        console.log('📊 Funzionalità: ricerca, filtri, preferiti, tema, pull-to-refresh');
+    </script>
+
+</body>
+</html>

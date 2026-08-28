@@ -1742,20 +1742,36 @@
                             ${showVerifica ? `<span class="badge-verifica">⏰ Verifica</span>` : ''}
                             ${icons.length > 0 ? `<span class="icons">${icons.join('')}</span>` : ''}
                         </div>
-                        <div class="result-actions">
-                            <button onclick="event.stopPropagation(); openSheet('${item.impianto}')">📋</button>
-                            <button onclick="event.stopPropagation(); shareImpianto('${item.impianto}')">📧</button>
-                            <button onclick="event.stopPropagation(); toggleFavorite('${item.impianto}')" 
-                                    class="${isFav ? 'fav-active' : ''}">
-                                ${isFav ? '⭐' : '☆'}
-                            </button>
-                        </div>
+                      <div class="result-actions">
+    <button onclick="event.stopPropagation(); openSheet('${item.impianto}')">📋</button>
+    <button onclick="event.stopPropagation(); openFullScheda('${item.impianto}')" 
+            style="color:var(--ios-blue);font-weight:600;font-size:13px;">📄</button>
+    <button onclick="event.stopPropagation(); shareImpianto('${item.impianto}')">📧</button>
+    <button onclick="event.stopPropagation(); toggleFavorite('${item.impianto}')" 
+            class="${isFav ? 'fav-active' : ''}">
+        ${isFav ? '⭐' : '☆'}
+    </button>
+</div>
                     </div>
                 `;
             });
 
             container.innerHTML = html;
         }
+
+
+// ============================================================
+// APRI SCHEDA COMPLETA
+// ============================================================
+function openFullScheda(impianto) {
+    const item = state.data.find(d => d.impianto === impianto);
+    if (!item) {
+        showToast('❌ Impianto non trovato', 'error');
+        return;
+    }
+    const datiJSON = encodeURIComponent(JSON.stringify(item));
+    window.open(`scheda_completa_m.html?impianto=${datiJSON}`, '_blank');
+}
 
         // ============================================================
         // BOTTOM SHEET
@@ -2013,13 +2029,12 @@
                 </div>
 
                 <!-- Link scheda completa -->
-                <div style="margin-top:16px;text-align:center;padding:12px;background:var(--ios-gray-bg);border-radius:12px;">
-                    <a href="scheda_completa_m.html?impianto=${encodeURIComponent(JSON.stringify(item))}" 
-                       target="_blank" 
-                       style="color:var(--ios-blue);text-decoration:none;font-weight:600;font-size:15px;">
-                       📋 Apri scheda completa →
-                    </a>
-                </div>
+<div style="margin-top:16px;text-align:center;padding:14px;background:var(--ios-blue);border-radius:12px;cursor:pointer;" 
+     onclick="window.open('scheda_completa_m.html?impianto=${encodeURIComponent(JSON.stringify(item))}', '_blank')">
+    <span style="color:white;font-weight:600;font-size:16px;">
+        📋 Apri scheda completa →
+    </span>
+</div>
             `;
         }
 

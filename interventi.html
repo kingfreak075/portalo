@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interventi - Impianto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET E VARIABILI ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1b5e20;
+            --primary-light: #4caf50;
+            --primary-dark: #0d3b12;
+            --primary-bg: #e8f5e9;
+            --text-primary: #1a2332;
+            --text-secondary: #4a5568;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(46, 125, 50, 0.08), 0 1px 2px rgba(46, 125, 50, 0.04);
+            --shadow: 0 4px 20px rgba(46, 125, 50, 0.12);
+            --shadow-lg: 0 8px 40px rgba(46, 125, 50, 0.18);
+            --border-radius: 16px;
+            --border-radius-sm: 10px;
+            --transition-speed: 0.3s;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --bg-gradient-start: #a5d6a7;
+            --bg-gradient-end: #66bb6a;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --color-reperibilita: #ffcdd2;
+            --color-reperibilita-border: #c62828;
+            --color-reperibilita-text: #c62828;
+            --color-normale: #c8e6c9;
+            --color-normale-border: #1b5e20;
+            --color-normale-text: #1b5e20;
+            --color-rip-consuntivo: #bbdefb;
+            --color-rip-consuntivo-border: #0d47a1;
+            --color-rip-consuntivo-text: #0d47a1;
+            --color-misto: #e0e0e0;
+            --color-misto-border: #757575;
+            --color-misto-text: #757575;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        body.dark-theme {
+            --bg-gradient-start: #0f1724;
+            --bg-gradient-end: #1a2332;
+            --card-bg: rgba(26, 35, 50, 0.95);
+            --text-primary: #e8edf5;
+            --text-secondary: #b0c4de;
+            --text-muted: #7a8ba3;
+            --border-color: rgba(76, 175, 80, 0.15);
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+            --primary-bg: rgba(76, 175, 80, 0.12);
+            --color-reperibilita: rgba(198, 40, 40, 0.2);
+            --color-reperibilita-text: #ef9a9a;
+            --color-normale: rgba(27, 94, 32, 0.2);
+            --color-normale-text: #81c784;
+            --color-rip-consuntivo: rgba(13, 71, 161, 0.2);
+            --color-rip-consuntivo-text: #90caf9;
+            --color-misto: rgba(117, 117, 117, 0.2);
+            --color-misto-text: #9e9e9e;
+        }
+
+        body.dark-theme .container {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+        }
+
+        body.dark-theme .job-card {
+            background: rgba(40, 50, 65, 0.6);
+            border-color: var(--border-color);
+        }
+
+        body.dark-theme .job-card:hover {
+            background: rgba(50, 60, 80, 0.7);
+        }
+
+        body.dark-theme .intervento-detail {
+            background: rgba(30, 40, 55, 0.8);
+            border-color: var(--border-color);
+        }
+
+        body.dark-theme .filter-chip {
+            background: rgba(40, 50, 65, 0.7);
+            color: var(--text-secondary);
+        }
+
+        body.dark-theme .filter-chips {
+            background: rgba(76, 175, 80, 0.08);
+        }
+
+        body.dark-theme .back-btn {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--text-secondary);
+        }
+
+        body.dark-theme .back-btn:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        body.dark-theme .empty-state {
+            color: var(--text-muted);
+        }
+
+        body.dark-theme .job-address {
+            color: var(--text-muted);
+        }
+
+        body.dark-theme .intervento-item {
+            background: rgba(40, 50, 65, 0.4);
+        }
+
+        body.dark-theme .intervento-item:hover {
+            background: rgba(50, 60, 80, 0.6);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 32px 36px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            transition: all var(--transition-speed);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 4px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header-left h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+
+        .header-left .badge {
+            background: var(--primary-bg);
+            color: var(--primary-color);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .header-actions button {
+            padding: 8px 18px;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: var(--font-family);
+            color: var(--text-secondary);
+            transition: all var(--transition-speed);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-actions button:hover {
+            background: var(--primary-light);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .back-btn {
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: var(--font-family);
+            color: var(--text-secondary);
+            transition: all var(--transition-speed);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-light);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+            text-decoration: none;
+        }
+
+        .job-address {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            padding-left: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .job-address .address-icon {
+            font-size: 1.1rem;
+        }
+
+        /* FILTRI */
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 0 0 20px 0;
+            padding: 10px 14px;
+            background: var(--primary-bg);
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .filter-chip {
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-secondary);
+            user-select: none;
+            font-family: var(--font-family);
+        }
+
+        .filter-chip:hover {
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-chip.active {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Job List */
+        .job-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .job-card {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .job-card:hover {
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .job-card .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .job-card .job-header .job-id {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .job-card .job-header .job-id .job-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border: 1px solid;
+        }
+
+        .job-card .job-header .job-id .job-badge.badge-reperibilita {
+            background: var(--color-reperibilita);
+            color: var(--color-reperibilita-text);
+            border-color: var(--color-reperibilita-border);
+        }
+
+        .job-card .job-header .job-id .job-badge.badge-normale {
+            background: var(--color-normale);
+            color: var(--color-normale-text);
+            border-color: var(--color-normale-border);
+        }
+
+        .job-card .job-header .job-id .job-badge.badge-rip-consuntivo {
+            background: var(--color-rip-consuntivo);
+            color: var(--color-rip-consuntivo-text);
+            border-color: var(--color-rip-consuntivo-border);
+        }
+
+        .job-card .job-header .job-id .job-badge.badge-misto {
+            background: var(--color-misto);
+            color: var(--color-misto-text);
+            border-color: var(--color-misto-border);
+        }
+
+        .job-card .job-header .job-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .job-card .job-header .job-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .job-card .job-header .job-cost {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+
+        .job-card .job-header .job-count {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: var(--border-color);
+            padding: 2px 10px;
+            border-radius: 12px;
+        }
+
+        .job-card .job-expand-icon {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+
+        .job-card.expanded .job-expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .job-interventi {
+            display: none;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .job-card.expanded .job-interventi {
+            display: block;
+        }
+
+        .intervento-item {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .intervento-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .intervento-item:hover {
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .intervento-item .intervento-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .intervento-item .intervento-header .intervento-tipo {
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .intervento-item .intervento-header .intervento-tipo .tipo-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .intervento-item .intervento-header .intervento-tipo .tipo-dot.dot-reperibilita {
+            background: var(--color-reperibilita-border);
+        }
+
+        .intervento-item .intervento-header .intervento-tipo .tipo-dot.dot-normale {
+            background: var(--color-normale-border);
+        }
+
+        .intervento-item .intervento-header .intervento-tipo .tipo-dot.dot-rip-consuntivo {
+            background: var(--color-rip-consuntivo-border);
+        }
+
+        .intervento-item .intervento-header .intervento-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .intervento-item .intervento-header .intervento-meta .tecnico {
+            color: var(--text-secondary);
+        }
+
+        .intervento-item .intervento-header .intervento-meta .costo {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .intervento-item .intervento-expand-icon {
+            font-size: 1rem;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+            margin-left: 4px;
+        }
+
+        .intervento-item.expanded .intervento-expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .intervento-detail {
+            display: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .intervento-item.expanded .intervento-detail {
+            display: block;
+        }
+
+        .intervento-detail .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 24px;
+        }
+
+        .intervento-detail .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            font-size: 0.82rem;
+        }
+
+        .intervento-detail .detail-item .detail-label {
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .intervento-detail .detail-item .detail-value {
+            color: var(--text-primary);
+            text-align: right;
+            max-width: 55%;
+            word-break: break-word;
+        }
+
+        .intervento-detail .detail-item-full {
+            grid-column: 1 / -1;
+        }
+
+        .intervento-detail .detail-item-full .detail-value {
+            text-align: left;
+            max-width: 100%;
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 4px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        body.dark-theme .intervento-detail .detail-item-full .detail-value {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state p {
+            font-size: 0.95rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            .container {
+                padding: 18px 16px;
+                border-radius: var(--border-radius-sm);
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .header-left h1 {
+                font-size: 1.3rem;
+            }
+            .header-actions {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+            .header-actions button,
+            .back-btn {
+                flex: 1;
+                justify-content: center;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            .filter-chips {
+                padding: 8px 10px;
+                gap: 4px;
+            }
+            .filter-chip {
+                font-size: 0.7rem;
+                padding: 3px 12px;
+            }
+            .job-card {
+                padding: 12px 14px;
+            }
+            .job-card .job-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .job-card .job-header .job-meta {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .intervento-item .intervento-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .intervento-detail .detail-grid {
+                grid-template-columns: 1fr;
+                gap: 2px;
+            }
+            .intervento-detail .detail-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2px;
+            }
+            .intervento-detail .detail-item .detail-value {
+                text-align: left;
+                max-width: 100%;
+                width: 100%;
+            }
+            .job-address {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+            .container {
+                padding: 12px 10px;
+            }
+            .header-left h1 {
+                font-size: 1.1rem;
+            }
+            .job-card .job-header .job-meta {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .intervento-item .intervento-header .intervento-meta {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 20px;
+            }
+            .header-actions,
+            .back-btn {
+                display: none;
+            }
+            .job-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                border-color: #ddd;
+            }
+            .job-card:hover {
+                transform: none;
+                box-shadow: none;
+            }
+            .job-interventi {
+                display: block !important;
+            }
+            .intervento-detail {
+                display: block !important;
+            }
+            .filter-chips {
+                display: none;
+            }
+            .job-expand-icon,
+            .intervento-expand-icon {
+                display: none;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .job-card {
+            animation: fadeInUp 0.35s ease forwards;
+        }
+        .job-card:nth-child(1) { animation-delay: 0.05s; }
+        .job-card:nth-child(2) { animation-delay: 0.10s; }
+        .job-card:nth-child(3) { animation-delay: 0.15s; }
+        .job-card:nth-child(4) { animation-delay: 0.20s; }
+        .job-card:nth-child(5) { animation-delay: 0.25s; }
+        .job-card:nth-child(6) { animation-delay: 0.30s; }
+        .job-card:nth-child(7) { animation-delay: 0.35s; }
+        .job-card:nth-child(8) { animation-delay: 0.40s; }
+        .job-card:nth-child(9) { animation-delay: 0.45s; }
+        .job-card:nth-child(10) { animation-delay: 0.50s; }
+        .job-card:nth-child(11) { animation-delay: 0.55s; }
+        .job-card:nth-child(12) { animation-delay: 0.60s; }
+        .job-card:nth-child(13) { animation-delay: 0.65s; }
+        .job-card:nth-child(14) { animation-delay: 0.70s; }
+        .job-card:nth-child(15) { animation-delay: 0.75s; }
+
+        .intervento-item {
+            animation: fadeInUp 0.3s ease forwards;
+        }
+        .intervento-item:nth-child(1) { animation-delay: 0.05s; }
+        .intervento-item:nth-child(2) { animation-delay: 0.10s; }
+        .intervento-item:nth-child(3) { animation-delay: 0.15s; }
+        .intervento-item:nth-child(4) { animation-delay: 0.20s; }
+        .intervento-item:nth-child(5) { animation-delay: 0.25s; }
+        .intervento-item:nth-child(6) { animation-delay: 0.30s; }
+        .intervento-item:nth-child(7) { animation-delay: 0.35s; }
+        .intervento-item:nth-child(8) { animation-delay: 0.40s; }
+        .intervento-item:nth-child(9) { animation-delay: 0.45s; }
+        .intervento-item:nth-child(10) { animation-delay: 0.50s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1 id="pageTitle">🛠️ Interventi</h1>
+                <span class="badge" id="impiantoBadge">Caricamento...</span>
+            </div>
+            <div class="header-actions">
+                <button onclick="window.print()" title="Stampa lista">🖨️ Stampa</button>
+                <button onclick="toggleTheme()" title="Cambia tema">🌓 Tema</button>
+                <a href="javascript:history.back()" class="back-btn">⬅️ Torna indietro</a>
+            </div>
+        </div>
+
+        <div class="job-address" id="impiantoAddress">
+            <span class="address-icon">📍</span>
+            <span id="addressText">Caricamento indirizzo...</span>
+        </div>
+
+        <!-- Filtri -->
+        <div class="filter-chips" id="filterChips">
+            <span class="filter-chip active" data-filter="all" onclick="applyFilter('all')">📋 Tutti</span>
+            <span class="filter-chip" data-filter="Reperibilità" onclick="applyFilter('Reperibilità')">🆘 Reperibilità</span>
+            <span class="filter-chip" data-filter="Normale" onclick="applyFilter('Normale')">⚡ Normale</span>
+            <span class="filter-chip" data-filter="Rip a consuntivo" onclick="applyFilter('Rip a consuntivo')">🔧 Rip a consuntivo</span>
+        </div>
+
+        <!-- Lista JOB -->
+        <div id="interventiContainer">
+            <div class="job-list" id="jobList">
+                <!-- Verrà popolato dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // TEMA
+        // ============================================================
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('interventiTheme', isDark ? 'dark' : 'light');
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem('interventiTheme');
+            if (saved === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+        }
+        loadTheme();
+
+        // ============================================================
+        // UTILITY: CONVERSIONE DATE (FIX per formato ISO)
+        // ============================================================
+
+        function excelDateToJSDate(excelDate) {
+            if (!excelDate) return null;
+            if (excelDate instanceof Date && !isNaN(excelDate)) return excelDate;
+            if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
+                const d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+            }
+            if (typeof excelDate === 'number') {
+                const epoch = new Date(1899, 11, 30);
+                const d = new Date(epoch.getTime() + excelDate * 86400000);
+                if (!isNaN(d)) return d;
+            }
+            if (typeof excelDate === 'string') {
+                const d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+                const parts = excelDate.split(/[/.-]/);
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]);
+                    const year = parseInt(parts[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
+                        const d = new Date(year, month - 1, day);
+                        if (!isNaN(d)) return d;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function formatInterventoDate(dateValue) {
+            if (!dateValue || dateValue === '') return 'Data non disponibile';
+
+            let date = null;
+
+            if (typeof dateValue === 'number') {
+                date = excelDateToJSDate(dateValue);
+            } else {
+                const str = String(dateValue).trim();
+                if (/^[\d,\.]+$/.test(str)) {
+                    const num = parseFloat(str.replace(',', '.'));
+                    date = excelDateToJSDate(num);
+                } else {
+                    const parsed = new Date(str);
+                    if (!isNaN(parsed.getTime())) {
+                        date = parsed;
+                    } else {
+                        date = excelDateToJSDate(str);
+                    }
+                }
+            }
+
+            if (!date) return 'Data non disponibile';
+
+            const giorno = String(date.getDate()).padStart(2, '0');
+            const mese = String(date.getMonth() + 1).padStart(2, '0');
+            const anno = date.getFullYear();
+            const ore = String(date.getHours()).padStart(2, '0');
+            const minuti = String(date.getMinutes()).padStart(2, '0');
+            return `${giorno}/${mese}/${anno} ${ore}:${minuti}`;
+        }
+
+        function formatCosto(costo) {
+            if (costo === undefined || costo === null || costo === '') return '€ 0,00';
+            const num = parseFloat(costo);
+            if (isNaN(num)) return '€ 0,00';
+            return `€ ${num.toFixed(2)}`;
+        }
+
+        // ============================================================
+        // FUNZIONI PER GLI INTERVENTI
+        // ============================================================
+
+        function getInterventiForImpianto(impiantoCodice) {
+            try {
+                const stored = localStorage.getItem(`interventi_${impiantoCodice}`);
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    console.log(`📦 Recuperati ${data.length} interventi per impianto ${impiantoCodice}`);
+                    return data;
+                }
+            } catch (e) {
+                console.warn('⚠️ Impossibile recuperare interventi:', e);
+            }
+            return [];
+        }
+
+        function getInterventoJob(intervento) {
+            return intervento['Job'] || 'N/D';
+        }
+
+        function getInterventoAddress(intervento) {
+            return intervento['Indrizzo Edificio (LocalUnitId) (Impianto)'] || '';
+        }
+
+        function getInterventoCost(intervento) {
+            const costo = intervento['COSTO'];
+            if (costo === undefined || costo === null || costo === '') return 0;
+            return parseFloat(costo) || 0;
+        }
+
+        function getInterventoDate(intervento) {
+            return intervento['ScheduledDate (Job) (Job)'] || '';
+        }
+
+        function getInterventoType(intervento) {
+            return intervento['LocalWorkPerformed'] || 'N/D';
+        }
+
+        function getInterventoTecnico(intervento) {
+            return intervento['LocalEmployeeId (Job) (Job)'] || 'N/D';
+        }
+
+        function getInterventoCliente(intervento) {
+            return intervento['Cliente (Job) (Job)'] || 'N/D';
+        }
+
+        function getInterventoAmministratore(intervento) {
+            return intervento['Amministratore (LocalUnitId) (Impianto)'] || 'N/D';
+        }
+
+        function getInterventoVenditore(intervento) {
+            return intervento['Venditore (LocalUnitId) (Impianto)'] || 'N/D';
+        }
+
+        function getInterventoWorkType(intervento) {
+            return intervento['WorkType (Job) (Job)'] || 'N/D';
+        }
+
+        function getInterventoComponentCode(intervento) {
+            return intervento['ComponentCode (LocalComponent) (Component)'] || 'N/D';
+        }
+
+        function getInterventoComponentCategory(intervento) {
+            return intervento['LocalComponentCategory'] || 'N/D';
+        }
+
+        function getInterventoQuantity(intervento) {
+            return intervento['Quantity'] || 'N/D';
+        }
+
+        function getInterventoTempoLavoro(intervento) {
+            return intervento['Tempo Lavoro (Job) (Job)'] || 'N/D';
+        }
+
+        function getInterventoAcceptedTime(intervento) {
+            return intervento['AcceptedTime (Job) (Job)'] || '';
+        }
+
+        function getInterventoCompletedDate(intervento) {
+            return intervento['JobCompletedDate (Job) (Job)'] || '';
+        }
+
+        function getInterventoComponente(intervento) {
+            return intervento['LocalComponent'] || '';
+        }
+
+        function getInterventoDescription(intervento) {
+            return intervento['TaskDescription'] || '';
+        }
+
+        function getJobBadgeClass(tipi) {
+            const tipiUnici = [...new Set(tipi)];
+            if (tipiUnici.length === 0) return 'badge-misto';
+            if (tipiUnici.length > 1) return 'badge-misto';
+            switch (tipiUnici[0]) {
+                case 'Reperibilità':
+                    return 'badge-reperibilita';
+                case 'Normale':
+                    return 'badge-normale';
+                case 'Rip a consuntivo':
+                    return 'badge-rip-consuntivo';
+                default:
+                    return 'badge-misto';
+            }
+        }
+
+        function getTipoDotClass(tipo) {
+            switch (tipo) {
+                case 'Reperibilità':
+                    return 'dot-reperibilita';
+                case 'Normale':
+                    return 'dot-normale';
+                case 'Rip a consuntivo':
+                    return 'dot-rip-consuntivo';
+                default:
+                    return '';
+            }
+        }
+
+        // ============================================================
+        // RAGGRUPPAMENTO PER JOB
+        // ============================================================
+
+        function raggruppaPerJob(interventi) {
+            const jobMap = new Map();
+
+            interventi.forEach(item => {
+                const jobId = getInterventoJob(item);
+                if (!jobMap.has(jobId)) {
+                    jobMap.set(jobId, {
+                        job: jobId,
+                        interventi: [],
+                        address: getInterventoAddress(item),
+                        totalCost: 0,
+                        date: getInterventoDate(item),
+                        tipi: []
+                    });
+                }
+                const jobGroup = jobMap.get(jobId);
+                jobGroup.interventi.push(item);
+                jobGroup.totalCost += getInterventoCost(item);
+                const tipo = getInterventoType(item);
+                if (tipo && tipo !== 'N/D' && !jobGroup.tipi.includes(tipo)) {
+                    jobGroup.tipi.push(tipo);
+                }
+                if (!jobGroup.date && getInterventoDate(item)) {
+                    jobGroup.date = getInterventoDate(item);
+                }
+                if (!jobGroup.address && getInterventoAddress(item)) {
+                    jobGroup.address = getInterventoAddress(item);
+                }
+            });
+
+            const result = Array.from(jobMap.values());
+            result.sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                if (isNaN(dateA.getTime())) return 1;
+                if (isNaN(dateB.getTime())) return -1;
+                return dateB - dateA;
+            });
+
+            return result;
+        }
+
+        // ============================================================
+        // FILTRI
+        // ============================================================
+
+        let interventiData = [];
+        let filteredData = [];
+        let currentFilter = 'all';
+        let expandedJobIndex = -1;
+        let expandedInterventoIndex = -1;
+
+        function applyFilter(filter) {
+            currentFilter = filter;
+
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active');
+                if (chip.dataset.filter === filter) {
+                    chip.classList.add('active');
+                }
+            });
+
+            if (filter === 'all') {
+                filteredData = [...interventiData];
+            } else {
+                filteredData = interventiData.filter(jobGroup => {
+                    return jobGroup.interventi.some(item => {
+                        const tipo = getInterventoType(item);
+                        return tipo === filter;
+                    });
+                });
+            }
+
+            expandedJobIndex = -1;
+            expandedInterventoIndex = -1;
+            renderJobs(filteredData);
+        }
+
+        // ============================================================
+        // TOGGLE
+        // ============================================================
+
+        function toggleJob(index) {
+            if (expandedJobIndex === index) {
+                expandedJobIndex = -1;
+                expandedInterventoIndex = -1;
+            } else {
+                expandedJobIndex = index;
+                expandedInterventoIndex = -1;
+            }
+            renderJobs(filteredData);
+
+            if (expandedJobIndex !== -1) {
+                const cards = document.querySelectorAll('.job-card');
+                if (cards[expandedJobIndex]) {
+                    setTimeout(() => {
+                        cards[expandedJobIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                    }, 100);
+                }
+            }
+        }
+
+        function toggleIntervento(jobIndex, interventoIndex) {
+            const key = `${jobIndex}_${interventoIndex}`;
+            if (expandedInterventoIndex === key) {
+                expandedInterventoIndex = -1;
+            } else {
+                expandedInterventoIndex = key;
+            }
+            renderJobs(filteredData);
+        }
+
+        // ============================================================
+        // RENDER
+        // ============================================================
+
+        function renderJobs(jobGroups) {
+            const container = document.getElementById('jobList');
+
+            if (!jobGroups || jobGroups.length === 0) {
+                container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <h3>Nessun intervento registrato</h3>
+                            <p>Per questo impianto non sono presenti interventi.</p>
+                        </div>
+                    `;
+                return;
+            }
+
+            let html = '';
+            jobGroups.forEach((jobGroup, jobIndex) => {
+                const isJobExpanded = (expandedJobIndex === jobIndex);
+                const jobDate = formatInterventoDate(jobGroup.date);
+                const totalCost = formatCosto(jobGroup.totalCost);
+                const count = jobGroup.interventi.length;
+                const badgeClass = getJobBadgeClass(jobGroup.tipi);
+                const badgeLabel = jobGroup.tipi.length > 1 ? 'Misto' : (jobGroup.tipi[0] || 'Misto');
+
+                html += `
+                        <div class="job-card ${isJobExpanded ? 'expanded' : ''}" onclick="toggleJob(${jobIndex})">
+                            <div class="job-header">
+                                <div class="job-id">
+                                    📋 ${jobGroup.job}
+                                    <span class="job-badge ${badgeClass}">${badgeLabel}</span>
+                                </div>
+                                <div class="job-meta">
+                                    <span class="job-date">📅 ${jobDate}</span>
+                                    <span class="job-cost">${totalCost}</span>
+                                    <span class="job-count">${count} interventi</span>
+                                    <span class="job-expand-icon">${isJobExpanded ? '▲' : '▼'}</span>
+                                </div>
+                            </div>
+                            <div class="job-interventi">
+                        `;
+
+                jobGroup.interventi.forEach((item, interventoIndex) => {
+                    const tipo = getInterventoType(item);
+                    const dotClass = getTipoDotClass(tipo);
+                    const tecnico = getInterventoTecnico(item);
+                    const costo = formatCosto(getInterventoCost(item));
+                    const componente = getInterventoComponente(item);
+                    const descrizione = getInterventoDescription(item);
+
+                    const key = `${jobIndex}_${interventoIndex}`;
+                    const isInterventoExpanded = (expandedInterventoIndex === key);
+
+                    html += `
+                            <div class="intervento-item ${isInterventoExpanded ? 'expanded' : ''}" onclick="event.stopPropagation(); toggleIntervento(${jobIndex}, ${interventoIndex})">
+                                <div class="intervento-header">
+                                    <div class="intervento-tipo">
+                                        <span class="tipo-dot ${dotClass}"></span>
+                                        ${tipo}
+                                    </div>
+                                    <div class="intervento-meta">
+                                        <span class="tecnico">👨‍🔧 ${tecnico}</span>
+                                        <span class="costo">${costo}</span>
+                                        <span class="intervento-expand-icon">${isInterventoExpanded ? '▲' : '▼'}</span>
+                                    </div>
+                                </div>
+                                <div class="intervento-detail">
+                                    <div class="detail-grid">
+                                        <div class="detail-item">
+                                            <span class="detail-label">📋 Job ID</span>
+                                            <span class="detail-value">${getInterventoJob(item)}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">📅 Data</span>
+                                            <span class="detail-value">${formatInterventoDate(getInterventoDate(item))}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">👤 Cliente</span>
+                                            <span class="detail-value">${getInterventoCliente(item)}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">👔 Amministratore</span>
+                                            <span class="detail-value">${getInterventoAmministratore(item)}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">💼 Venditore</span>
+                                            <span class="detail-value">${getInterventoVenditore(item)}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">📋 WorkType</span>
+                                            <span class="detail-value">${getInterventoWorkType(item)}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">🔧 Componente</span>
+                                            <span class="detail-value">${getInterventoComponentCode(item)}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">📂 Categoria</span>
+                                            <span class="detail-value">${getInterventoComponentCategory(item)}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">📦 Quantità</span>
+                                            <span class="detail-value">${getInterventoQuantity(item)}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">⏱️ Tempo Lavoro</span>
+                                            <span class="detail-value">${getInterventoTempoLavoro(item)} min</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">🕐 Accettazione</span>
+                                            <span class="detail-value">${formatInterventoDate(getInterventoAcceptedTime(item))}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">✅ Completamento</span>
+                                            <span class="detail-value">${formatInterventoDate(getInterventoCompletedDate(item))}</span>
+                                        </div>
+                                        ${componente ? `
+                                        <div class="detail-item detail-item-full">
+                                            <span class="detail-label">📌 Componente</span>
+                                            <span class="detail-value">${componente}</span>
+                                        </div>
+                                        ` : ''}
+                                        ${descrizione ? `
+                                        <div class="detail-item detail-item-full">
+                                            <span class="detail-label">📝 Descrizione</span>
+                                            <span class="detail-value">${descrizione}</span>
+                                        </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                });
+
+                html += `
+                            </div>
+                        </div>
+                    `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // CARICAMENTO PAGINA
+        // ============================================================
+
+        function loadInterventi() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const impianto = urlParams.get('impianto');
+
+            if (!impianto) {
+                document.getElementById('jobList').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">⚠️</div>
+                            <h3>Nessun impianto selezionato</h3>
+                            <p>Specificare un codice impianto nella URL: ?impianto=CODICE</p>
+                        </div>
+                    `;
+                document.getElementById('pageTitle').textContent = '🛠️ Interventi';
+                document.getElementById('impiantoBadge').textContent = '⚠️ Non selezionato';
+                document.getElementById('addressText').textContent = 'Nessun impianto selezionato';
+                return;
+            }
+
+            document.getElementById('pageTitle').textContent = `🛠️ Interventi - Impianto ${impianto}`;
+            document.getElementById('impiantoBadge').textContent = `🆔 ${impianto}`;
+            document.title = `Interventi - Impianto ${impianto}`;
+
+            const rawData = getInterventiForImpianto(impianto);
+
+            if (rawData.length === 0) {
+                document.getElementById('jobList').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <h3>Nessun intervento registrato</h3>
+                            <p>Per l'impianto <strong>${impianto}</strong> non sono presenti interventi.</p>
+                        </div>
+                    `;
+                document.getElementById('addressText').textContent = 'Indirizzo non disponibile';
+                return;
+            }
+
+            interventiData = raggruppaPerJob(rawData);
+            filteredData = [...interventiData];
+
+            if (interventiData.length > 0 && interventiData[0].address) {
+                document.getElementById('addressText').textContent = interventiData[0].address;
+            } else {
+                document.getElementById('addressText').textContent = 'Indirizzo non disponibile';
+            }
+
+            expandedJobIndex = -1;
+            expandedInterventoIndex = -1;
+            renderJobs(filteredData);
+        }
+
+        window.onload = loadInterventi;
+    </script>
+</body>
+</html>

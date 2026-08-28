@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dettaglio Commessa</title>
+    <style>
+        /* ===== RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1b5e20;
+            --primary-light: #4caf50;
+            --primary-bg: #e8f5e9;
+            --text-primary: #1a2332;
+            --text-secondary: #4a5568;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 20px rgba(46, 125, 50, 0.12);
+            --shadow-lg: 0 8px 40px rgba(46, 125, 50, 0.18);
+            --border-radius: 16px;
+            --border-radius-sm: 10px;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --bg-gradient-start: #a5d6a7;
+            --bg-gradient-end: #66bb6a;
+            --card-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        body.dark-theme {
+            --bg-gradient-start: #0f1724;
+            --bg-gradient-end: #1a2332;
+            --card-bg: rgba(26, 35, 50, 0.95);
+            --text-primary: #e8edf5;
+            --text-secondary: #b0c4de;
+            --text-muted: #7a8ba3;
+            --border-color: rgba(76, 175, 80, 0.15);
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+            --primary-bg: rgba(76, 175, 80, 0.12);
+        }
+
+        body.dark-theme .container {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+        }
+
+        body.dark-theme .card {
+            background: rgba(40, 50, 65, 0.6);
+            border-color: var(--border-color);
+        }
+
+        body.dark-theme th {
+            background: rgba(40, 50, 65, 0.8);
+            color: var(--text-secondary);
+        }
+
+        body.dark-theme td {
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        body.dark-theme tr:hover {
+            background: rgba(50, 60, 80, 0.6);
+        }
+
+        body.dark-theme .back-btn {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--text-secondary);
+        }
+
+        body.dark-theme .back-btn:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        body.dark-theme .status-C {
+            background: #1b5e20;
+        }
+
+        body.dark-theme .error {
+            background: rgba(198, 40, 40, 0.2);
+            color: #ef9a9a;
+        }
+
+        body.dark-theme .success-message {
+            background: rgba(27, 94, 32, 0.2);
+            color: #81c784;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 32px 36px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 8px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-info {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header-actions button {
+            padding: 8px 18px;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: var(--font-family);
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-actions button:hover {
+            background: var(--primary-light);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(46, 125, 50, 0.15);
+        }
+
+        .back-btn {
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: var(--font-family);
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-light);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(46, 125, 50, 0.15);
+            text-decoration: none;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: var(--primary-bg);
+            font-weight: 600;
+            color: var(--text-secondary);
+            width: 35%;
+        }
+
+        td {
+            width: 65%;
+            color: var(--text-primary);
+        }
+
+        td strong {
+            color: var(--primary-color);
+        }
+
+        tr:hover td {
+            background: rgba(76, 175, 80, 0.04);
+        }
+
+        .error {
+            color: #c62828;
+            padding: 16px 20px;
+            background: #ffcdd2;
+            border-radius: var(--border-radius-sm);
+            margin: 20px 0;
+            border-left: 4px solid #c62828;
+        }
+
+        .success-message {
+            background: var(--primary-bg);
+            color: var(--primary-color);
+            padding: 12px 20px;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 20px;
+            text-align: center;
+            border-left: 4px solid var(--primary-color);
+            font-weight: 500;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-C {
+            background: #c8e6c9;
+            color: #1b5e20;
+        }
+
+        .status-A {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        .status-P {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .json-display {
+            background: rgba(0, 0, 0, 0.03);
+            border-left: 4px solid var(--primary-light);
+            padding: 14px 18px;
+            margin: 16px 0 0 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            border-radius: var(--border-radius-sm);
+            color: var(--text-secondary);
+        }
+
+        body.dark-theme .json-display {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            .container {
+                padding: 18px 16px;
+                border-radius: var(--border-radius-sm);
+            }
+            h1 {
+                font-size: 1.4rem;
+            }
+            .header-actions {
+                justify-content: center;
+            }
+            .header-actions button,
+            .back-btn {
+                flex: 1;
+                justify-content: center;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            th,
+            td {
+                padding: 8px 10px;
+                font-size: 0.82rem;
+            }
+            th {
+                width: 40%;
+            }
+            td {
+                width: 60%;
+            }
+            .card {
+                padding: 14px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+            .container {
+                padding: 12px 10px;
+            }
+            h1 {
+                font-size: 1.1rem;
+            }
+            .section-title {
+                font-size: 0.95rem;
+            }
+            th,
+            td {
+                padding: 6px 8px;
+                font-size: 0.75rem;
+            }
+            th {
+                width: 45%;
+            }
+            td {
+                width: 55%;
+                word-break: break-word;
+            }
+            .card {
+                padding: 10px 12px;
+            }
+            .json-display {
+                font-size: 0.7rem;
+                padding: 10px 12px;
+            }
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 20px;
+            }
+            .header-actions {
+                display: none;
+            }
+            .card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                border-color: #ddd;
+            }
+            .card:hover {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeInUp 0.35s ease forwards;
+        }
+        .card:nth-child(1) { animation-delay: 0.05s; }
+        .card:nth-child(2) { animation-delay: 0.10s; }
+        .card:nth-child(3) { animation-delay: 0.15s; }
+        .card:nth-child(4) { animation-delay: 0.20s; }
+        .card:nth-child(5) { animation-delay: 0.25s; }
+        .card:nth-child(6) { animation-delay: 0.30s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Dettaglio Commessa</h1>
+        <div class="header-info">Sistema di visualizzazione dati commesse</div>
+
+        <div class="header-actions">
+            <button onclick="window.print()" title="Stampa">🖨️ Stampa</button>
+            <button onclick="toggleTheme()" title="Cambia tema">🌓 Tema</button>
+            <a href="javascript:history.back()" class="back-btn">⬅️ Torna indietro</a>
+        </div>
+
+        <div id="status-message"></div>
+        <div id="content">
+            <div class="loading">Caricamento dati in corso...</div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // TEMA
+        // ============================================================
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('commesseTheme', isDark ? 'dark' : 'light');
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem('commesseTheme');
+            if (saved === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+        }
+        loadTheme();
+
+        // ============================================================
+        // UTILITY: CONVERSIONE DATE (FIX per formato ISO)
+        // ============================================================
+
+        function excelDateToJSDate(excelDate) {
+            if (!excelDate) return null;
+            if (excelDate instanceof Date && !isNaN(excelDate)) return excelDate;
+            if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
+                const d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+            }
+            if (typeof excelDate === 'number') {
+                const epoch = new Date(1899, 11, 30);
+                const d = new Date(epoch.getTime() + excelDate * 86400000);
+                if (!isNaN(d)) return d;
+            }
+            if (typeof excelDate === 'string') {
+                const d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+                const parts = excelDate.split(/[/.-]/);
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]);
+                    const year = parseInt(parts[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
+                        const d = new Date(year, month - 1, day);
+                        if (!isNaN(d)) return d;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function formatExcelDate(excelDate) {
+            if (!excelDate || excelDate === 0 || excelDate === '') return 'N/A';
+
+            // Se è già una stringa in formato ISO
+            if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
+                const parts = excelDate.split('-');
+                const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+                if (!isNaN(d)) {
+                    return d.toLocaleDateString('it-IT');
+                }
+                return excelDate;
+            }
+
+            // Se è un numero seriale Excel
+            if (typeof excelDate === 'number') {
+                const d = excelDateToJSDate(excelDate);
+                if (d && !isNaN(d)) {
+                    return d.toLocaleDateString('it-IT');
+                }
+                return String(excelDate);
+            }
+
+            // Se è una stringa
+            if (typeof excelDate === 'string') {
+                const d = excelDateToJSDate(excelDate);
+                if (d && !isNaN(d)) {
+                    return d.toLocaleDateString('it-IT');
+                }
+                return excelDate;
+            }
+
+            return 'N/A';
+        }
+
+        function formatCurrency(amount) {
+            if (amount === undefined || amount === null || amount === '') return 'N/A';
+            const num = parseFloat(amount);
+            if (isNaN(num)) return 'N/A';
+            return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(num);
+        }
+
+        function getFieldValue(obj, key, defaultValue = 'N/A') {
+            if (!obj) return defaultValue;
+            const value = obj[key];
+            return (value !== undefined && value !== null && value !== '') ? value : defaultValue;
+        }
+
+        // ============================================================
+        // CARICAMENTO DATI
+        // ============================================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const commessaParam = urlParams.get('commessa');
+
+            if (!commessaParam) {
+                showError("Nessun parametro 'commessa' trovato nell'URL.");
+                return;
+            }
+
+            try {
+                const commessaData = JSON.parse(decodeURIComponent(commessaParam));
+
+                showSuccess(`Dati commessa ${commessaData['Numero Commessa'] || 'N/D'} caricati con successo`);
+
+                displayCommessaData(commessaData);
+            } catch (error) {
+                showError("Errore nell'elaborazione dei dati: " + error.message);
+                console.error("Dati non validi:", commessaParam);
+            }
+        });
+
+        function displayCommessaData(data) {
+            const contentDiv = document.getElementById('content');
+
+            // Formatta lo stato
+            let statoBadge = '';
+            const stato = data['Stato comm.'];
+            if (stato) {
+                let cls = 'status-P';
+                if (stato === 'C') cls = 'status-C';
+                else if (stato === 'A') cls = 'status-A';
+                statoBadge = `<span class="status-badge ${cls}">${stato}</span>`;
+            }
+
+            let html = `
+                    <div class="card">
+                        <div class="section-title">📌 Informazioni Principali</div>
+                        <table>
+                            <tr>
+                                <th>Campo</th>
+                                <th>Valore</th>
+                            </tr>
+                            <tr>
+                                <td>Numero Commessa</td>
+                                <td><strong>${getFieldValue(data, 'Numero Commessa')}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Data commessa</td>
+                                <td>${formatExcelDate(data['Data commessa'])}</td>
+                            </tr>
+                            <tr>
+                                <td>Stato comm.</td>
+                                <td>${statoBadge || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td>Tipo</td>
+                                <td>${getFieldValue(data, 'Tipo')}</td>
+                            </tr>
+                            <tr>
+                                <td>ID Imp.</td>
+                                <td><strong>${getFieldValue(data, 'ID Imp.')}</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="section-title">📍 Dettagli Impianto</div>
+                        <table>
+                            <tr>
+                                <th>Campo</th>
+                                <th>Valore</th>
+                            </tr>
+                            <tr>
+                                <td>Indirizzo</td>
+                                <td>${getFieldValue(data, 'Indirizzo')}</td>
+                            </tr>
+                            <tr>
+                                <td>Località impianto</td>
+                                <td>${getFieldValue(data, 'Località impianto')}</td>
+                            </tr>
+                            <tr>
+                                <td>Prov.</td>
+                                <td>${getFieldValue(data, 'Prov')}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="section-title">💰 Informazioni Commerciali</div>
+                        <table>
+                            <tr>
+                                <th>Campo</th>
+                                <th>Valore</th>
+                            </tr>
+                            <tr>
+                                <td>Addetto commerciale</td>
+                                <td>${getFieldValue(data, 'Addetto commerciale')}</td>
+                            </tr>
+                            <tr>
+                                <td>Descrizione Lavori</td>
+                                <td>${getFieldValue(data, 'Descrizione Lavori')}</td>
+                            </tr>
+                            <tr>
+                                <td>Prezzo Netto</td>
+                                <td><strong>${formatCurrency(data['Prezzo Netto'])}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>N. ordine</td>
+                                <td>${getFieldValue(data, 'N. ordine')}</td>
+                            </tr>
+                            <tr>
+                                <td>Data Ordine</td>
+                                <td>${formatExcelDate(data['Data Ordine'])}</td>
+                            </tr>
+                            <tr>
+                                <td>Costo materiale</td>
+                                <td>${formatCurrency(data['Costo materiale'])}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="section-title">📅 Pianificazione Lavori</div>
+                        <table>
+                            <tr>
+                                <th>Campo</th>
+                                <th>Valore</th>
+                            </tr>
+                            <tr>
+                                <td>Data inizio lavori prevista</td>
+                                <td>${formatExcelDate(data['Data inizio lavori prevista'])}</td>
+                            </tr>
+                            <tr>
+                                <td>Data fine lavori prevista</td>
+                                <td>${formatExcelDate(data['Data fine lavori prevista'])}</td>
+                            </tr>
+                            <tr>
+                                <td>Pianificato / Completato nel mese</td>
+                                <td>${getFieldValue(data, 'Pianificato / Completato nel mese')}</td>
+                            </tr>
+                            <tr>
+                                <td>Data effettiva chiusura commessa</td>
+                                <td>${formatExcelDate(data['Data effettiva chiusura commessa'])}</td>
+                            </tr>
+                            <tr>
+                                <td>Data validazione commessa</td>
+                                <td>${formatExcelDate(data['Data validazione commessa'])}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="section-title">📝 Altri Dettagli</div>
+                        <table>
+                            <tr>
+                                <th>Campo</th>
+                                <th>Valore</th>
+                            </tr>
+                            <tr>
+                                <td>Supervisore STF</td>
+                                <td>${getFieldValue(data, 'Supervisore STF')}</td>
+                            </tr>
+                            <tr>
+                                <td>Subappalto Si o No</td>
+                                <td>${getFieldValue(data, 'Subappalto Si o No')}</td>
+                            </tr>
+                            <tr>
+                                <td>Risorsa/e (interna o esterna)</td>
+                                <td>${getFieldValue(data, 'Risorsa/e (interna o esterna)')}</td>
+                            </tr>
+                            <tr>
+                                <td>NOTE</td>
+                                <td>${getFieldValue(data, 'NOTE')}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="section-title">📋 Dati JSON Completi</div>
+                        <div class="json-display">${JSON.stringify(data, null, 2)}</div>
+                    </div>
+                `;
+
+            contentDiv.innerHTML = html;
+        }
+
+        function showError(message) {
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = `<div class="error">❌ ${message}</div>`;
+        }
+
+        function showSuccess(message) {
+            const statusDiv = document.getElementById('status-message');
+            statusDiv.innerHTML = `<div class="success-message">✅ ${message}</div>`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impianto [Impianto]</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET E VARIABILI ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1b5e20;
+            --primary-light: #4caf50;
+            --primary-dark: #0d3b12;
+            --primary-bg: #e8f5e9;
+            --secondary-color: #2e7d32;
+            --text-primary: #1a2332;
+            --text-secondary: #4a5568;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(46, 125, 50, 0.08), 0 1px 2px rgba(46, 125, 50, 0.04);
+            --shadow: 0 4px 20px rgba(46, 125, 50, 0.12);
+            --shadow-lg: 0 8px 40px rgba(46, 125, 50, 0.18);
+            --border-radius: 16px;
+            --border-radius-sm: 10px;
+            --transition-speed: 0.3s;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --bg-gradient-start: #a5d6a7;
+            --bg-gradient-end: #66bb6a;
+            --card-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        body.dark-theme {
+            --bg-gradient-start: #0f1724;
+            --bg-gradient-end: #1a2332;
+            --card-bg: rgba(26, 35, 50, 0.95);
+            --text-primary: #e8edf5;
+            --text-secondary: #b0c4de;
+            --text-muted: #7a8ba3;
+            --border-color: rgba(76, 175, 80, 0.15);
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+            --primary-bg: rgba(76, 175, 80, 0.12);
+        }
+
+        body.dark-theme .container {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+        }
+
+        body.dark-theme .section {
+            background: rgba(40, 50, 65, 0.6);
+            border-color: var(--border-color);
+        }
+
+        body.dark-theme .section h2 {
+            color: #81c784;
+        }
+
+        body.dark-theme .badge {
+            background: rgba(76, 175, 80, 0.15);
+            color: #81c784;
+        }
+
+        body.dark-theme .back-btn {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--text-secondary);
+        }
+
+        body.dark-theme .back-btn:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        body.dark-theme #interventiSection {
+            background: rgba(33, 150, 243, 0.12);
+            border-color: rgba(33, 150, 243, 0.2);
+        }
+
+        body.dark-theme .section-full .field .value {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 32px 36px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            transition: all var(--transition-speed);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+
+        .header-left .badge {
+            background: var(--primary-bg);
+            color: var(--primary-color);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .header-actions button {
+            padding: 8px 18px;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: var(--font-family);
+            color: var(--text-secondary);
+            transition: all var(--transition-speed);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-actions button:hover {
+            background: var(--primary-light);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .back-btn {
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: var(--font-family);
+            color: var(--text-secondary);
+            transition: all var(--transition-speed);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-light);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+            text-decoration: none;
+        }
+
+        /* Sezione interventi in alto */
+        #interventiSection {
+            margin-bottom: 24px;
+            padding: 12px 20px;
+            background: rgba(33, 150, 243, 0.08);
+            border-radius: var(--border-radius-sm);
+            border-left: 4px solid #2196f3;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        #interventiSection .interventi-count {
+            background: #1976d2;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        #interventiSection .interventi-link {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        #interventiSection .interventi-link:hover {
+            color: #0d47a1;
+            text-decoration: underline;
+        }
+
+        #interventiSection .interventi-disabled {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Grid delle sezioni */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 20px 22px;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+            transition: all var(--transition-speed);
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+
+        .section h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.2px;
+        }
+
+        .section .field {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            font-size: 0.9rem;
+        }
+
+        .section .field:last-child {
+            border-bottom: none;
+        }
+
+        .section .field .label {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .section .field .value {
+            color: var(--text-primary);
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .section .field .value a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .section .field .value a:hover {
+            text-decoration: underline;
+        }
+
+        .section .field .value .tag {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tag-presente {
+            background: #c8e6c9;
+            color: #1b5e20;
+        }
+
+        .tag-assente {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        /* Sezione Note a larghezza intera */
+        .section-full {
+            grid-column: 1 / -1;
+        }
+
+        .section-full .field {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+
+        .section-full .field .value {
+            text-align: left;
+            max-width: 100%;
+            background: rgba(0, 0, 0, 0.03);
+            padding: 10px 14px;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-light);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Badge stato combinatore */
+        .combinatore-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+
+        .status-dot.presente {
+            background: #4caf50;
+        }
+
+        .status-dot.assente {
+            background: #ef5350;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            .container {
+                padding: 18px 16px;
+                border-radius: var(--border-radius-sm);
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .header-left h1 {
+                font-size: 1.4rem;
+            }
+            .header-actions {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+            .header-actions button,
+            .back-btn {
+                flex: 1;
+                justify-content: center;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            #interventiSection {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 12px 16px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .section {
+                padding: 16px 18px;
+            }
+            .section .field {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2px;
+                padding: 6px 0;
+            }
+            .section .field .value {
+                text-align: left;
+                max-width: 100%;
+                width: 100%;
+            }
+            .section-full .field .value {
+                padding: 8px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+            .container {
+                padding: 12px 10px;
+            }
+            .header-left h1 {
+                font-size: 1.1rem;
+            }
+            .header-left .badge {
+                font-size: 0.7rem;
+                padding: 2px 12px;
+            }
+            .section {
+                padding: 12px 14px;
+            }
+            .section h2 {
+                font-size: 0.9rem;
+            }
+            .section .field {
+                font-size: 0.82rem;
+            }
+            #interventiSection {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 20px;
+            }
+            .header-actions,
+            .back-btn {
+                display: none;
+            }
+            .section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                border-color: #ddd;
+            }
+            .section:hover {
+                transform: none;
+                box-shadow: none;
+            }
+            #interventiSection {
+                border-color: #ddd;
+                background: #f5f5f5;
+            }
+            #interventiSection .interventi-link {
+                color: #1976d2;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeIn 0.4s ease forwards;
+        }
+        .section:nth-child(1) { animation-delay: 0.05s; }
+        .section:nth-child(2) { animation-delay: 0.10s; }
+        .section:nth-child(3) { animation-delay: 0.15s; }
+        .section:nth-child(4) { animation-delay: 0.20s; }
+        .section:nth-child(5) { animation-delay: 0.25s; }
+        .section:nth-child(6) { animation-delay: 0.30s; }
+        .section:nth-child(7) { animation-delay: 0.35s; }
+        .section:nth-child(8) { animation-delay: 0.40s; }
+        .section:nth-child(9) { animation-delay: 0.45s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1 id="dynamicImpiantoTitle">📋 Scheda Impianto</h1>
+                <span class="badge" id="impiantoBadge">Caricamento...</span>
+            </div>
+            <div class="header-actions">
+                <button onclick="window.print()" title="Stampa scheda">🖨️ Stampa</button>
+                <button onclick="toggleTheme()" title="Cambia tema">🌓 Tema</button>
+                <a href="javascript:history.back()" class="back-btn">⬅️ Torna indietro</a>
+            </div>
+        </div>
+
+        <!-- Sezione Interventi (in alto) -->
+        <div id="interventiSection">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-size:1.2rem;">🛠️</span>
+                <span style="font-weight:600; color:var(--text-primary);">Interventi effettuati</span>
+                <span class="interventi-count" id="interventiCount">0</span>
+            </div>
+            <div id="interventiLinkContainer">
+                <!-- Verrà popolato dinamicamente -->
+            </div>
+        </div>
+
+        <!-- Contenuto principale -->
+        <div class="grid" id="schedaContent">
+            <!-- Le informazioni verranno caricate qui dinamicamente -->
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // TEMA
+        // ============================================================
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('schedaTheme', isDark ? 'dark' : 'light');
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem('schedaTheme');
+            if (saved === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+        }
+        loadTheme();
+
+        // ============================================================
+        // UTILITY: CONVERSIONE DATE (FIX per formato ISO)
+        // ============================================================
+
+        function excelDateToJSDate(excelDate) {
+            if (!excelDate) return null;
+            if (excelDate instanceof Date && !isNaN(excelDate)) return excelDate;
+            if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
+                const d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+            }
+            if (typeof excelDate === 'number') {
+                const epoch = new Date(1899, 11, 30);
+                const d = new Date(epoch.getTime() + excelDate * 86400000);
+                if (!isNaN(d)) return d;
+            }
+            if (typeof excelDate === 'string') {
+                const d = new Date(excelDate);
+                if (!isNaN(d)) return d;
+                const parts = excelDate.split(/[/.-]/);
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]);
+                    const year = parseInt(parts[2]);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
+                        const d = new Date(year, month - 1, day);
+                        if (!isNaN(d)) return d;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function formatExcelDate(excelDate) {
+            if (!excelDate || excelDate === 0 || excelDate === '') return 'N/A';
+
+            // Se è già una stringa in formato ISO
+            if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
+                const parts = excelDate.split('-');
+                const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+                if (!isNaN(d)) {
+                    return d.toLocaleDateString('it-IT');
+                }
+                return excelDate;
+            }
+
+            // Se è un numero seriale Excel
+            if (typeof excelDate === 'number') {
+                const d = excelDateToJSDate(excelDate);
+                if (d && !isNaN(d)) {
+                    return d.toLocaleDateString('it-IT');
+                }
+                return String(excelDate);
+            }
+
+            // Se è una stringa
+            if (typeof excelDate === 'string') {
+                const d = excelDateToJSDate(excelDate);
+                if (d && !isNaN(d)) {
+                    return d.toLocaleDateString('it-IT');
+                }
+                return excelDate;
+            }
+
+            return 'N/A';
+        }
+
+        function formatSimpleDate(dateString) {
+            if (!dateString || dateString === '') return 'N/A';
+            try {
+                const str = String(dateString).trim();
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return str;
+
+                // Prova a parsare come data
+                const d = excelDateToJSDate(dateString);
+                if (d && !isNaN(d)) {
+                    return d.toLocaleDateString('it-IT');
+                }
+
+                return 'N/A';
+            } catch (e) {
+                return 'N/A';
+            }
+        }
+
+        function getFieldValue(obj, key, defaultValue = 'N/A') {
+            if (!obj) return defaultValue;
+            const value = obj[key];
+            return (value !== undefined && value !== null && value !== '') ? value : defaultValue;
+        }
+
+        // ============================================================
+        // FUNZIONI PER GLI INTERVENTI
+        // ============================================================
+
+        function getInterventiForImpianto(impiantoCodice) {
+            try {
+                const stored = localStorage.getItem(`interventi_${impiantoCodice}`);
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    console.log(`📦 Recuperati ${data.length} interventi per impianto ${impiantoCodice}`);
+                    return data;
+                }
+            } catch (e) {
+                console.warn('⚠️ Impossibile recuperare interventi:', e);
+            }
+            return [];
+        }
+
+        // ============================================================
+        // CARICAMENTO DATI
+        // ============================================================
+
+        function loadImpiantoData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const impiantoJSON = urlParams.get('impianto');
+
+            if (!impiantoJSON) {
+                document.getElementById('schedaContent').innerHTML = `
+                        <div class="section section-full" style="text-align:center;padding:40px 20px;">
+                            <h2>⚠️ Nessun Impianto Selezionato</h2>
+                            <p style="color:var(--text-muted);">Torna alla pagina di ricerca e seleziona un impianto per visualizzarne i dettagli.</p>
+                            <br>
+                            <a href="javascript:history.back()" style="color:var(--primary-light);text-decoration:none;font-weight:600;">⬅️ Torna alla ricerca</a>
+                        </div>
+                    `;
+                document.getElementById('dynamicImpiantoTitle').textContent = '📋 Nessun Impianto';
+                document.getElementById('impiantoBadge').textContent = '⚠️ Non selezionato';
+                document.title = 'Nessun Impianto Selezionato';
+                document.getElementById('interventiSection').style.display = 'none';
+                return;
+            }
+
+            try {
+                const datiImpianto = JSON.parse(decodeURIComponent(impiantoJSON));
+
+                // Recupero interventi
+                const interventi = getInterventiForImpianto(datiImpianto.impianto);
+                const interventiCount = interventi.length;
+                const hasInterv = interventiCount > 0;
+
+                // Aggiorna sezione interventi
+                document.getElementById('interventiCount').textContent = interventiCount;
+                const linkContainer = document.getElementById('interventiLinkContainer');
+                if (hasInterv) {
+                    linkContainer.innerHTML = `
+                            <a href="interventi.html?impianto=${encodeURIComponent(datiImpianto.impianto)}" 
+                               target="_blank" 
+                               class="interventi-link">
+                               📋 Visualizza tutti →
+                            </a>
+                        `;
+                } else {
+                    linkContainer.innerHTML = `
+                            <span class="interventi-disabled">Nessun intervento registrato</span>
+                        `;
+                }
+
+                // Aggiorna titolo
+                const codice = datiImpianto.impianto || 'N/D';
+                document.title = `Impianto ${codice}`;
+                document.getElementById('dynamicImpiantoTitle').textContent = `📋 Impianto ${codice}`;
+                document.getElementById('impiantoBadge').textContent = `🆔 ${codice}`;
+
+                // Icone per le sezioni
+                const sezioni = {
+                    generali: '📌',
+                    indirizzi: '📍',
+                    cliente: '👤',
+                    contatti: '📞',
+                    manutenzione: '🔧',
+                    contratto: '📄',
+                    fiscali: '🏛️',
+                    combinatore: '📡',
+                    note: '📝'
+                };
+
+                // Determina stato combinatore
+                const isRad = datiImpianto.rad_tel === 'RAD';
+                const combinatoreStatus = isRad ?
+                    `<span class="combinatore-status"><span class="status-dot presente"></span> Presente</span>` :
+                    `<span class="combinatore-status"><span class="status-dot assente"></span> Non Presente</span>`;
+
+                const combinatoreCanone = isRad ?
+                    (datiImpianto.rad || 'Linea Fissa / SIM del Cliente') :
+                    'N/A';
+
+                // Popola la scheda
+                const schedaContent = document.getElementById('schedaContent');
+                schedaContent.innerHTML = `
+                        <!-- Informazioni Generali -->
+                        <div class="section">
+                            <h2>${sezioni.generali} Informazioni Generali</h2>
+                            <div class="field"><span class="label">Impianto</span><span class="value"><strong>${getFieldValue(datiImpianto, 'impianto')}</strong></span></div>
+                            <div class="field"><span class="label">Tipo Cliente</span><span class="value">${getFieldValue(datiImpianto, 'tipo_cliente')}</span></div>
+                            <div class="field"><span class="label">Zona</span><span class="value">${getFieldValue(datiImpianto, 'zona')}</span></div>
+                            <div class="field"><span class="label">Giro</span><span class="value">${getFieldValue(datiImpianto, 'giro')}</span></div>
+                            <div class="field"><span class="label">Tecnico</span><span class="value">${getFieldValue(datiImpianto, 'tecnico')}</span></div>
+                            <div class="field"><span class="label">Matricola</span><span class="value"><strong>${getFieldValue(datiImpianto, 'matricola')}</strong></span></div>
+                            <div class="field"><span class="label">Venditore</span><span class="value">${getFieldValue(datiImpianto, 'venditore')}</span></div>
+                        </div>
+
+                        <!-- Indirizzi -->
+                        <div class="section">
+                            <h2>${sezioni.indirizzi} Indirizzi</h2>
+                            <div class="field"><span class="label">Indirizzo Impianto</span><span class="value">${getFieldValue(datiImpianto, 'Indirizzo impianto')}</span></div>
+                            <div class="field"><span class="label">Località</span><span class="value">${getFieldValue(datiImpianto, 'Località impianto')}</span></div>
+                            <div class="field"><span class="label">Provincia</span><span class="value">${getFieldValue(datiImpianto, 'Prov')}</span></div>
+                            <div class="field"><span class="label">Indirizzo Cliente</span><span class="value">${getFieldValue(datiImpianto, 'Indirizzo Cliente')}</span></div>
+                            <div class="field"><span class="label">Città Cliente</span><span class="value">${getFieldValue(datiImpianto, 'Città cliente')}</span></div>
+                            <div class="field"><span class="label">Provincia Cliente</span><span class="value">${getFieldValue(datiImpianto, 'Prov Cliente')}</span></div>
+                        </div>
+
+                        <!-- Cliente -->
+                        <div class="section">
+                            <h2>${sezioni.cliente} Cliente</h2>
+                            <div class="field"><span class="label">Cliente</span><span class="value"><strong>${getFieldValue(datiImpianto, 'Cliente')}</strong></span></div>
+                            <div class="field"><span class="label">Amministratore</span><span class="value">${getFieldValue(datiImpianto, 'Amministratore')}</span></div>
+                            <div class="field"><span class="label">Indirizzo Amm.</span><span class="value">${getFieldValue(datiImpianto, 'Indirizzo Amm')}</span></div>
+                            <div class="field"><span class="label">Città Amm.</span><span class="value">${getFieldValue(datiImpianto, 'Citta amm')}</span></div>
+                            <div class="field"><span class="label">Provincia Amm.</span><span class="value">${getFieldValue(datiImpianto, 'Prov Amm')}</span></div>
+                            <div class="field"><span class="label">CAP Amm.</span><span class="value">${getFieldValue(datiImpianto, 'Cap Amm')}</span></div>
+                        </div>
+
+                        <!-- Contatti -->
+                        <div class="section">
+                            <h2>${sezioni.contatti} Contatti</h2>
+                            <div class="field"><span class="label">Email Cliente</span><span class="value">${datiImpianto.aa ? `<a href="mailto:${datiImpianto.aa}">${datiImpianto.aa}</a>` : 'N/A'}</span></div>
+                            <div class="field"><span class="label">Telefono Amm.</span><span class="value">${getFieldValue(datiImpianto, 'tel amm')}</span></div>
+                            <div class="field"><span class="label">Cellulare Amm.</span><span class="value">${getFieldValue(datiImpianto, 'cell amm')}</span></div>
+                            <div class="field"><span class="label">Email Amm.</span><span class="value">${datiImpianto['email amm'] ? `<a href="mailto:${datiImpianto['email amm']}">${datiImpianto['email amm']}</a>` : 'N/A'}</span></div>
+                            <div class="field"><span class="label">Fax Amm.</span><span class="value">${getFieldValue(datiImpianto, 'fax amm')}</span></div>
+                        </div>
+
+                        <!-- Manutenzione -->
+                        <div class="section">
+                            <h2>${sezioni.manutenzione} Manutenzione</h2>
+                            <div class="field"><span class="label">Manutenzione</span><span class="value">${getFieldValue(datiImpianto, 'manut')}</span></div>
+                            <div class="field"><span class="label">Ultima Semestrale</span><span class="value">${formatExcelDate(datiImpianto['ult sem'])}</span></div>
+                            <div class="field"><span class="label">Ultima Visita ENTE</span><span class="value">${formatExcelDate(datiImpianto['utl vp'])}</span></div>
+                            <div class="field"><span class="label">Ultima Manutenzione</span><span class="value">${formatExcelDate(datiImpianto['ult man'])}</span></div>
+                            <div class="field"><span class="label">Periodicità</span><span class="value">${getFieldValue(datiImpianto, 'periodicità')}</span></div>
+                        </div>
+
+                        <!-- Contratto -->
+                        <div class="section">
+                            <h2>${sezioni.contratto} Contratto</h2>
+                            <div class="field"><span class="label">Contratto</span><span class="value">${getFieldValue(datiImpianto, 'contratto')}</span></div>
+                            <div class="field"><span class="label">Inizio Contratto</span><span class="value">${formatSimpleDate(datiImpianto['inizio cont'])}</span></div>
+                            <div class="field"><span class="label">Fine Contratto</span><span class="value">${formatSimpleDate(datiImpianto['fine contratto'])}</span></div>
+                            <div class="field"><span class="label">Canone Contratto</span><span class="value">${getFieldValue(datiImpianto, 'Canone contratto')}</span></div>
+                            <div class="field"><span class="label">Canone Impianto</span><span class="value">${getFieldValue(datiImpianto, 'Canone impianto')}</span></div>
+                        </div>
+
+                        <!-- Dettagli Fiscali -->
+                        <div class="section">
+                            <h2>${sezioni.fiscali} Dettagli Fiscali</h2>
+                            <div class="field"><span class="label">Codice Fiscale</span><span class="value">${getFieldValue(datiImpianto, 'PCCODFISCALE')}</span></div>
+                            <div class="field"><span class="label">Partita IVA</span><span class="value">${getFieldValue(datiImpianto, 'PCPARTITAIVA')}</span></div>
+                        </div>
+
+                        <!-- Combinatore Telefonico -->
+                        <div class="section">
+                            <h2>${sezioni.combinatore} Combinatore Telefonico</h2>
+                            <div class="field"><span class="label">Stato</span><span class="value">${combinatoreStatus}</span></div>
+                            <div class="field"><span class="label">Canone</span><span class="value">${combinatoreCanone}</span></div>
+                        </div>
+
+                        <!-- Note (a tutta larghezza) -->
+                        <div class="section section-full">
+                            <h2>${sezioni.note} Note</h2>
+                            <div class="field">
+                                <span class="value">${datiImpianto.note || 'Nessuna nota disponibile.'}</span>
+                            </div>
+                        </div>
+                    `;
+
+            } catch (error) {
+                console.error('Errore nel caricamento dei dati:', error);
+                document.getElementById('schedaContent').innerHTML = `
+                        <div class="section section-full" style="text-align:center;padding:40px 20px;border-color:#ef5350;">
+                            <h2>❌ Errore nel caricamento dei dati</h2>
+                            <p style="color:var(--text-muted);">Si è verificato un errore durante il caricamento dei dati dell'impianto.</p>
+                            <p style="color:var(--text-muted);font-size:0.85rem;">${error.message}</p>
+                            <br>
+                            <a href="javascript:history.back()" style="color:var(--primary-light);text-decoration:none;font-weight:600;">⬅️ Torna alla ricerca</a>
+                        </div>
+                    `;
+                document.getElementById('interventiSection').style.display = 'none';
+            }
+        }
+
+        window.onload = loadImpiantoData;
+    </script>
+</body>
+</html>

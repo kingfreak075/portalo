@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
-        /* ===== RESET E VARIABILI ===== */
+        /* ===== STILI (come prima, invariati) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -144,7 +144,6 @@
             transition: all var(--transition-speed);
         }
 
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -249,7 +248,6 @@
             font-size: 1.1rem;
         }
 
-        /* FILTRI */
         .filter-chips {
             display: flex;
             flex-wrap: wrap;
@@ -286,7 +284,6 @@
             border-color: var(--primary-color);
         }
 
-        /* Job List */
         .job-list {
             display: flex;
             flex-direction: column;
@@ -563,6 +560,32 @@
 
         .empty-state p {
             font-size: 0.95rem;
+        }
+
+        .loading-database {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .loading-database .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-light);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-database p {
+            margin-top: 12px;
+            color: var(--text-muted);
         }
 
         /* Responsive */
@@ -865,22 +888,153 @@
         }
 
         // ============================================================
-        // FUNZIONI PER GLI INTERVENTI
+        // FUNZIONI PER GLI INTERVENTI (con fallback su window.database)
         // ============================================================
 
+        /**
+         * Recupera gli interventi per un impianto
+         * Prima controlla in localStorage, poi in window.database.bolle
+         */
         function getInterventiForImpianto(impiantoCodice) {
+            // 1. Prova a recuperare da localStorage (salvati da ricerca.html)
             try {
                 const stored = localStorage.getItem(`interventi_${impiantoCodice}`);
                 if (stored) {
                     const data = JSON.parse(stored);
-                    console.log(`📦 Recuperati ${data.length} interventi per impianto ${impiantoCodice}`);
-                    return data;
+                    if (data && data.length > 0) {
+                        console.log(`📦 Recuperati ${data.length} interventi da localStorage per impianto ${impiantoCodice}`);
+                        return data;
+                    }
                 }
             } catch (e) {
-                console.warn('⚠️ Impossibile recuperare interventi:', e);
+                console.warn('⚠️ Impossibile recuperare interventi da localStorage:', e);
             }
+
+            // 2. Se non trova in localStorage, cerca in window.database.bolle (dai chunk)
+            if (window.database && window.database.bolle) {
+                const bolle = window.database.bolle;
+                const interventi = bolle.filter(row => {
+                    const impiantoRif = row['Impiantodiriferimento (Job) (Job)'] || '';
+                    return impiantoRif.trim() === impiantoCodice.trim();
+                });
+
+                if (interventi.length > 0) {
+                    console.log(`📦 Recuperati ${interventi.length} interventi da window.database.bolle per impianto ${impiantoCodice}`);
+                    
+                    // Salva in localStorage per le prossime visite
+                    try {
+                        localStorage.setItem(`interventi_${impiantoCodice}`, JSON.stringify(interventi));
+                        console.log(`💾 Salvati ${interventi.length} interventi in localStorage per impianto ${impiantoCodice}`);
+                    } catch (e) {
+                        console.warn('⚠️ Impossibile salvare interventi in localStorage:', e);
+                    }
+                    
+                    return interventi;
+                }
+            }
+
+            // 3. Prova a caricare i chunk se window.database non esiste ancora
+            if (!window.database) {
+                console.warn('⚠️ window.database non disponibile, provo a caricare i chunk...');
+                // Chiamata asincrona per caricare i dati
+                loadDatabaseAndRetry(impiantoCodice);
+                return [];
+            }
+
+            console.log(`📭 Nessun intervento trovato per impianto ${impiantoCodice}`);
             return [];
         }
+
+        /**
+         * Carica i chunk e riprova a recuperare gli interventi
+         */
+        async function loadDatabaseAndRetry(impiantoCodice) {
+            const container = document.getElementById('jobList');
+            container.innerHTML = `
+                <div class="loading-database">
+                    <div class="spinner"></div>
+                    <p>📥 Caricamento database degli interventi in corso...</p>
+                </div>
+            `;
+
+            try {
+                console.log('📥 Caricamento database da chunk...');
+                
+                // Carica manifest
+                const manifestResp = await fetch('manifest.json');
+                if (!manifestResp.ok) {
+                    throw new Error('manifest.json non trovato');
+                }
+                const manifest = await manifestResp.json();
+                
+                // Scarica tutti i chunk
+                const chunkPromises = manifest.chunks.map(async (chunkInfo, idx) => {
+                    const fileName = chunkInfo.fileName || `chunk_${String(idx).padStart(3, '0')}.json`;
+                    const resp = await fetch(fileName);
+                    if (!resp.ok) throw new Error(`Chunk ${fileName} non trovato`);
+                    return await resp.json();
+                });
+                
+                const chunkResults = await Promise.all(chunkPromises);
+                
+                // Unisci i dati
+                const database = {};
+                for (const chunkData of chunkResults) {
+                    for (const [key, value] of Object.entries(chunkData)) {
+                        if (!database[key]) {
+                            database[key] = Array.isArray(value) ? [] : {};
+                        }
+                        if (Array.isArray(value)) {
+                            database[key] = database[key].concat(value);
+                        } else if (typeof value === 'object' && value !== null) {
+                            database[key] = { ...database[key], ...value };
+                        }
+                    }
+                }
+                
+                window.database = database;
+                console.log('✅ Database caricato da chunk');
+                
+                // Ora riprova a recuperare gli interventi
+                const interventi = getInterventiForImpianto(impiantoCodice);
+                if (interventi.length > 0) {
+                    // Ricarica la pagina con i dati
+                    interventiData = raggruppaPerJob(interventi);
+                    filteredData = [...interventiData];
+                    
+                    if (interventiData.length > 0 && interventiData[0].address) {
+                        document.getElementById('addressText').textContent = interventiData[0].address;
+                    }
+                    
+                    renderJobs(filteredData);
+                } else {
+                    document.getElementById('jobList').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <h3>Nessun intervento registrato</h3>
+                            <p>Per l'impianto <strong>${impiantoCodice}</strong> non sono presenti interventi.</p>
+                        </div>
+                    `;
+                }
+                
+            } catch (err) {
+                console.error('❌ Errore caricamento chunk:', err);
+                document.getElementById('jobList').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+                        <h3>Errore nel caricamento dei dati</h3>
+                        <p>Impossibile caricare gli interventi per l'impianto <strong>${impiantoCodice}</strong>.</p>
+                        <p style="font-size:0.85rem; color:var(--text-muted);">${err.message}</p>
+                        <br>
+                        <button onclick="location.reload()" style="padding:8px 24px;border-radius:8px;border:1px solid var(--primary-color);background:var(--primary-light);color:white;cursor:pointer;font-weight:600;">🔄 Riprova</button>
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================================
+        // FUNZIONI PER GLI INTERVENTI (getter)
+        // ============================================================
 
         function getInterventoJob(intervento) {
             return intervento['Job'] || 'N/D';
@@ -1275,14 +1429,19 @@
             const rawData = getInterventiForImpianto(impianto);
 
             if (rawData.length === 0) {
-                document.getElementById('jobList').innerHTML = `
+                // Se non ci sono dati in localStorage e window.database non è disponibile,
+                // loadDatabaseAndRetry è già stato chiamato da getInterventiForImpianto
+                // Se window.database esiste ma non ci sono interventi, mostra il messaggio
+                if (window.database && window.database.bolle) {
+                    document.getElementById('jobList').innerHTML = `
                         <div class="empty-state">
                             <div class="empty-icon">📭</div>
                             <h3>Nessun intervento registrato</h3>
                             <p>Per l'impianto <strong>${impianto}</strong> non sono presenti interventi.</p>
                         </div>
                     `;
-                document.getElementById('addressText').textContent = 'Indirizzo non disponibile';
+                    document.getElementById('addressText').textContent = 'Indirizzo non disponibile';
+                }
                 return;
             }
 

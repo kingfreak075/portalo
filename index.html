@@ -2643,18 +2643,21 @@ function formatWithMapping(value, mapping) {
                 .slice(0, limite);
         }
 
-        function getCommesseHTML(impiantoCodice) {
-            const commesse = state.m28Data.filter(c => c["ID Imp."] == impiantoCodice);
-            if (commesse.length === 0) {
-                return '<p class="text-muted" style="font-size:0.85rem;">Nessuna commessa trovata</p>';
-            }
-            return commesse.map(c => `
-                    <li>
-                        <span>📋 ${c["Numero Commessa"] || 'N/A'} - ${formatDateToDDMMYYYY(c["Data commessa"])} - ${c["Stato comm."] || 'N/A'} - ${c["Tipo"] || 'N/A'}</span>
-                        <a href="commesse.html?commessa=${encodeURIComponent(JSON.stringify(c))}" target="_blank" title="Visualizza dettagli">🔨</a>
-                    </li>
-                `).join('');
-        }
+     function getCommesseHTML(impiantoCodice) {
+    const commesse = state.m28Data.filter(c => c["ID Imp."] == impiantoCodice);
+    if (commesse.length === 0) {
+        return '<p class="text-muted" style="font-size:0.85rem;">Nessuna commessa trovata</p>';
+    }
+    return commesse.map(c => {
+        const commessaJSON = encodeURIComponent(JSON.stringify(c));
+        return `
+            <li>
+                <span>📋 ${c["Numero Commessa"] || 'N/A'} - ${formatDateToDDMMYYYY(c["Data commessa"])} - ${c["Stato comm."] || 'N/A'} - ${c["Tipo"] || 'N/A'}</span>
+                <a href="commesse.html?commessa=${commessaJSON}" target="_blank" title="Visualizza dettagli" style="font-size:1.1rem;">🔨</a>
+            </li>
+        `;
+    }).join('');
+}
 
         function formatFileSize(bytes) {
             if (bytes < 1024) return bytes + ' B';
@@ -3282,11 +3285,10 @@ function formatWithMapping(value, mapping) {
                         ${docHTML}
                     </div>
 
-                    <div class="documenti-container" style="border-left-color: #ff6f00;">
-                        <h4>🔧 COMMESSE PRESENTI</h4>
-                        <div id="listaCommesse">${commesseHTML}</div>
-                    </div>
-
+                 <div class="documenti-container" style="border-left-color: #ff6f00;">
+    <h4>🔧 COMMESSE PRESENTI</h4>
+    <div id="listaCommesse">${commesseHTML}</div>
+</div>
                     <div class="annotazioni-container" style="border-left-color: #f57c00;">
                         <h4>📄 ARCHIVIO DC</h4>
                         ${archHTML}

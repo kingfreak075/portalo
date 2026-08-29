@@ -2041,25 +2041,37 @@ function getCommesseHTML(impiantoCodice) {
         // ============================================================
         // STATISTICHE
         // ============================================================
-        function updateStats(results) {
-            const total = results.length;
-            const disdette = results.filter(item => isGiroDisdetta(item.giro)).length;
-            const scadute = results.filter(item => isSemestraleScaduta(item)).length;
-            const verbali = results.filter(item => hasVerbali(item.impianto)).length;
-            const senza = results.filter(item => !hasAnnotazioni(item.impianto)).length;
+function updateDashboard() {
+    if (!state.isLoaded || state.data.length === 0) {
+        document.getElementById('dashboardWrapper').style.display = 'none';
+        return;
+    }
 
-            document.getElementById('statTotal').textContent = total;
-            document.getElementById('statDisdette').textContent = disdette;
-            document.getElementById('statScadute').textContent = scadute;
-            document.getElementById('statVerbali').textContent = verbali;
-            document.getElementById('statSenza').textContent = senza;
+    const total = state.data.length;
+    const disdette = state.data.filter(item => isGiroDisdetta(item.giro)).length;
+    const scadute = state.data.filter(item => isSemestraleScaduta(item)).length;
+    const verbali = state.data.filter(item => hasVerbali(item.impianto)).length;
 
-            document.getElementById('dashTotal').textContent = total;
-            document.getElementById('dashDisdette').textContent = disdette;
-            document.getElementById('dashScadute').textContent = scadute;
-            document.getElementById('dashVerbali').textContent = verbali;
-        }
+    document.getElementById('dashTotal').textContent = total;
+    document.getElementById('dashDisdette').textContent = disdette;
+    document.getElementById('dashScadute').textContent = scadute;
+    document.getElementById('dashVerbali').textContent = verbali;
 
+    document.getElementById('dashboardWrapper').style.display = 'block';
+}
+function updateStats(results) {
+    const total = results.length;
+    const disdette = results.filter(item => isGiroDisdetta(item.giro)).length;
+    const scadute = results.filter(item => isSemestraleScaduta(item)).length;
+    const verbali = results.filter(item => hasVerbali(item.impianto)).length;
+    const senza = results.filter(item => !hasAnnotazioni(item.impianto)).length;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statDisdette').textContent = disdette;
+    document.getElementById('statScadute').textContent = scadute;
+    document.getElementById('statVerbali').textContent = verbali;
+    document.getElementById('statSenza').textContent = senza;
+}
         function toggleStats() {
             const grid = document.getElementById('statsGrid');
             const icon = document.getElementById('statsIcon');
@@ -2136,7 +2148,7 @@ function getCommesseHTML(impiantoCodice) {
                 state.mappature = database.mappature || { commerciali: {}, giri: {} };
 
                 state.isLoaded = true;
-
+updateDashboard();  // ← AGGIUNGI QUESTA RIGA
                 document.getElementById('dashboardWrapper').style.display = 'block';
                 updateStats([]);
 

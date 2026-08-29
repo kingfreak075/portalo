@@ -632,8 +632,12 @@
         // ============================================================
         // NAVIGATION
         // ============================================================
-       function goBack() {
-    window.history.back();
+function goBack() {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        window.location.href = 'ricerca_m.html';
+    }
 }
 
         function goHome() { window.location.href = 'ricerca_m.html'; }
@@ -830,11 +834,10 @@ function getCommesseHTML(impiantoCodice) {
                 const linkContainer = document.getElementById('interventiLink');
                 if (count > 0) {
                     linkContainer.innerHTML = `
-                        <a href="interventi_m.html?impianto=${encodeURIComponent(datiImpianto.impianto)}" 
-                           target="_blank" 
-                           class="interventi-link">
-                           📋 Visualizza tutti →
-                        </a>
+                     <a href="interventi_m.html?impianto=${encodeURIComponent(datiImpianto.impianto)}" 
+   class="interventi-link">
+   📋 Visualizza tutti →
+</a>
                     `;
                 } else {
                     linkContainer.innerHTML = `

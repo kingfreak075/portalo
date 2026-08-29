@@ -1573,7 +1573,7 @@
 
             // Banner interventi (solo se > 0)
             const bannerHTML = interventiCount > 0 ? `
-                <div class="sheet-interventi-banner" onclick="window.open('interventi_m.html?impianto=${encodeURIComponent(item.impianto)}', '_blank')">
+               <div class="sheet-interventi-banner" onclick="window.location.href='interventi_m.html?impianto=${encodeURIComponent(item.impianto)}'">
                     <span class="banner-text">🛠️ INTERVENTI (${interventiCount})</span>
                     <span class="banner-link">📋 Visualizza →</span>
                 </div>
@@ -1745,7 +1745,7 @@
                 ${bannerHTML}
 
                 <!-- PULSANTE SCHEDA COMPLETA -->
-                <div class="sheet-full-btn" onclick="window.open('scheda_completa_m.html?impianto=${encodeURIComponent(JSON.stringify(item))}', '_blank')">
+              <div class="sheet-full-btn" onclick="window.location.href='scheda_completa_m.html?impianto=${encodeURIComponent(JSON.stringify(item))}'">
                     <span>📋 Apri scheda completa →</span>
                 </div>
             `;
@@ -1777,7 +1777,7 @@ function getCommesseHTML(impiantoCodice) {
         return `
             <div class="field-row" style="border-bottom:0.5px solid var(--ios-separator);padding:6px 0;display:flex;justify-content:space-between;align-items:center;">
                 <span style="font-size:13px;">📋 ${c["Numero Commessa"] || 'N/A'} - ${formatData(c["Data commessa"])}</span>
-                <a href="commesse_m.html?commessa=${commessaJSON}" target="_blank" style="color:var(--ios-blue);text-decoration:none;font-size:16px;">🔨</a>
+         <a href="commesse_m.html?commessa=${commessaJSON}" style="color:var(--ios-blue);text-decoration:none;font-size:16px;">🔨</a>
             </div>
         `;
     }).join('');

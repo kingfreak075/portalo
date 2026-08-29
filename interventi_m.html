@@ -781,14 +781,13 @@
         // ============================================================
         // NAVIGATION
         // ============================================================
-        function goBack() {
-            if (document.referrer && document.referrer.includes('ricerca_m')) {
-                window.location.href = 'ricerca_m.html';
-            } else {
-                window.history.back();
-            }
-        }
-
+function goBack() {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        window.location.href = 'ricerca_m.html';
+    }
+}
         function goHome() { window.location.href = 'ricerca_m.html'; }
         function goSearch() { window.location.href = 'ricerca_m.html'; }
 

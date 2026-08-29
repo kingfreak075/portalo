@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Analisi Interventi</title>
+    <title>Dashboard Analisi Commerciale</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+    </script>
     <style>
         /* ============================================================
-           DASHBOARD ANALISI - STILE PROFESSIONALE DESKTOP
+           DASHBOARD ANALISI COMMERCIALE - STILE PROFESSIONALE
            ============================================================ */
 
         * {
@@ -42,7 +44,6 @@
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --bg-start: #a5d6a7;
             --bg-end: #66bb6a;
-            --header-height: 60px;
         }
 
         body.dark-theme {
@@ -62,109 +63,123 @@
             background: var(--card-bg);
             border-color: var(--border-color);
         }
-
         body.dark-theme .card {
             background: rgba(40, 50, 65, 0.6);
             border-color: var(--border-color);
         }
-
         body.dark-theme .card h3 {
             border-color: var(--border-color);
             color: var(--text-primary);
         }
-
         body.dark-theme .kpi-card {
             background: rgba(40, 50, 65, 0.6);
             border-color: var(--border-color);
         }
-
         body.dark-theme .kpi-card .kpi-number {
             color: var(--text-primary);
         }
-
         body.dark-theme .kpi-card .kpi-label {
             color: var(--text-muted);
         }
-
         body.dark-theme .bar-item .bar-fill {
             background: var(--primary-light);
         }
-
         body.dark-theme .bar-item .bar-label {
             color: var(--text-secondary);
         }
-
         body.dark-theme .bar-item .bar-value {
             color: var(--text-primary);
         }
-
         body.dark-theme .table-row {
             border-color: var(--border-color);
         }
-
         body.dark-theme .table-row .rank {
             color: var(--text-muted);
         }
-
         body.dark-theme .table-row .name {
             color: var(--text-primary);
         }
-
         body.dark-theme .table-row .value {
             color: var(--text-secondary);
         }
-
         body.dark-theme .badge-success {
             background: #1b5e20;
             color: #a5d6a7;
         }
-
         body.dark-theme .badge-warning {
             background: #e65100;
             color: #ffcc80;
         }
-
         body.dark-theme .badge-danger {
             background: #c62828;
             color: #ef9a9a;
         }
-
         body.dark-theme .badge-info {
             background: #0d47a1;
             color: #90caf9;
         }
-
         body.dark-theme .bottom-nav {
             background: rgba(26, 35, 50, 0.95);
             border-color: var(--border-color);
         }
-
         body.dark-theme .bottom-nav button {
             color: var(--text-muted);
         }
-
         body.dark-theme .bottom-nav button.active {
             color: var(--primary-light);
         }
-
         body.dark-theme .bottom-nav button:hover {
             color: var(--text-primary);
         }
-
         body.dark-theme .header-info {
             color: var(--text-muted);
         }
-
         body.dark-theme .loading-state p {
             color: var(--text-muted);
         }
-
         body.dark-theme .empty-state {
             color: var(--text-muted);
         }
-
         body.dark-theme .empty-state h3 {
             color: var(--text-secondary);
+        }
+        body.dark-theme .opportunity-card {
+            background: rgba(40, 50, 65, 0.6);
+            border-color: var(--border-color);
+        }
+        body.dark-theme .opportunity-card .opp-number {
+            color: var(--text-primary);
+        }
+        body.dark-theme .opportunity-card .opp-label {
+            color: var(--text-muted);
+        }
+        body.dark-theme .modal-content {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+        }
+        body.dark-theme .modal-close {
+            color: var(--text-muted);
+        }
+        body.dark-theme .modal-close:hover {
+            background: var(--border-color);
+        }
+        body.dark-theme .modal-detail-row {
+            border-color: var(--border-color);
+        }
+        body.dark-theme .modal-detail-row .label {
+            color: var(--text-muted);
+        }
+        body.dark-theme .modal-detail-row .value {
+            color: var(--text-primary);
+        }
+        body.dark-theme .modal-table-row {
+            border-color: var(--border-color);
+        }
+        body.dark-theme .modal-table-row .mt-label {
+            color: var(--text-secondary);
+        }
+        body.dark-theme .modal-table-row .mt-value {
+            color: var(--text-primary);
         }
 
         body {
@@ -178,7 +193,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1440px;
             margin: 0 auto;
             background: var(--card-bg);
             padding: 28px 32px;
@@ -220,6 +235,7 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .header-actions button {
@@ -269,7 +285,7 @@
         /* ----- KPI CARDS ----- */
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 14px;
             margin-bottom: 24px;
         }
@@ -277,7 +293,7 @@
         .kpi-card {
             background: rgba(255, 255, 255, 0.5);
             border-radius: var(--radius-sm);
-            padding: 16px 14px;
+            padding: 14px 12px;
             text-align: center;
             border: 1px solid var(--border-color);
             transition: all var(--transition);
@@ -290,7 +306,7 @@
         }
 
         .kpi-card .kpi-number {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--primary);
             line-height: 1.2;
@@ -310,7 +326,7 @@
         }
 
         .kpi-card .kpi-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             font-weight: 500;
             margin-top: 4px;
@@ -328,6 +344,10 @@
 
         .row.full {
             grid-template-columns: 1fr;
+        }
+
+        .row.three {
+            grid-template-columns: 1fr 1fr 1fr;
         }
 
         /* ----- CARDS ----- */
@@ -455,10 +475,11 @@
             align-items: center;
             font-size: 0.85rem;
             transition: background 0.2s;
+            cursor: pointer;
         }
 
         .table-row:hover {
-            background: rgba(0, 0, 0, 0.02);
+            background: rgba(0, 0, 0, 0.04);
         }
 
         .table-row:last-child {
@@ -496,44 +517,103 @@
             color: var(--primary);
         }
 
-        .table-row .value .small {
+        /* ----- TABELLA IMPIANTI (con ordinamento) ----- */
+        .impianti-table-header {
+            display: grid;
+            grid-template-columns: 40px 100px 1fr 100px 100px 120px 120px;
+            padding: 8px 0;
+            font-weight: 600;
             font-size: 0.75rem;
             color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 2px solid var(--border-color);
+            cursor: pointer;
+            user-select: none;
         }
 
-        /* ----- CONTROLLI INCROCIATI ----- */
-        .incrocio-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-
-        .incrocio-item {
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: var(--radius-xs);
-            padding: 12px 14px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
-
-        .incrocio-item .incrocio-number {
-            font-size: 1.6rem;
-            font-weight: 700;
+        .impianti-table-header span:hover {
             color: var(--primary);
         }
 
-        .incrocio-item .incrocio-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
+        .impianti-table-header .sortable {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        .incrocio-item .incrocio-percent {
+        .impianti-table-header .sortable .sort-arrow {
+            font-size: 0.6rem;
+            opacity: 0.5;
+        }
+
+        .impianti-table-header .sortable.active .sort-arrow {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        .impianti-table-row {
+            display: grid;
+            grid-template-columns: 40px 100px 1fr 100px 100px 120px 120px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            align-items: center;
             font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-secondary);
+            transition: background 0.2s;
+            cursor: pointer;
         }
 
-        /* ----- BADGE ----- */
+        .impianti-table-row:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .impianti-table-row:last-child {
+            border-bottom: none;
+        }
+
+        .impianti-table-row .rank {
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .impianti-table-row .code {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .impianti-table-row .address {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .impianti-table-row .interventi {
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .impianti-table-row .commesse {
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .impianti-table-row .stato {
+            text-align: center;
+        }
+
+        .impianti-table-row .cliente {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ----- BADGE STATO ----- */
         .badge-status {
             display: inline-block;
             padding: 2px 12px;
@@ -546,20 +626,289 @@
             background: #c8e6c9;
             color: #1b5e20;
         }
-
         .badge-warning {
             background: #fff3e0;
             color: #e65100;
         }
-
         .badge-danger {
             background: #ffcdd2;
             color: #c62828;
         }
-
         .badge-info {
             background: #bbdefb;
             color: #0d47a1;
+        }
+
+        /* ----- OPPORTUNITY CARDS ----- */
+        .opportunity-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .opportunity-card {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: var(--radius-xs);
+            padding: 12px 14px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+
+        .opportunity-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .opportunity-card .opp-number {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .opportunity-card .opp-number.red {
+            color: var(--danger);
+        }
+        .opportunity-card .opp-number.orange {
+            color: var(--warning);
+        }
+        .opportunity-card .opp-number.green {
+            color: var(--success);
+        }
+        .opportunity-card .opp-number.blue {
+            color: var(--info);
+        }
+
+        .opportunity-card .opp-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .opportunity-card .opp-detail {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ----- FILTRI ----- */
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            background: var(--primary-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .filter-bar input,
+        .filter-bar select {
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xs);
+            font-size: 0.85rem;
+            font-family: var(--font);
+            background: var(--card-bg);
+            color: var(--text-primary);
+            transition: all var(--transition);
+        }
+
+        .filter-bar input:focus,
+        .filter-bar select:focus {
+            border-color: var(--primary-light);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.12);
+        }
+
+        .filter-bar input {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .filter-bar select {
+            min-width: 120px;
+        }
+
+        .filter-bar .filter-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .filter-bar .export-btn {
+            padding: 6px 16px;
+            background: var(--primary-light);
+            color: white;
+            border: none;
+            border-radius: var(--radius-xs);
+            cursor: pointer;
+            font-weight: 500;
+            font-family: var(--font);
+            font-size: 0.8rem;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-bar .export-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(46, 125, 50, 0.2);
+        }
+
+        /* ----- MODALE ----- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            max-width: 900px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: var(--radius-xs);
+            transition: all var(--transition);
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .modal-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .modal-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 24px;
+            padding: 12px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        .modal-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .modal-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .modal-detail-row .label {
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .modal-detail-row .value {
+            color: var(--text-primary);
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+
+        .modal-section-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--primary);
+            margin: 16px 0 8px 0;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-table-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            padding: 6px 0;
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-table-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            font-size: 0.8rem;
+            align-items: center;
+        }
+
+        .modal-table-row:last-child {
+            border-bottom: none;
+        }
+
+        .modal-table-row .mt-label {
+            color: var(--text-secondary);
+        }
+
+        .modal-table-row .mt-value {
+            color: var(--text-primary);
+            font-weight: 500;
         }
 
         /* ----- LOADING ----- */
@@ -579,7 +928,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .loading-state p {
@@ -606,7 +957,7 @@
             margin-bottom: 4px;
         }
 
-        /* ----- BOTTOM NAV (desktop) ----- */
+        /* ----- BOTTOM NAV ----- */
         .bottom-nav {
             margin-top: 24px;
             padding-top: 16px;
@@ -646,9 +997,26 @@
         }
 
         /* ----- RESPONSIVE ----- */
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .kpi-grid {
                 grid-template-columns: repeat(3, 1fr);
+            }
+            .opportunity-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+            .row.three {
+                grid-template-columns: 1fr;
+            }
+            .impianti-table-header,
+            .impianti-table-row {
+                grid-template-columns: 30px 80px 1fr 70px 70px 90px 90px;
+                font-size: 0.75rem;
             }
         }
 
@@ -684,26 +1052,40 @@
             .kpi-card .kpi-number {
                 font-size: 1.5rem;
             }
-            .row {
-                grid-template-columns: 1fr;
-                gap: 14px;
-            }
-            .table-header,
-            .table-row {
-                grid-template-columns: 30px 1fr 80px 80px 80px;
-                font-size: 0.75rem;
-            }
-            .bar-item .bar-label {
-                min-width: 80px;
-                font-size: 0.75rem;
-            }
-            .bar-item .bar-value {
-                min-width: 50px;
-                font-size: 0.75rem;
-            }
-            .incrocio-grid {
+            .opportunity-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 8px;
+            }
+            .impianti-table-header,
+            .impianti-table-row {
+                grid-template-columns: 25px 70px 1fr 60px 60px 80px 80px;
+                font-size: 0.65rem;
+                gap: 4px;
+            }
+            .impianti-table-row .address {
+                font-size: 0.6rem;
+            }
+            .impianti-table-row .cliente {
+                font-size: 0.6rem;
+            }
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-bar input {
+                min-width: auto;
+            }
+            .modal-content {
+                padding: 16px;
+                max-width: 100%;
+            }
+            .modal-detail-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-table-header,
+            .modal-table-row {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+                font-size: 0.7rem;
             }
             .header-info {
                 font-size: 0.8rem;
@@ -743,12 +1125,35 @@
                 font-size: 1.2rem;
             }
             .kpi-card .kpi-label {
+                font-size: 0.6rem;
+            }
+            .impianti-table-header,
+            .impianti-table-row {
+                grid-template-columns: 20px 60px 1fr 50px 50px 60px 60px;
+                font-size: 0.55rem;
+                gap: 2px;
+            }
+            .impianti-table-row .address {
+                font-size: 0.5rem;
+            }
+            .impianti-table-row .cliente {
+                font-size: 0.5rem;
+            }
+            .opportunity-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .opportunity-card .opp-number {
+                font-size: 1.2rem;
+            }
+            .opportunity-card .opp-label {
                 font-size: 0.65rem;
             }
-            .table-header,
-            .table-row {
-                grid-template-columns: 25px 1fr 60px 60px 60px;
-                font-size: 0.65rem;
+            .card {
+                padding: 12px 14px;
+            }
+            .card h3 {
+                font-size: 0.85rem;
             }
             .bar-item .bar-label {
                 min-width: 60px;
@@ -758,21 +1163,19 @@
                 min-width: 40px;
                 font-size: 0.7rem;
             }
-            .incrocio-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 6px;
+            .modal-content {
+                padding: 12px;
             }
-            .incrocio-item .incrocio-number {
-                font-size: 1.2rem;
+            .modal-title {
+                font-size: 1.1rem;
             }
-            .incrocio-item .incrocio-label {
-                font-size: 0.65rem;
+            .modal-detail-row {
+                font-size: 0.8rem;
             }
-            .card {
-                padding: 12px 14px;
-            }
-            .card h3 {
-                font-size: 0.85rem;
+            .modal-table-header,
+            .modal-table-row {
+                grid-template-columns: 1fr 1fr 1fr;
+                font-size: 0.6rem;
             }
         }
 
@@ -787,7 +1190,8 @@
                 padding: 20px;
             }
             .header-actions,
-            .bottom-nav {
+            .bottom-nav,
+            .filter-bar .export-btn {
                 display: none;
             }
             .card {
@@ -798,6 +1202,9 @@
             .kpi-card {
                 break-inside: avoid;
                 page-break-inside: avoid;
+            }
+            .modal-overlay {
+                display: none !important;
             }
         }
 
@@ -825,7 +1232,7 @@
 
         <!-- ===== HEADER ===== -->
         <div class="header">
-            <h1>Dashboard Analisi</h1>
+            <h1>Dashboard Commerciale</h1>
             <div class="header-actions">
                 <button onclick="toggleTheme()" title="Cambia tema">🌓 Tema</button>
                 <button onclick="window.print()" title="Stampa">🖨️ Stampa</button>
@@ -841,6 +1248,8 @@
             <span>📄 <span class="highlight" id="totaleCommesse">0</span> commesse</span>
             <span>•</span>
             <span>🏢 <span class="highlight" id="totaleImpianti">0</span> impianti</span>
+            <span>•</span>
+            <span>💼 <span class="highlight" id="totaleClienti">0</span> clienti</span>
         </div>
 
         <!-- ===== KPI CARDS ===== -->
@@ -865,6 +1274,10 @@
                 <div class="kpi-number blue" id="kpiCommesse">0</div>
                 <div class="kpi-label">📄 Totale Commesse</div>
             </div>
+            <div class="kpi-card">
+                <div class="kpi-number" id="kpiClienti">0</div>
+                <div class="kpi-label">👥 Clienti</div>
+            </div>
         </div>
 
         <!-- ===== RIGA 1: Tipo + Andamento Mensile ===== -->
@@ -872,25 +1285,13 @@
             <div class="col">
                 <div class="card">
                     <h3>📊 Interventi per Tipo <span class="badge" id="tipoBadge">0</span></h3>
-                    <div id="tipoChart">
-                        <div class="empty-state">
-                            <div class="empty-icon">📊</div>
-                            <h3>Nessun dato</h3>
-                            <p>Caricamento in corso...</p>
-                        </div>
-                    </div>
+                    <div id="tipoChart"></div>
                 </div>
             </div>
             <div class="col">
                 <div class="card">
                     <h3>📅 Andamento Mensile <span class="badge" id="mensileBadge">0</span></h3>
-                    <div id="mensileChart">
-                        <div class="empty-state">
-                            <div class="empty-icon">📅</div>
-                            <h3>Nessun dato</h3>
-                            <p>Caricamento in corso...</p>
-                        </div>
-                    </div>
+                    <div id="mensileChart"></div>
                 </div>
             </div>
         </div>
@@ -900,57 +1301,108 @@
             <div class="col">
                 <div class="card">
                     <h3>👨‍🔧 Top Tecnici <span class="badge" id="tecniciBadge">0</span></h3>
-                    <div id="topTecnici">
-                        <div class="empty-state">
-                            <div class="empty-icon">👨‍🔧</div>
-                            <h3>Nessun dato</h3>
-                            <p>Caricamento in corso...</p>
-                        </div>
-                    </div>
+                    <div id="topTecnici"></div>
                 </div>
             </div>
             <div class="col">
                 <div class="card">
                     <h3>💰 Analisi Costi per Tipo <span class="badge" id="costiBadge">0</span></h3>
-                    <div id="analisiCosti">
-                        <div class="empty-state">
-                            <div class="empty-icon">💰</div>
-                            <h3>Nessun dato</h3>
-                            <p>Caricamento in corso...</p>
-                        </div>
-                    </div>
+                    <div id="analisiCosti"></div>
                 </div>
             </div>
         </div>
 
-        <!-- ===== RIGA 3: Top Venditori ===== -->
-        <div class="row full">
+        <!-- ===== RIGA 3: Top Venditori + Top Clienti ===== -->
+        <div class="row">
             <div class="col">
                 <div class="card">
                     <h3>💼 Top Venditori <span class="badge" id="venditoriBadge">0</span></h3>
-                    <div id="topVenditori">
-                        <div class="empty-state">
-                            <div class="empty-icon">💼</div>
-                            <h3>Nessun dato</h3>
-                            <p>Caricamento in corso...</p>
+                    <div id="topVenditori"></div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <h3>🏆 Top Clienti per Fatturato <span class="badge" id="clientiBadge">0</span></h3>
+                    <div id="topClienti"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== RIGA 4: Opportunità Commerciali ===== -->
+        <div class="row full">
+            <div class="col">
+                <div class="card">
+                    <h3>🚀 Opportunità Commerciali <span class="badge" id="opportunitaBadge">0</span></h3>
+                    <div class="opportunity-grid" id="opportunitaGrid">
+                        <div class="opportunity-card" onclick="filtraImpianti('inattivi')">
+                            <div class="opp-number red" id="oppInattivi">0</div>
+                            <div class="opp-label">🔴 Impianti senza attività</div>
+                            <div class="opp-detail">Né interventi né commesse</div>
+                        </div>
+                        <div class="opportunity-card" onclick="filtraImpianti('soloInterventi')">
+                            <div class="opp-number orange" id="oppSoloInterventi">0</div>
+                            <div class="opp-label">🟠 Solo Interventi</div>
+                            <div class="opp-detail">Nessuna commessa</div>
+                        </div>
+                        <div class="opportunity-card" onclick="filtraImpianti('soloCommesse')">
+                            <div class="opp-number blue" id="oppSoloCommesse">0</div>
+                            <div class="opp-label">🔵 Solo Commesse</div>
+                            <div class="opp-detail">Nessun intervento</div>
+                        </div>
+                        <div class="opportunity-card" onclick="filtraImpianti('scadenze')">
+                            <div class="opp-number orange" id="oppScadenze">0</div>
+                            <div class="opp-label">🟡 Scadenze contratto</div>
+                            <div class="opp-detail">Da rinnovare</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ===== RIGA 4: Controlli Incrociati ===== -->
+        <!-- ===== RIGA 5: Analisi per Zona ===== -->
         <div class="row full">
             <div class="col">
                 <div class="card">
-                    <h3>🔗 Controlli Incrociati (BOLLE vs M28) <span class="badge" id="incrocioBadge">0</span></h3>
-                    <div id="controlliIncrociati">
-                        <div class="empty-state">
-                            <div class="empty-icon">🔗</div>
-                            <h3>Nessun dato</h3>
-                            <p>Caricamento in corso...</p>
-                        </div>
+                    <h3>📍 Analisi per Zona <span class="badge" id="zonaBadge">0</span></h3>
+                    <div id="analisiZona"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== RIGA 6: Controlli Incrociati ===== -->
+        <div class="row full">
+            <div class="col">
+                <div class="card">
+                    <h3>🔗 Controlli Incrociati (PARCO + BOLLE + M28) <span class="badge" id="incrocioBadge">0</span></h3>
+                    <div id="controlliIncrociati"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== RIGA 7: Lista Impianti ===== -->
+        <div class="row full">
+            <div class="col">
+                <div class="card">
+                    <h3>📋 Elenco Impianti <span class="badge" id="listaBadge">0</span></h3>
+
+                    <!-- Filter Bar -->
+                    <div class="filter-bar">
+                        <span class="filter-label">🔎</span>
+                        <input type="text" id="searchImpianto" placeholder="Cerca impianto per codice o indirizzo..." oninput="filtraListaImpianti()">
+                        <select id="filtroZona" onchange="filtraListaImpianti()">
+                            <option value="">🌍 Tutte le zone</option>
+                        </select>
+                        <select id="filtroStato" onchange="filtraListaImpianti()">
+                            <option value="">📋 Tutti gli stati</option>
+                            <option value="attivo">✅ Attivo</option>
+                            <option value="parziale">⚠️ Parziale</option>
+                            <option value="inattivo">❌ Inattivo</option>
+                        </select>
+                        <button class="export-btn" onclick="esportaExcel()">📤 Esporta Excel</button>
                     </div>
+
+                    <!-- Table -->
+                    <div id="listaImpianti"></div>
                 </div>
             </div>
         </div>
@@ -966,9 +1418,19 @@
 
     </div>
 
+    <!-- ===== MODALE ===== -->
+    <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) closeModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div id="modalBody">
+                <!-- Contenuto popolato dinamicamente -->
+            </div>
+        </div>
+    </div>
+
     <script>
         // ============================================================
-        // DASHBOARD ANALISI - LOGICA
+        // DASHBOARD ANALISI COMMERCIALE - LOGICA COMPLETA
         // ============================================================
 
         // ============================================================
@@ -1036,14 +1498,25 @@
             return months[month - 1] || month;
         }
 
+        function getStatoImpianto(interventi, commesse) {
+            if (interventi > 0 && commesse > 0) return { label: '✅ Attivo', cls: 'badge-success' };
+            if (interventi > 0 || commesse > 0) return { label: '⚠️ Parziale', cls: 'badge-warning' };
+            return { label: '❌ Inattivo', cls: 'badge-danger' };
+        }
+
         // ============================================================
-        // CARICAMENTO DATI
+        // STATO
         // ============================================================
         let bolleData = [];
         let m28Data = [];
         let parcoData = [];
         let mappature = { commerciali: {} };
+        let impiantiAnalisi = [];
+        let impiantiFiltrati = [];
 
+        // ============================================================
+        // CARICAMENTO DATI
+        // ============================================================
         async function loadDatabase() {
             try {
                 const manifestResp = await fetch('manifest.json');
@@ -1078,12 +1551,10 @@
                 parcoData = database.parco || [];
                 mappature = database.mappature || { commerciali: {} };
 
-                // Aggiorna data
                 document.getElementById('dataAggiornamento').textContent = manifest.timestamp ?
                     new Date(manifest.timestamp).toLocaleString('it-IT') :
                     new Date().toLocaleString('it-IT');
 
-                // Avvia analisi
                 analizzaDati();
 
             } catch (err) {
@@ -1102,16 +1573,18 @@
                 return;
             }
 
-            // 1. Panoramica
+            // ---- PANORAMICA ----
             const totaleInterventi = bolleData.length;
             const totaleCommesse = m28Data.length;
-            const impiantiUnici = new Set(bolleData.map(b => b['Impiantodiriferimento (Job) (Job)'] || '').filter(Boolean));
+            const impiantiUnici = new Set(parcoData.map(p => p.impianto).filter(Boolean));
+            const clientiUnici = new Set(parcoData.map(p => p.Cliente).filter(Boolean));
 
             document.getElementById('totaleInterventi').textContent = formatNumber(totaleInterventi);
             document.getElementById('totaleCommesse').textContent = formatNumber(totaleCommesse);
             document.getElementById('totaleImpianti').textContent = formatNumber(impiantiUnici.size);
+            document.getElementById('totaleClienti').textContent = formatNumber(clientiUnici.size);
 
-            // 2. KPI
+            // ---- KPI ----
             const tipi = bolleData.map(b => b['LocalWorkPerformed'] || 'N/D').filter(Boolean);
             const tipiUnici = [...new Set(tipi)];
             const costi = bolleData.map(b => parseFloat(b['COSTO']) || 0);
@@ -1123,26 +1596,41 @@
             document.getElementById('kpiCosto').textContent = formatCurrency(costoTotale);
             document.getElementById('kpiMedia').textContent = formatCurrency(costoMedio);
             document.getElementById('kpiCommesse').textContent = formatNumber(totaleCommesse);
+            document.getElementById('kpiClienti').textContent = formatNumber(clientiUnici.size);
 
-            // 3. Interventi per Tipo
+            // ---- INTERVENTI PER TIPO ----
             renderTipoChart(tipi);
 
-            // 4. Andamento Mensile
+            // ---- ANDAMENTO MENSILE ----
             renderMensileChart(bolleData);
 
-            // 5. Top Tecnici
+            // ---- TOP TECNICI ----
             renderTopTecnici(bolleData);
 
-            // 6. Analisi Costi per Tipo
+            // ---- ANALISI COSTI PER TIPO ----
             renderAnalisiCosti(bolleData);
 
-            // 7. Top Venditori
+            // ---- TOP VENDITORI ----
             renderTopVenditori(bolleData);
 
-            // 8. Controlli Incrociati
-            renderControlliIncrociati(bolleData, m28Data);
+            // ---- TOP CLIENTI ----
+            renderTopClienti();
 
-            showToast(`✅ Analisi completata: ${totaleInterventi} interventi`, 'success');
+            // ---- OPPORTUNITÀ COMMERCIALI ----
+            renderOpportunita();
+
+            // ---- ANALISI PER ZONA ----
+            renderAnalisiZona();
+
+            // ---- CONTROLLI INCROCIATI ----
+            renderControlliIncrociati();
+
+            // ---- LISTA IMPIANTI ----
+            buildListaImpianti();
+            populateZoneFilter();
+            filtraListaImpianti();
+
+            showToast(`✅ Analisi completata: ${totaleInterventi} interventi, ${totaleCommesse} commesse`, 'success');
         }
 
         // ============================================================
@@ -1159,7 +1647,8 @@
             document.getElementById('tipoBadge').textContent = sorted.length;
 
             if (sorted.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-icon">📊</div><h3>Nessun tipo</h3></div>`;
+                container.innerHTML =
+                    `<div class="empty-state"><div class="empty-icon">📊</div><h3>Nessun tipo</h3></div>`;
                 return;
             }
 
@@ -1204,7 +1693,8 @@
             document.getElementById('mensileBadge').textContent = sorted.length;
 
             if (sorted.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-icon">📅</div><h3>Nessun dato mensile</h3></div>`;
+                container.innerHTML =
+                    `<div class="empty-state"><div class="empty-icon">📅</div><h3>Nessun dato mensile</h3></div>`;
                 return;
             }
 
@@ -1251,7 +1741,8 @@
             document.getElementById('tecniciBadge').textContent = sorted.length;
 
             if (sorted.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-icon">👨‍🔧</div><h3>Nessun tecnico</h3></div>`;
+                container.innerHTML =
+                    `<div class="empty-state"><div class="empty-icon">👨‍🔧</div><h3>Nessun tecnico</h3></div>`;
                 return;
             }
 
@@ -1310,7 +1801,8 @@
             document.getElementById('costiBadge').textContent = sorted.length;
 
             if (sorted.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-icon">💰</div><h3>Nessun costo</h3></div>`;
+                container.innerHTML =
+                    `<div class="empty-state"><div class="empty-icon">💰</div><h3>Nessun costo</h3></div>`;
                 return;
             }
 
@@ -1349,7 +1841,6 @@
 
             bolle.forEach(b => {
                 let venditore = b['Venditore (LocalUnitId) (Impianto)'] || 'N/D';
-                // Prova a mappare usando la mappatura dei commerciali
                 if (mappature.commerciali && venditore !== 'N/D') {
                     const mapped = mappature.commerciali[venditore];
                     if (mapped) venditore = `${venditore} - ${mapped}`;
@@ -1371,7 +1862,8 @@
             document.getElementById('venditoriBadge').textContent = sorted.length;
 
             if (sorted.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-icon">💼</div><h3>Nessun venditore</h3></div>`;
+                container.innerHTML =
+                    `<div class="empty-state"><div class="empty-icon">💼</div><h3>Nessun venditore</h3></div>`;
                 return;
             }
 
@@ -1412,46 +1904,293 @@
         }
 
         // ============================================================
+        // RENDER: Top Clienti per Fatturato
+        // ============================================================
+        function renderTopClienti() {
+            const container = document.getElementById('topClienti');
+            const clienti = {};
+
+            // Raggruppa per cliente da PARCO
+            parcoData.forEach(p => {
+                const cliente = p.Cliente || 'N/D';
+                if (!clienti[cliente]) {
+                    clienti[cliente] = { impianti: 0, interventi: 0, commesse: 0, costi: 0 };
+                }
+                clienti[cliente].impianti++;
+            });
+
+            // Aggiungi interventi e costi
+            bolleData.forEach(b => {
+                const impianto = b['Impiantodiriferimento (Job) (Job)'] || '';
+                const parco = parcoData.find(p => p.impianto === impianto);
+                const cliente = parco ? parco.Cliente || 'N/D' : 'N/D';
+                const costo = parseFloat(b['COSTO']) || 0;
+                if (!clienti[cliente]) {
+                    clienti[cliente] = { impianti: 0, interventi: 0, commesse: 0, costi: 0 };
+                }
+                clienti[cliente].interventi++;
+                clienti[cliente].costi += costo;
+            });
+
+            // Aggiungi commesse
+            m28Data.forEach(m => {
+                const impianto = String(m["ID Imp."] || '').trim();
+                const parco = parcoData.find(p => p.impianto === impianto);
+                const cliente = parco ? parco.Cliente || 'N/D' : 'N/D';
+                if (!clienti[cliente]) {
+                    clienti[cliente] = { impianti: 0, interventi: 0, commesse: 0, costi: 0 };
+                }
+                clienti[cliente].commesse++;
+            });
+
+            const sorted = Object.entries(clienti)
+                .filter(([nome]) => nome !== 'N/D' && nome !== '')
+                .sort((a, b) => b[1].costi - a[1].costi)
+                .slice(0, 10);
+
+            document.getElementById('clientiBadge').textContent = sorted.length;
+
+            if (sorted.length === 0) {
+                container.innerHTML =
+                    `<div class="empty-state"><div class="empty-icon">👥</div><h3>Nessun cliente</h3></div>`;
+                return;
+            }
+
+            let html = `
+                <div class="table-header">
+                    <span>#</span>
+                    <span>Cliente</span>
+                    <span>Impianti</span>
+                    <span>Interventi</span>
+                    <span>Commesse</span>
+                    <span>Totale Speso</span>
+                </div>
+            `;
+
+            sorted.forEach(([nome, data], index) => {
+                const rank = index + 1;
+                let rankClass = '';
+                if (rank === 1) rankClass = 'gold';
+                else if (rank === 2) rankClass = 'silver';
+                else if (rank === 3) rankClass = 'bronze';
+
+                html += `
+                    <div class="table-row">
+                        <span class="rank ${rankClass}">#${rank}</span>
+                        <span class="name">${nome}</span>
+                        <span class="value">${formatNumber(data.impianti)}</span>
+                        <span class="value">${formatNumber(data.interventi)}</span>
+                        <span class="value">${formatNumber(data.commesse)}</span>
+                        <span class="value highlight">${formatCurrency(data.costi)}</span>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // RENDER: Opportunità Commerciali
+        // ============================================================
+        function renderOpportunita() {
+            const impiantiMap = {};
+
+            // Inizializza tutti gli impianti da PARCO
+            parcoData.forEach(p => {
+                const codice = p.impianto;
+                if (codice) {
+                    impiantiMap[codice] = {
+                        interventi: 0,
+                        commesse: 0,
+                        scadenza: p['fine contratto'] || null
+                    };
+                }
+            });
+
+            // Conta interventi per impianto
+            bolleData.forEach(b => {
+                const impianto = b['Impiantodiriferimento (Job) (Job)'] || '';
+                if (impianto && impiantiMap[impianto]) {
+                    impiantiMap[impianto].interventi++;
+                }
+            });
+
+            // Conta commesse per impianto
+            m28Data.forEach(m => {
+                const impianto = String(m["ID Imp."] || '').trim();
+                if (impianto && impiantiMap[impianto]) {
+                    impiantiMap[impianto].commesse++;
+                }
+            });
+
+            const entries = Object.entries(impiantiMap);
+
+            // Impianti senza attività (0 interventi e 0 commesse)
+            const inattivi = entries.filter(([_, d]) => d.interventi === 0 && d.commesse === 0);
+            // Solo interventi
+            const soloInterventi = entries.filter(([_, d]) => d.interventi > 0 && d.commesse === 0);
+            // Solo commesse
+            const soloCommesse = entries.filter(([_, d]) => d.interventi === 0 && d.commesse > 0);
+
+            // Scadenze contratto (fine contratto < 60 giorni)
+            const oggi = new Date();
+            const scadenze = entries.filter(([_, d]) => {
+                if (!d.scadenza) return false;
+                const scad = excelDateToJSDate(d.scadenza);
+                if (!scad) return false;
+                const diff = (scad - oggi) / (1000 * 60 * 60 * 24);
+                return diff > 0 && diff < 60;
+            });
+
+            document.getElementById('oppInattivi').textContent = formatNumber(inattivi.length);
+            document.getElementById('oppSoloInterventi').textContent = formatNumber(soloInterventi.length);
+            document.getElementById('oppSoloCommesse').textContent = formatNumber(soloCommesse.length);
+            document.getElementById('oppScadenze').textContent = formatNumber(scadenze.length);
+
+            const totale = inattivi.length + soloInterventi.length + soloCommesse.length + scadenze.length;
+            document.getElementById('opportunitaBadge').textContent = formatNumber(totale);
+
+            // Salva per i filtri
+            window._opportunita = { inattivi, soloInterventi, soloCommesse, scadenze };
+        }
+
+        // ============================================================
+        // RENDER: Analisi per Zona
+        // ============================================================
+        function renderAnalisiZona() {
+            const container = document.getElementById('analisiZona');
+            const zone = {};
+
+            // Raggruppa impianti per zona
+            parcoData.forEach(p => {
+                const zona = p.zona || 'N/D';
+                if (!zone[zona]) {
+                    zone[zona] = { impianti: 0, interventi: 0, commesse: 0 };
+                }
+                zone[zona].impianti++;
+            });
+
+            // Aggiungi interventi
+            bolleData.forEach(b => {
+                const impianto = b['Impiantodiriferimento (Job) (Job)'] || '';
+                const parco = parcoData.find(p => p.impianto === impianto);
+                const zona = parco ? parco.zona || 'N/D' : 'N/D';
+                if (!zone[zona]) {
+                    zone[zona] = { impianti: 0, interventi: 0, commesse: 0 };
+                }
+                zone[zona].interventi++;
+            });
+
+            // Aggiungi commesse
+            m28Data.forEach(m => {
+                const impianto = String(m["ID Imp."] || '').trim();
+                const parco = parcoData.find(p => p.impianto === impianto);
+                const zona = parco ? parco.zona || 'N/D' : 'N/D';
+                if (!zone[zona]) {
+                    zone[zona] = { impianti: 0, interventi: 0, commesse: 0 };
+                }
+                zone[zona].commesse++;
+            });
+
+            const sorted = Object.entries(zone).sort((a, b) => b[1].impianti - a[1].impianti);
+
+            document.getElementById('zonaBadge').textContent = sorted.length;
+
+            if (sorted.length === 0) {
+                container.innerHTML =
+                    `<div class="empty-state"><div class="empty-icon">📍</div><h3>Nessuna zona</h3></div>`;
+                return;
+            }
+
+            let html = `
+                <div class="table-header" style="grid-template-columns: 40px 1fr 100px 100px 100px 100px;">
+                    <span>#</span>
+                    <span>Zona</span>
+                    <span>Impianti</span>
+                    <span>Interventi</span>
+                    <span>Commesse</span>
+                    <span>Rapporto</span>
+                </div>
+            `;
+
+            sorted.forEach(([zona, data], index) => {
+                const rapporto = data.impianti > 0 ? (data.interventi / data.impianti).toFixed(1) : '0';
+                const rank = index + 1;
+                let rankClass = '';
+                if (rank === 1) rankClass = 'gold';
+                else if (rank === 2) rankClass = 'silver';
+                else if (rank === 3) rankClass = 'bronze';
+
+                html += `
+                    <div class="table-row" style="grid-template-columns: 40px 1fr 100px 100px 100px 100px;">
+                        <span class="rank ${rankClass}">#${rank}</span>
+                        <span class="name">${zona}</span>
+                        <span class="value">${formatNumber(data.impianti)}</span>
+                        <span class="value">${formatNumber(data.interventi)}</span>
+                        <span class="value">${formatNumber(data.commesse)}</span>
+                        <span class="value highlight">${rapporto} / imp.</span>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ============================================================
         // RENDER: Controlli Incrociati
         // ============================================================
-        function renderControlliIncrociati(bolle, m28) {
+        function renderControlliIncrociati() {
             const container = document.getElementById('controlliIncrociati');
 
-            // Estrai codici impianto da BOLLE
-            const impiantiBolle = new Set(bolle.map(b => b['Impiantodiriferimento (Job) (Job)'] || '').filter(Boolean));
+            const impiantiMap = {};
+            parcoData.forEach(p => {
+                const codice = p.impianto;
+                if (codice) {
+                    impiantiMap[codice] = { interventi: 0, commesse: 0 };
+                }
+            });
 
-            // Estrai codici impianto da M28
-            const impiantiM28 = new Set(m28.map(m => String(m["ID Imp."] || '').trim()).filter(Boolean));
+            bolleData.forEach(b => {
+                const impianto = b['Impiantodiriferimento (Job) (Job)'] || '';
+                if (impianto && impiantiMap[impianto]) {
+                    impiantiMap[impianto].interventi++;
+                }
+            });
 
-            // Unione di tutti gli impianti
-            const tuttiImpianti = new Set([...impiantiBolle, ...impiantiM28]);
+            m28Data.forEach(m => {
+                const impianto = String(m["ID Imp."] || '').trim();
+                if (impianto && impiantiMap[impianto]) {
+                    impiantiMap[impianto].commesse++;
+                }
+            });
 
-            // Calcoli
-            const soloBolle = [...impiantiBolle].filter(i => !impiantiM28.has(i));
-            const soloM28 = [...impiantiM28].filter(i => !impiantiBolle.has(i));
-            const entrambi = [...impiantiBolle].filter(i => impiantiM28.has(i));
-            const nessuno = tuttiImpianti.size;
+            const entries = Object.entries(impiantiMap);
+            const totale = entries.length || 1;
 
-            const totale = tuttiImpianti.size || 1;
+            const conEntrambi = entries.filter(([_, d]) => d.interventi > 0 && d.commesse > 0);
+            const soloInterventi = entries.filter(([_, d]) => d.interventi > 0 && d.commesse === 0);
+            const soloCommesse = entries.filter(([_, d]) => d.interventi === 0 && d.commesse > 0);
+            const nessuno = entries.filter(([_, d]) => d.interventi === 0 && d.commesse === 0);
 
             document.getElementById('incrocioBadge').textContent = totale;
 
             const items = [
-                { label: '📋 Interventi (BOLLE)', count: impiantiBolle.size, percent: (impiantiBolle.size / totale * 100), status: 'success' },
-                { label: '📄 Commesse (M28)', count: impiantiM28.size, percent: (impiantiM28.size / totale * 100), status: 'info' },
-                { label: '✅ Entrambi', count: entrambi.length, percent: (entrambi.length / totale * 100), status: 'success' },
-                { label: '⚠️ Solo Interventi', count: soloBolle.length, percent: (soloBolle.length / totale * 100), status: 'warning' },
-                { label: '⚠️ Solo Commesse', count: soloM28.length, percent: (soloM28.length / totale * 100), status: 'warning' },
-                { label: '❌ Nessuno', count: nessuno - impiantiBolle.size - impiantiM28.size + entrambi.length, percent: ((nessuno - impiantiBolle.size - impiantiM28.size + entrambi.length) / totale * 100), status: 'danger' },
+                { label: '✅ Con entrambi', count: conEntrambi.length, percent: (conEntrambi.length / totale * 100),
+                status: 'success' },
+                { label: '⚠️ Solo Interventi', count: soloInterventi.length, percent: (soloInterventi.length / totale *
+                        100), status: 'warning' },
+                { label: '⚠️ Solo Commesse', count: soloCommesse.length, percent: (soloCommesse.length / totale * 100),
+                    status: 'warning' },
+                { label: '❌ Nessuno', count: nessuno.length, percent: (nessuno.length / totale * 100), status: 'danger' },
             ];
 
             let html = `
-                <div class="incrocio-grid">
+                <div class="incrocio-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
                     ${items.map(item => `
-                        <div class="incrocio-item">
-                            <div class="incrocio-number">${formatNumber(item.count)}</div>
-                            <div class="incrocio-label">${item.label}</div>
-                            <div class="incrocio-percent">
+                        <div class="opportunity-card" style="cursor:default;">
+                            <div class="opp-number ${item.status === 'success' ? 'green' : item.status === 'warning' ? 'orange' : 'red'}">${formatNumber(item.count)}</div>
+                            <div class="opp-label">${item.label}</div>
+                            <div class="opp-detail">
                                 <span class="badge-status badge-${item.status}">${item.percent.toFixed(1)}%</span>
                             </div>
                         </div>
@@ -1459,19 +2198,10 @@
                 </div>
             `;
 
-            // Aggiungi dettaglio impianti
             html += `
                 <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border-color);">
                     <div style="font-size:0.85rem;font-weight:500;color:var(--text-secondary);margin-bottom:8px;">
-                        📊 Riepilogo: ${formatNumber(tuttiImpianti.size)} impianti totali
-                    </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:0.8rem;color:var(--text-muted);">
-                        <div>📋 Con interventi: <strong style="color:var(--text-primary);">${formatNumber(impiantiBolle.size)}</strong></div>
-                        <div>📄 Con commesse: <strong style="color:var(--text-primary);">${formatNumber(impiantiM28.size)}</strong></div>
-                        <div>✅ Con entrambi: <strong style="color:var(--text-primary);">${formatNumber(entrambi.length)}</strong></div>
-                        <div>⚠️ Solo interventi: <strong style="color:var(--text-primary);">${formatNumber(soloBolle.length)}</strong></div>
-                        <div>⚠️ Solo commesse: <strong style="color:var(--text-primary);">${formatNumber(soloM28.length)}</strong></div>
-                        <div>❌ Nessuno: <strong style="color:var(--text-primary);">${formatNumber(nessuno - impiantiBolle.size - impiantiM28.size + entrambi.length)}</strong></div>
+                        📊 Riepilogo: ${formatNumber(totale)} impianti totali
                     </div>
                 </div>
             `;
@@ -1480,21 +2210,444 @@
         }
 
         // ============================================================
+        // LISTA IMPIANTI
+        // ============================================================
+        let sortField = 'interventi';
+        let sortAsc = false;
+
+        function buildListaImpianti() {
+            const impiantiMap = {};
+
+            parcoData.forEach(p => {
+                const codice = p.impianto;
+                if (codice) {
+                    impiantiMap[codice] = {
+                        impianto: codice,
+                        indirizzo: p['Indirizzo impianto'] || 'N/A',
+                        zona: p.zona || 'N/A',
+                        cliente: p.Cliente || 'N/A',
+                        amministratore: p.Amministratore || 'N/A',
+                        contratto: p.contratto || 'N/A',
+                        interventi: 0,
+                        commesse: 0,
+                        costi: 0
+                    };
+                }
+            });
+
+            bolleData.forEach(b => {
+                const impianto = b['Impiantodiriferimento (Job) (Job)'] || '';
+                const costo = parseFloat(b['COSTO']) || 0;
+                if (impianto && impiantiMap[impianto]) {
+                    impiantiMap[impianto].interventi++;
+                    impiantiMap[impianto].costi += costo;
+                }
+            });
+
+            m28Data.forEach(m => {
+                const impianto = String(m["ID Imp."] || '').trim();
+                if (impianto && impiantiMap[impianto]) {
+                    impiantiMap[impianto].commesse++;
+                }
+            });
+
+            impiantiAnalisi = Object.values(impiantiMap).filter(d => d.impianto);
+            impiantiFiltrati = [...impiantiAnalisi];
+            document.getElementById('listaBadge').textContent = formatNumber(impiantiFiltrati.length);
+        }
+
+        function populateZoneFilter() {
+            const select = document.getElementById('filtroZona');
+            const zone = [...new Set(parcoData.map(p => p.zona).filter(Boolean))].sort();
+            zone.forEach(z => {
+                const opt = document.createElement('option');
+                opt.value = z;
+                opt.textContent = `📍 ${z}`;
+                select.appendChild(opt);
+            });
+        }
+
+        function filtraListaImpianti() {
+            const search = document.getElementById('searchImpianto').value.toLowerCase().trim();
+            const zona = document.getElementById('filtroZona').value;
+            const stato = document.getElementById('filtroStato').value;
+
+            impiantiFiltrati = impiantiAnalisi.filter(d => {
+                // Search
+                if (search) {
+                    const match = d.impianto.toLowerCase().includes(search) ||
+                        d.indirizzo.toLowerCase().includes(search) ||
+                        d.cliente.toLowerCase().includes(search);
+                    if (!match) return false;
+                }
+                // Zona
+                if (zona && d.zona !== zona) return false;
+                // Stato
+                if (stato) {
+                    const s = getStatoImpianto(d.interventi, d.commesse);
+                    const labelMap = { 'attivo': '✅ Attivo', 'parziale': '⚠️ Parziale', 'inattivo': '❌ Inattivo' };
+                    if (s.label !== labelMap[stato]) return false;
+                }
+                return true;
+            });
+
+            ordinaImpianti();
+            renderListaImpianti();
+            document.getElementById('listaBadge').textContent = formatNumber(impiantiFiltrati.length);
+        }
+
+        function ordinaImpianti() {
+            impiantiFiltrati.sort((a, b) => {
+                let valA = a[sortField] || 0;
+                let valB = b[sortField] || 0;
+                if (typeof valA === 'string') {
+                    valA = valA.toLowerCase();
+                    valB = valB.toLowerCase();
+                }
+                if (valA < valB) return sortAsc ? -1 : 1;
+                if (valA > valB) return sortAsc ? 1 : -1;
+                return 0;
+            });
+        }
+
+        function setSort(field) {
+            if (sortField === field) {
+                sortAsc = !sortAsc;
+            } else {
+                sortField = field;
+                sortAsc = false;
+            }
+            filtraListaImpianti();
+            // Aggiorna indicatori
+            document.querySelectorAll('.sortable').forEach(el => {
+                el.classList.remove('active');
+                if (el.dataset.field === field) {
+                    el.classList.add('active');
+                    el.querySelector('.sort-arrow').textContent = sortAsc ? '↑' : '↓';
+                }
+            });
+        }
+
+        function renderListaImpianti() {
+            const container = document.getElementById('listaImpianti');
+
+            if (impiantiFiltrati.length === 0) {
+                container.innerHTML =
+                    `<div class="empty-state"><div class="empty-icon">📭</div><h3>Nessun impianto trovato</h3></div>`;
+                return;
+            }
+
+            let html = `
+                <div class="impianti-table-header">
+                    <span>#</span>
+                    <span class="sortable active" data-field="impianto" onclick="setSort('impianto')">Codice <span class="sort-arrow">↓</span></span>
+                    <span class="sortable" data-field="indirizzo" onclick="setSort('indirizzo')">Indirizzo <span class="sort-arrow">↓</span></span>
+                    <span class="sortable" data-field="interventi" onclick="setSort('interventi')">Interventi <span class="sort-arrow">↓</span></span>
+                    <span class="sortable" data-field="commesse" onclick="setSort('commesse')">Commesse <span class="sort-arrow">↓</span></span>
+                    <span>Stato</span>
+                    <span>Cliente</span>
+                </div>
+            `;
+
+            impiantiFiltrati.forEach((d, index) => {
+                const stato = getStatoImpianto(d.interventi, d.commesse);
+                const rank = index + 1;
+                let rankClass = '';
+                if (rank === 1) rankClass = 'gold';
+                else if (rank === 2) rankClass = 'silver';
+                else if (rank === 3) rankClass = 'bronze';
+
+                html += `
+                    <div class="impianti-table-row" onclick="openModal('${d.impianto}')">
+                        <span class="rank ${rankClass}">#${rank}</span>
+                        <span class="code">${d.impianto}</span>
+                        <span class="address" title="${d.indirizzo}">${d.indirizzo}</span>
+                        <span class="interventi">${formatNumber(d.interventi)}</span>
+                        <span class="commesse">${formatNumber(d.commesse)}</span>
+                        <span class="stato"><span class="badge-status ${stato.cls}">${stato.label}</span></span>
+                        <span class="cliente" title="${d.cliente}">${d.cliente}</span>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // FILTRI OPPORTUNITÀ
+        // ============================================================
+        function filtraImpianti(tipo) {
+            const opp = window._opportunita || { inattivi: [], soloInterventi: [], soloCommesse: [], scadenze: [] };
+            let codici = [];
+
+            switch (tipo) {
+                case 'inattivi':
+                    codici = opp.inattivi.map(([codice]) => codice);
+                    showToast(`🔴 ${codici.length} impianti senza attività`, 'warning');
+                    break;
+                case 'soloInterventi':
+                    codici = opp.soloInterventi.map(([codice]) => codice);
+                    showToast(`🟠 ${codici.length} impianti con solo interventi`, 'warning');
+                    break;
+                case 'soloCommesse':
+                    codici = opp.soloCommesse.map(([codice]) => codice);
+                    showToast(`🔵 ${codici.length} impianti con solo commesse`, 'info');
+                    break;
+                case 'scadenze':
+                    codici = opp.scadenze.map(([codice]) => codice);
+                    showToast(`🟡 ${codici.length} impianti con scadenze imminenti`, 'warning');
+                    break;
+                default:
+                    return;
+            }
+
+            // Filtra la lista
+            document.getElementById('searchImpianto').value = '';
+            document.getElementById('filtroZona').value = '';
+            document.getElementById('filtroStato').value = '';
+
+            if (codici.length > 0) {
+                impiantiFiltrati = impiantiAnalisi.filter(d => codici.includes(d.impianto));
+            } else {
+                impiantiFiltrati = [...impiantiAnalisi];
+            }
+
+            renderListaImpianti();
+            document.getElementById('listaBadge').textContent = formatNumber(impiantiFiltrati.length);
+
+            // Scroll alla lista
+            document.querySelector('.card:last-child').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ============================================================
+        // MODALE DETTAGLIO IMPIANTO
+        // ============================================================
+        function openModal(impiantoCodice) {
+            const parco = parcoData.find(p => p.impianto === impiantoCodice);
+            if (!parco) {
+                showToast('❌ Impianto non trovato', 'error');
+                return;
+            }
+
+            const interventi = bolleData.filter(b => b['Impiantodiriferimento (Job) (Job)'] === impiantoCodice);
+            const commesse = m28Data.filter(m => String(m["ID Imp."] || '').trim() === impiantoCodice);
+
+            const totaleInterventi = interventi.length;
+            const totaleCommesse = commesse.length;
+            const costoTotale = interventi.reduce((sum, b) => sum + (parseFloat(b['COSTO']) || 0), 0);
+            const costoMedio = totaleInterventi > 0 ? costoTotale / totaleInterventi : 0;
+
+            const stato = getStatoImpianto(totaleInterventi, totaleCommesse);
+
+            let html = `
+                <div class="modal-title">📋 Impianto ${impiantoCodice}</div>
+                <div class="modal-subtitle">
+                    <span class="badge-status ${stato.cls}" style="font-size:0.9rem;">${stato.label}</span>
+                </div>
+
+                <div class="modal-detail-grid">
+                    <div class="modal-detail-row">
+                        <span class="label">📍 Indirizzo</span>
+                        <span class="value">${parco['Indirizzo impianto'] || 'N/A'}</span>
+                    </div>
+                    <div class="modal-detail-row">
+                        <span class="label">🏠 Località</span>
+                        <span class="value">${parco['Località impianto'] || 'N/A'}</span>
+                    </div>
+                    <div class="modal-detail-row">
+                        <span class="label">🔢 Matricola</span>
+                        <span class="value">${parco.matricola || 'N/A'}</span>
+                    </div>
+                    <div class="modal-detail-row">
+                        <span class="label">📋 Contratto</span>
+                        <span class="value">${parco.contratto || 'N/A'}</span>
+                    </div>
+                    <div class="modal-detail-row">
+                        <span class="label">🏢 Cliente</span>
+                        <span class="value">${parco.Cliente || 'N/A'}</span>
+                    </div>
+                    <div class="modal-detail-row">
+                        <span class="label">👔 Amministratore</span>
+                        <span class="value">${parco.Amministratore || 'N/A'}</span>
+                    </div>
+                    <div class="modal-detail-row">
+                        <span class="label">🔄 Giro</span>
+                        <span class="value">${parco.giro || 'N/A'}</span>
+                    </div>
+                    <div class="modal-detail-row">
+                        <span class="label">📍 Zona</span>
+                        <span class="value">${parco.zona || 'N/A'}</span>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;">
+                    <div class="kpi-card" style="padding:8px;">
+                        <div class="kpi-number green" style="font-size:1.2rem;">${formatNumber(totaleInterventi)}</div>
+                        <div class="kpi-label">🛠️ Interventi</div>
+                    </div>
+                    <div class="kpi-card" style="padding:8px;">
+                        <div class="kpi-number blue" style="font-size:1.2rem;">${formatNumber(totaleCommesse)}</div>
+                        <div class="kpi-label">📄 Commesse</div>
+                    </div>
+                    <div class="kpi-card" style="padding:8px;">
+                        <div class="kpi-number orange" style="font-size:1.2rem;">${formatCurrency(costoTotale)}</div>
+                        <div class="kpi-label">💰 Costo Totale</div>
+                    </div>
+                    <div class="kpi-card" style="padding:8px;">
+                        <div class="kpi-number" style="font-size:1.2rem;">${formatCurrency(costoMedio)}</div>
+                        <div class="kpi-label">⏱️ Costo Medio</div>
+                    </div>
+                </div>
+            `;
+
+            // Interventi
+            if (totaleInterventi > 0) {
+                html += `
+                    <div class="modal-section-title">🛠️ Interventi (${totaleInterventi})</div>
+                    <div class="modal-table-header">
+                        <span>Data</span>
+                        <span>Tipo</span>
+                        <span>Tecnico</span>
+                        <span>Costo</span>
+                        <span>Job</span>
+                    </div>
+                `;
+                interventi.slice(0, 20).forEach(b => {
+                    const data = formatDate(b['ScheduledDate (Job) (Job)']);
+                    const tipo = b['LocalWorkPerformed'] || 'N/D';
+                    const tecnico = b['LocalEmployeeId (Job) (Job)'] || 'N/D';
+                    const costo = formatCurrency(parseFloat(b['COSTO']) || 0);
+                    const job = b['Job'] || 'N/D';
+                    html += `
+                        <div class="modal-table-row">
+                            <span class="mt-value">${data}</span>
+                            <span class="mt-label">${tipo}</span>
+                            <span class="mt-label">${tecnico}</span>
+                            <span class="mt-value">${costo}</span>
+                            <span class="mt-label">${job}</span>
+                        </div>
+                    `;
+                });
+                if (totaleInterventi > 20) {
+                    html +=
+                        `<div style="font-size:0.8rem;color:var(--text-muted);padding:4px 0;">... e altri ${totaleInterventi - 20} interventi</div>`;
+                }
+            }
+
+            // Commesse
+            if (totaleCommesse > 0) {
+                html += `
+                    <div class="modal-section-title">📄 Commesse (${totaleCommesse})</div>
+                    <div class="modal-table-header">
+                        <span>Numero</span>
+                        <span>Data</span>
+                        <span>Stato</span>
+                        <span>Tipo</span>
+                        <span>Prezzo</span>
+                    </div>
+                `;
+                commesse.slice(0, 20).forEach(m => {
+                    const numero = m["Numero Commessa"] || 'N/D';
+                    const data = formatDate(m["Data commessa"]);
+                    const stato = m["Stato comm."] || 'N/D';
+                    const tipo = m["Tipo"] || 'N/D';
+                    const prezzo = formatCurrency(parseFloat(m["Prezzo Netto"]) || 0);
+                    html += `
+                        <div class="modal-table-row">
+                            <span class="mt-value">${numero}</span>
+                            <span class="mt-label">${data}</span>
+                            <span class="mt-label">${stato}</span>
+                            <span class="mt-label">${tipo}</span>
+                            <span class="mt-value">${prezzo}</span>
+                        </div>
+                    `;
+                });
+                if (totaleCommesse > 20) {
+                    html +=
+                        `<div style="font-size:0.8rem;color:var(--text-muted);padding:4px 0;">... e altri ${totaleCommesse - 20} commesse</div>`;
+                }
+            }
+
+            if (totaleInterventi === 0 && totaleCommesse === 0) {
+                html += `
+                    <div class="empty-state" style="padding:20px;">
+                        <div class="empty-icon">📭</div>
+                        <h3>Nessuna attività</h3>
+                        <p>Questo impianto non ha interventi né commesse registrate.</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('modalBody').innerHTML = html;
+            document.getElementById('modalOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // ============================================================
+        // UTILITY MODALE
+        // ============================================================
+        function formatDate(dateValue) {
+            if (!dateValue) return 'N/A';
+            const d = excelDateToJSDate(dateValue);
+            if (!d || isNaN(d)) return 'N/A';
+            return d.toLocaleDateString('it-IT');
+        }
+
+        // ============================================================
+        // ESPORTAZIONE EXCEL
+        // ============================================================
+        function esportaExcel() {
+            if (impiantiFiltrati.length === 0) {
+                showToast('⚠️ Nessun dato da esportare', 'warning');
+                return;
+            }
+
+            const data = impiantiFiltrati.map(d => ({
+                'Codice': d.impianto,
+                'Indirizzo': d.indirizzo,
+                'Zona': d.zona,
+                'Cliente': d.cliente,
+                'Amministratore': d.amministratore,
+                'Contratto': d.contratto,
+                'Interventi': d.interventi,
+                'Commesse': d.commesse,
+                'Costo Totale': d.costi
+            }));
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, 'Analisi Impianti');
+            XLSX.writeFile(wb, `analisi_impianti_${new Date().toISOString().slice(0,10)}.xlsx`);
+
+            showToast(`📤 Esportati ${data.length} impianti in Excel`, 'success');
+        }
+
+        // ============================================================
         // TOAST
         // ============================================================
         function showToast(message, type = 'info') {
-            // Usa un toast semplice per desktop
             const oldToast = document.querySelector('.toast-message');
             if (oldToast) oldToast.remove();
 
             const toast = document.createElement('div');
             toast.className = 'toast-message';
+            const colors = {
+                success: '#2e7d32',
+                error: '#d32f2f',
+                warning: '#f57c00',
+                info: '#1976d2'
+            };
             toast.style.cssText = `
                 position: fixed;
                 bottom: 80px;
                 left: 50%;
                 transform: translateX(-50%);
-                background: rgba(0,0,0,0.8);
+                background: ${colors[type] || '#333'};
                 color: white;
                 padding: 12px 24px;
                 border-radius: 10px;
@@ -1524,8 +2677,8 @@
         loadTheme();
         loadDatabase();
 
-        console.log('📊 Dashboard Analisi v1.0 caricata');
-        console.log('📋 Analisi interventi e commesse');
+        console.log('📊 Dashboard Commerciale v1.0 caricata');
+        console.log('📋 Analisi completa di PARCO + BOLLE + M28');
     </script>
 
 </body>

@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
-           iOS NATIVE STYLE - Interventi Mobile
+           iOS NATIVE STYLE - Interventi Mobile v3
            ============================================================ */
 
         * {
@@ -41,18 +41,15 @@
             --tab-height: 50px;
             --header-height: 52px;
 
-            --color-reperibilita: #FFCDD2;
-            --color-reperibilita-border: #C62828;
-            --color-reperibilita-text: #C62828;
-            --color-normale: #C8E6C9;
-            --color-normale-border: #1B5E20;
-            --color-normale-text: #1B5E20;
-            --color-rip-consuntivo: #BBDEFB;
-            --color-rip-consuntivo-border: #0D47A1;
-            --color-rip-consuntivo-text: #0D47A1;
-            --color-misto: #E0E0E0;
-            --color-misto-border: #757575;
-            --color-misto-text: #757575;
+            /* Colori badge tipo intervento */
+            --badge-normale: #34C759;
+            --badge-normale-bg: #E8F5E9;
+            --badge-reperibilita: #FF3B30;
+            --badge-reperibilita-bg: #FFEBEE;
+            --badge-rip-consuntivo: #007AFF;
+            --badge-rip-consuntivo-bg: #E3F2FD;
+            --badge-misto: #8E8E93;
+            --badge-misto-bg: #F5F5F5;
         }
 
         body.dark {
@@ -64,14 +61,10 @@
             --ios-separator: #38383A;
             --ios-shadow: rgba(255, 255, 255, 0.05);
             --ios-shadow-heavy: rgba(255, 255, 255, 0.08);
-            --color-reperibilita: rgba(198, 40, 40, 0.2);
-            --color-reperibilita-text: #EF9A9A;
-            --color-normale: rgba(27, 94, 32, 0.2);
-            --color-normale-text: #81C784;
-            --color-rip-consuntivo: rgba(13, 71, 161, 0.2);
-            --color-rip-consuntivo-text: #90CAF9;
-            --color-misto: rgba(117, 117, 117, 0.2);
-            --color-misto-text: #9E9E9E;
+            --badge-normale-bg: rgba(52, 199, 89, 0.2);
+            --badge-reperibilita-bg: rgba(255, 59, 48, 0.2);
+            --badge-rip-consuntivo-bg: rgba(0, 122, 255, 0.2);
+            --badge-misto-bg: rgba(142, 142, 147, 0.2);
         }
 
         body {
@@ -221,7 +214,7 @@
             padding: 0 16px 16px;
         }
 
-        /* ----- JOB CARD ----- */
+        /* ----- JOB CARD (nuovo layout) ----- */
         .job-card {
             background: var(--ios-card);
             border-radius: 14px;
@@ -233,98 +226,108 @@
         }
 
         .job-header {
-            padding: 14px 16px;
+            padding: 12px 16px 10px;
             cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            min-height: 56px;
             user-select: none;
+            transition: background 0.2s;
         }
 
         .job-header:active {
             background: var(--ios-separator);
         }
 
-        .job-header .job-left {
+        /* Riga 1: Tipo + Costo + Freccia */
+        .job-header .job-row1 {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 0;
+            margin-bottom: 4px;
         }
 
-        .job-header .job-left .job-id {
+        .job-header .job-row1 .job-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-size: 15px;
             font-weight: 600;
             color: var(--ios-text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
-        .job-header .job-left .job-badge {
-            font-size: 10px;
-            font-weight: 600;
-            padding: 2px 10px;
-            border-radius: 12px;
-            flex-shrink: 0;
-            border: 0.5px solid;
-        }
-
-        .badge-reperibilita {
-            background: var(--color-reperibilita);
-            color: var(--color-reperibilita-text);
-            border-color: var(--color-reperibilita-border);
-        }
-
-        .badge-normale {
-            background: var(--color-normale);
-            color: var(--color-normale-text);
-            border-color: var(--color-normale-border);
-        }
-
-        .badge-rip-consuntivo {
-            background: var(--color-rip-consuntivo);
-            color: var(--color-rip-consuntivo-text);
-            border-color: var(--color-rip-consuntivo-border);
-        }
-
-        .badge-misto {
-            background: var(--color-misto);
-            color: var(--color-misto-text);
-            border-color: var(--color-misto-border);
-        }
-
-        .job-header .job-right {
-            display: flex;
+        .job-header .job-row1 .job-type .type-badge {
+            display: inline-flex;
             align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-
-        .job-header .job-right .job-date {
-            font-size: 12px;
-            color: var(--ios-text-tertiary);
-        }
-
-        .job-header .job-right .job-count {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--ios-text-tertiary);
-            background: var(--ios-gray-bg);
-            padding: 2px 10px;
+            gap: 4px;
+            padding: 2px 12px 2px 8px;
             border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
-        .job-header .job-right .job-arrow {
+        .type-badge.badge-normale {
+            background: var(--badge-normale-bg);
+            color: var(--badge-normale);
+        }
+
+        .type-badge.badge-reperibilita {
+            background: var(--badge-reperibilita-bg);
+            color: var(--badge-reperibilita);
+        }
+
+        .type-badge.badge-rip-consuntivo {
+            background: var(--badge-rip-consuntivo-bg);
+            color: var(--badge-rip-consuntivo);
+        }
+
+        .type-badge.badge-misto {
+            background: var(--badge-misto-bg);
+            color: var(--badge-misto);
+        }
+
+        .job-header .job-row1 .job-cost {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ios-text);
+        }
+
+        .job-header .job-row1 .job-arrow {
             font-size: 14px;
             color: var(--ios-text-tertiary);
             transition: transform 0.3s ease;
+            margin-left: 8px;
         }
 
-        .job-header .job-right .job-arrow.open {
+        .job-header .job-row1 .job-arrow.open {
             transform: rotate(180deg);
+        }
+
+        /* Riga 2: Data + Tecnico */
+        .job-header .job-row2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--ios-text-tertiary);
+        }
+
+        .job-header .job-row2 .job-date {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .job-header .job-row2 .job-date .date-icon {
+            font-size: 13px;
+        }
+
+        .job-header .job-row2 .job-tecnico {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--ios-text-secondary);
+        }
+
+        .job-header .job-row2 .job-tecnico .tecnico-icon {
+            font-size: 13px;
         }
 
         /* ----- JOB BODY (interventi) ----- */
@@ -338,7 +341,7 @@
             display: block;
         }
 
-        /* ----- INTERVENTO ITEM ----- */
+        /* ----- INTERVENTO ITEM (nuovo layout) ----- */
         .intervento-item {
             background: var(--ios-gray-bg);
             border-radius: 10px;
@@ -357,15 +360,15 @@
             background: var(--ios-separator);
         }
 
-        .intervento-item .intervento-header {
+        /* Riga 1: Tipo + Tecnico + Freccia */
+        .intervento-item .intervento-row1 {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
+            margin-bottom: 4px;
         }
 
-        .intervento-item .intervento-header .intervento-tipo {
+        .intervento-item .intervento-row1 .intervento-tipo {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -374,7 +377,7 @@
             color: var(--ios-text);
         }
 
-        .intervento-item .intervento-header .intervento-tipo .tipo-dot {
+        .intervento-item .intervento-row1 .intervento-tipo .tipo-dot {
             display: inline-block;
             width: 10px;
             height: 10px;
@@ -382,42 +385,63 @@
             flex-shrink: 0;
         }
 
-        .tipo-dot.dot-reperibilita {
-            background: var(--color-reperibilita-border);
-        }
         .tipo-dot.dot-normale {
-            background: var(--color-normale-border);
+            background: var(--badge-normale);
+        }
+        .tipo-dot.dot-reperibilita {
+            background: var(--badge-reperibilita);
         }
         .tipo-dot.dot-rip-consuntivo {
-            background: var(--color-rip-consuntivo-border);
+            background: var(--badge-rip-consuntivo);
+        }
+        .tipo-dot.dot-misto {
+            background: var(--badge-misto);
         }
 
-        .intervento-item .intervento-header .intervento-meta {
+        .intervento-item .intervento-row1 .intervento-tecnico {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 4px;
+            font-size: 13px;
+            color: var(--ios-text-secondary);
+        }
+
+        .intervento-item .intervento-row1 .intervento-arrow {
+            font-size: 12px;
+            color: var(--ios-text-tertiary);
+            transition: transform 0.3s ease;
+            margin-left: 6px;
+        }
+
+        .intervento-item .intervento-row1 .intervento-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        /* Riga 2: Costo + Data + Ora */
+        .intervento-item .intervento-row2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-size: 12px;
             color: var(--ios-text-tertiary);
             flex-wrap: wrap;
         }
 
-        .intervento-item .intervento-header .intervento-meta .tecnico {
-            color: var(--ios-text-secondary);
-        }
-
-        .intervento-item .intervento-header .intervento-meta .costo {
+        .intervento-item .intervento-row2 .intervento-cost {
             font-weight: 600;
             color: var(--ios-text);
         }
 
-        .intervento-item .intervento-arrow {
-            font-size: 12px;
-            color: var(--ios-text-tertiary);
-            transition: transform 0.3s ease;
+        .intervento-item .intervento-row2 .intervento-date {
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        .intervento-item .intervento-arrow.open {
-            transform: rotate(180deg);
+        .intervento-item .intervento-row2 .intervento-time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         /* ----- INTERVENTO DETAIL ----- */
@@ -469,6 +493,8 @@
             padding: 4px 8px;
             border-radius: 6px;
             width: 100%;
+            font-size: 12px;
+            color: var(--ios-text-secondary);
         }
 
         /* ----- EMPTY ----- */
@@ -618,8 +644,9 @@
         /* ----- RESPONSIVE ----- */
         @media (max-width: 375px) {
             .header-title { font-size: 15px; }
-            .job-header .job-left .job-id { font-size: 13px; }
-            .intervento-item .intervento-header .intervento-tipo { font-size: 13px; }
+            .job-header .job-row1 .job-type { font-size: 14px; }
+            .job-header .job-row2 { font-size: 12px; }
+            .intervento-item .intervento-row1 .intervento-tipo { font-size: 13px; }
         }
 
         @media (min-width: 768px) {
@@ -680,9 +707,9 @@
         <div class="filter-wrapper">
             <div class="filter-scroll" id="filterScroll">
                 <button class="filter-chip active" data-filter="all" onclick="applyFilter('all')">📋 Tutti</button>
-                <button class="filter-chip" data-filter="Reperibilità" onclick="applyFilter('Reperibilità')">🆘 Reperibilità</button>
-                <button class="filter-chip" data-filter="Normale" onclick="applyFilter('Normale')">⚡ Normale</button>
-                <button class="filter-chip" data-filter="Rip a consuntivo" onclick="applyFilter('Rip a consuntivo')">🔧 Rip a consuntivo</button>
+                <button class="filter-chip" data-filter="Reperibilità" onclick="applyFilter('Reperibilità')">🔴 Reperibilità</button>
+                <button class="filter-chip" data-filter="Normale" onclick="applyFilter('Normale')">🟢 Normale</button>
+                <button class="filter-chip" data-filter="Rip a consuntivo" onclick="applyFilter('Rip a consuntivo')">🔵 Rip a consuntivo</button>
             </div>
         </div>
 
@@ -800,7 +827,14 @@
             if (!dateValue) return 'Data non disponibile';
             const d = excelDateToJSDate(dateValue);
             if (!d || isNaN(d)) return 'Data non disponibile';
-            return d.toLocaleDateString('it-IT') + ' · ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+            return d.toLocaleDateString('it-IT');
+        }
+
+        function formatInterventoTime(dateValue) {
+            if (!dateValue) return '--:--';
+            const d = excelDateToJSDate(dateValue);
+            if (!d || isNaN(d)) return '--:--';
+            return d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
         }
 
         function formatCosto(costo) {
@@ -848,7 +882,7 @@
                 case 'Reperibilità': return 'dot-reperibilita';
                 case 'Normale': return 'dot-normale';
                 case 'Rip a consuntivo': return 'dot-rip-consuntivo';
-                default: return '';
+                default: return 'dot-misto';
             }
         }
 
@@ -857,6 +891,17 @@
             if (u.length === 0) return 'Misto';
             if (u.length > 1) return 'Misto';
             return u[0];
+        }
+
+        function getJobBadgeIcon(tipi) {
+            const u = [...new Set(tipi)];
+            if (u.length === 0 || u.length > 1) return '⚪';
+            switch (u[0]) {
+                case 'Reperibilità': return '🔴';
+                case 'Normale': return '🟢';
+                case 'Rip a consuntivo': return '🔵';
+                default: return '⚪';
+            }
         }
 
         function pluralize(count, singular, plural) {
@@ -1000,6 +1045,7 @@
                 const isJobOpen = expandedJob === jobIndex;
                 const badgeClass = getJobBadgeClass(jobGroup.tipi);
                 const badgeLabel = getJobBadgeLabel(jobGroup.tipi);
+                const badgeIcon = getJobBadgeIcon(jobGroup.tipi);
                 const jobDate = formatInterventoDate(jobGroup.date);
                 const totalCost = formatCosto(jobGroup.totalCost);
                 const count = jobGroup.interventi.length;
@@ -1007,14 +1053,22 @@
                 html += `
                     <div class="job-card">
                         <div class="job-header" onclick="toggleJob(${jobIndex})">
-                            <div class="job-left">
-                                <span class="job-id">📋 ${jobGroup.job}</span>
-                                <span class="job-badge ${badgeClass}">${badgeLabel}</span>
+                            <div class="job-row1">
+                                <span class="job-type">
+                                    <span class="type-badge ${badgeClass}">${badgeIcon} ${badgeLabel}</span>
+                                </span>
+                                <span style="display:flex;align-items:center;">
+                                    <span class="job-cost">${totalCost}</span>
+                                    <span class="job-arrow ${isJobOpen ? 'open' : ''}">${isJobOpen ? '▲' : '▼'}</span>
+                                </span>
                             </div>
-                            <div class="job-right">
-                                <span class="job-date">📅 ${jobDate}</span>
-                                <span class="job-count">${count} ${pluralize(count, 'intervento', 'interventi')}</span>
-                                <span class="job-arrow ${isJobOpen ? 'open' : ''}">${isJobOpen ? '▲' : '▼'}</span>
+                            <div class="job-row2">
+                                <span class="job-date">
+                                    <span class="date-icon">📅</span> ${jobDate}
+                                </span>
+                                <span class="job-tecnico">
+                                    <span class="tecnico-icon">👨‍🔧</span> ${jobGroup.interventi[0] ? getInterventoTecnico(jobGroup.interventi[0]) : 'N/D'}
+                                </span>
                             </div>
                         </div>
                         <div class="job-body ${isJobOpen ? 'open' : ''}">
@@ -1023,27 +1077,29 @@
                                 const dotClass = getTipoDotClass(tipo);
                                 const tecnico = getInterventoTecnico(item);
                                 const costo = formatCosto(getInterventoCost(item));
+                                const data = formatInterventoDate(getInterventoDate(item));
+                                const time = formatInterventoTime(getInterventoDate(item));
                                 const key = `${jobIndex}_${interventoIndex}`;
                                 const isInterventoOpen = expandedIntervento === key;
 
                                 return `
                                     <div class="intervento-item" onclick="event.stopPropagation(); toggleIntervento(${jobIndex}, ${interventoIndex})">
-                                        <div class="intervento-header">
-                                            <div class="intervento-tipo">
+                                        <div class="intervento-row1">
+                                            <span class="intervento-tipo">
                                                 <span class="tipo-dot ${dotClass}"></span>
                                                 ${tipo}
-                                            </div>
-                                            <div class="intervento-meta">
-                                                <span class="tecnico">👨‍🔧 ${tecnico}</span>
-                                                <span class="costo">${costo}</span>
+                                            </span>
+                                            <span style="display:flex;align-items:center;gap:6px;">
+                                                <span class="intervento-tecnico">👨‍🔧 ${tecnico}</span>
                                                 <span class="intervento-arrow ${isInterventoOpen ? 'open' : ''}">${isInterventoOpen ? '▲' : '▼'}</span>
-                                            </div>
+                                            </span>
+                                        </div>
+                                        <div class="intervento-row2">
+                                            <span class="intervento-cost">${costo}</span>
+                                            <span class="intervento-date">📅 ${data}</span>
+                                            <span class="intervento-time">⏱️ ${time}</span>
                                         </div>
                                         <div class="intervento-detail ${isInterventoOpen ? 'open' : ''}">
-                                            <div class="detail-row">
-                                                <span class="dl">📅 Data</span>
-                                                <span class="dv">${formatInterventoDate(getInterventoDate(item))}</span>
-                                            </div>
                                             <div class="detail-row">
                                                 <span class="dl">👤 Cliente</span>
                                                 <span class="dv">${getInterventoCliente(item)}</span>
@@ -1078,11 +1134,11 @@
                                             </div>
                                             <div class="detail-row">
                                                 <span class="dl">🕐 Accettazione</span>
-                                                <span class="dv">${formatInterventoDate(getInterventoAcceptedTime(item))}</span>
+                                                <span class="dv">${formatInterventoDate(getInterventoAcceptedTime(item))} · ${formatInterventoTime(getInterventoAcceptedTime(item))}</span>
                                             </div>
                                             <div class="detail-row">
                                                 <span class="dl">✅ Completamento</span>
-                                                <span class="dv">${formatInterventoDate(getInterventoCompletedDate(item))}</span>
+                                                <span class="dv">${formatInterventoDate(getInterventoCompletedDate(item))} · ${formatInterventoTime(getInterventoCompletedDate(item))}</span>
                                             </div>
                                             ${getInterventoComponente(item) ? `
                                             <div class="detail-row detail-row-full">
@@ -1194,7 +1250,7 @@
         loadTheme();
         loadInterventi();
 
-        console.log('📱 Interventi Mobile v2.0');
+        console.log('📱 Interventi Mobile v3.0 - Nuovo layout');
     </script>
 
 </body>

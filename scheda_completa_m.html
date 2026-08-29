@@ -738,6 +738,40 @@
             return [];
         }
 
+// ============================================================
+// COMMESSE
+// ============================================================
+function getCommesseForImpianto(impiantoCodice) {
+    if (!window.database || !window.database.m28) return [];
+    return window.database.m28.filter(c => String(c["ID Imp."]) === String(impiantoCodice));
+}
+
+function getCommesseCount(impiantoCodice) {
+    return getCommesseForImpianto(impiantoCodice).length;
+}
+
+function getCommesseHTML(impiantoCodice) {
+    const commesse = getCommesseForImpianto(impiantoCodice);
+    if (commesse.length === 0) {
+        return '<p class="text-muted" style="font-size:0.85rem;">Nessuna commessa trovata</p>';
+    }
+    return commesse.map(c => {
+        const commessaJSON = encodeURIComponent(JSON.stringify(c));
+        const dataCommessa = formatDate(c["Data commessa"]);
+        return `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--ios-separator);">
+                <span style="font-size:13px;">📋 ${c["Numero Commessa"] || 'N/A'} - ${dataCommessa} - ${c["Stato comm."] || 'N/A'}</span>
+                <a href="commesse_m.html?commessa=${commessaJSON}" target="_blank" style="color:var(--ios-blue);text-decoration:none;font-size:16px;">🔨</a>
+            </div>
+        `;
+    }).join('');
+}
+
+
+
+
+
+
         // ============================================================
         // TOGGLE SEZIONE (espansione singola)
         // ============================================================
@@ -963,7 +997,26 @@
                     </div>
                 `;
             });
+// Aggiungi questa sezione dopo le sezioni esistenti, prima della sezione "Note"
 
+// Sezione Commesse
+const commesseCount = getCommesseCount(item.impianto);
+const commesseHTML = getCommesseHTML(item.impianto);
+
+html += `
+    <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <span class="section-title">
+                <span>🔧</span>
+                Commesse (${commesseCount})
+            </span>
+            <span class="section-arrow">▼</span>
+        </div>
+        <div class="section-body">
+            ${commesseHTML}
+        </div>
+    </div>
+`;
             // Sezione Note (full width)
             html += `
                 <div class="section">

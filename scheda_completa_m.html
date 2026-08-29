@@ -135,9 +135,8 @@
             padding: 8px 16px 12px;
             border-bottom: 0.5px solid var(--ios-separator);
             display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 2px;
         }
 
         .impianto-badge .code {
@@ -149,16 +148,11 @@
         .impianto-badge .matricola {
             font-size: 13px;
             color: var(--ios-text-tertiary);
-            background: var(--ios-gray-bg);
-            padding: 2px 12px;
-            border-radius: 12px;
         }
 
         .impianto-badge .address {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--ios-text-secondary);
-            flex: 1;
-            min-width: 100%;
         }
 
         /* ----- INTERVENTI CARD (in alto) ----- */
@@ -216,7 +210,7 @@
             font-size: 13px;
         }
 
-        /* ----- CONTENUTO PRINCIPALE (sezioni) ----- */
+        /* ----- CONTENUTO PRINCIPALE ----- */
         .content {
             padding: 0 16px 20px;
         }
@@ -307,6 +301,11 @@
 
         .field .value a:active {
             opacity: 0.6;
+        }
+
+        .field .value .map-link {
+            font-size: 12px;
+            margin-left: 4px;
         }
 
         /* ----- FULL WIDTH FIELD (Note) ----- */
@@ -459,7 +458,7 @@
             top: calc(var(--safe-top) + 60px);
             left: 50%;
             transform: translateX(-50%);
-            z-index: 999;
+            z-index: 9999;
             pointer-events: none;
             max-width: 90%;
         }
@@ -484,38 +483,20 @@
         }
 
         @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         @keyframes toastOut {
-            from {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(-20px) scale(0.95);
-            }
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-20px) scale(0.95); }
         }
 
         /* ----- RESPONSIVE ----- */
         @media (max-width: 375px) {
-            .header-title {
-                font-size: 15px;
-            }
-            .field {
-                font-size: 13px;
-            }
-            .section-header {
-                font-size: 13px;
-            }
+            .header-title { font-size: 15px; }
+            .field { font-size: 13px; }
+            .section-header { font-size: 13px; }
         }
 
         @media (min-width: 768px) {
@@ -536,33 +517,15 @@
                 border: 0.5px solid var(--ios-separator);
                 min-height: 90vh;
             }
-            body.dark {
-                background: #000000;
-            }
+            body.dark { background: #000000; }
         }
 
-        /* ----- PRINT ----- */
         @media print {
-            .header-actions,
-            .bottom-nav {
-                display: none;
-            }
-            body {
-                background: white;
-                padding: 0;
-            }
-            .container {
-                box-shadow: none;
-                border: none;
-            }
-            .section {
-                break-inside: avoid;
-                page-break-inside: avoid;
-                border-color: #ddd;
-            }
-            .section-header:active {
-                background: none;
-            }
+            .header-actions, .bottom-nav { display: none; }
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border: none; }
+            .section { break-inside: avoid; page-break-inside: avoid; border-color: #ddd; }
+            .section-header:active { background: none; }
         }
     </style>
 </head>
@@ -570,26 +533,26 @@
 
     <div class="container">
 
-        <!-- ===== HEADER ===== -->
+        <!-- HEADER -->
         <header class="header">
             <div class="header-left">
                 <button class="header-back" onclick="goBack()">‹</button>
                 <span class="header-title" id="headerTitle">Scheda Impianto</span>
             </div>
             <div class="header-actions">
-                <button onclick="toggleTheme()" aria-label="Tema" title="Tema">🌓</button>
-                <button onclick="window.print()" aria-label="Stampa" title="Stampa">🖨️</button>
+                <button onclick="toggleTheme()" aria-label="Tema">🌓</button>
+                <button onclick="window.print()" aria-label="Stampa">🖨️</button>
             </div>
         </header>
 
-        <!-- ===== BADGE IMPIANTO ===== -->
+        <!-- BADGE IMPIANTO -->
         <div class="impianto-badge" id="impiantoBadge">
             <span class="code" id="impiantoCode">Caricamento...</span>
-            <span class="matricola" id="impiantoMatricola">N/A</span>
+            <span class="matricola" id="impiantoMatricola">🔢 N/A</span>
             <span class="address" id="impiantoAddress">📍 Caricamento indirizzo...</span>
         </div>
 
-        <!-- ===== INTERVENTI CARD ===== -->
+        <!-- INTERVENTI CARD -->
         <div class="interventi-card" id="interventiCard">
             <div class="interventi-left">
                 <span class="icon">🛠️</span>
@@ -601,7 +564,7 @@
             </div>
         </div>
 
-        <!-- ===== CONTENUTO ===== -->
+        <!-- CONTENUTO -->
         <div class="content" id="content">
             <div class="loading-state">
                 <div class="loading-spinner"></div>
@@ -609,7 +572,7 @@
             </div>
         </div>
 
-        <!-- ===== BOTTOM NAV ===== -->
+        <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
             <button onclick="goHome()">
                 <span class="nav-icon">🏠</span>
@@ -629,7 +592,7 @@
             </button>
         </nav>
 
-        <!-- ===== TOAST ===== -->
+        <!-- TOAST -->
         <div class="toast-container" id="toastContainer"></div>
 
     </div>
@@ -647,9 +610,7 @@
 
         function loadTheme() {
             const saved = localStorage.getItem('theme');
-            if (saved === 'dark') {
-                document.body.classList.add('dark');
-            }
+            if (saved === 'dark') document.body.classList.add('dark');
             document.getElementById('themeIcon').textContent = document.body.classList.contains('dark') ? '☀️' : '🌓';
         }
 
@@ -679,13 +640,8 @@
             }
         }
 
-        function goHome() {
-            window.location.href = 'ricerca_m.html';
-        }
-
-        function goSearch() {
-            window.location.href = 'ricerca_m.html';
-        }
+        function goHome() { window.location.href = 'ricerca_m.html'; }
+        function goSearch() { window.location.href = 'ricerca_m.html'; }
 
         // ============================================================
         // UTILITY (da ricerca_m.html)
@@ -719,40 +675,37 @@
         }
 
         function formatDate(excelDate) {
-            if (!excelDate) return 'N/A';
+            if (!excelDate) return '—';
             const jsDate = excelDateToJSDate(excelDate);
-            if (!jsDate || isNaN(jsDate)) return 'N/A';
+            if (!jsDate || isNaN(jsDate)) return '—';
             return jsDate.toLocaleDateString('it-IT');
         }
 
         function formatSimpleDate(dateString) {
-            if (!dateString || dateString === '') return 'N/A';
+            if (!dateString || dateString === '') return '—';
             try {
                 const d = excelDateToJSDate(dateString);
-                if (d && !isNaN(d)) {
-                    return d.toLocaleDateString('it-IT');
-                }
+                if (d && !isNaN(d)) return d.toLocaleDateString('it-IT');
                 const str = String(dateString).trim();
                 if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) return str;
-                return 'N/A';
+                return '—';
             } catch (e) {
-                return 'N/A';
+                return '—';
             }
         }
 
         function formatWithMapping(value, mapping) {
-            if (!value) return 'N/A';
+            if (!value) return '—';
             const mapped = mapping[value];
             return mapped ? `${value} - ${mapped}` : value;
         }
 
         function getMesiText() {
             return ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
-                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
-            ];
+                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
         }
 
-        function getFieldValue(obj, key, defaultValue = 'N/A') {
+        function getFieldValue(obj, key, defaultValue = '—') {
             if (!obj) return defaultValue;
             const value = obj[key];
             return (value !== undefined && value !== null && value !== '') ? value : defaultValue;
@@ -786,7 +739,7 @@
         }
 
         // ============================================================
-        // SEZIONI COLLASSABILI (espansione singola)
+        // TOGGLE SEZIONE (espansione singola)
         // ============================================================
         function toggleSection(header) {
             const body = header.nextElementSibling;
@@ -836,8 +789,8 @@
                 // Aggiorna badge
                 document.getElementById('headerTitle').textContent = `Impianto ${datiImpianto.impianto}`;
                 document.getElementById('impiantoCode').textContent = `🆔 ${datiImpianto.impianto}`;
-                document.getElementById('impiantoMatricola').textContent = `🔢 ${datiImpianto.matricola || 'N/A'}`;
-                document.getElementById('impiantoAddress').textContent = `📍 ${datiImpianto['Indirizzo impianto'] || 'N/A'}${datiImpianto['Località impianto'] ? `, ${datiImpianto['Località impianto']}` : ''}`;
+                document.getElementById('impiantoMatricola').textContent = `🔢 ${datiImpianto.matricola || '—'}`;
+                document.getElementById('impiantoAddress').textContent = `📍 ${datiImpianto['Indirizzo impianto'] || '—'}${datiImpianto['Località impianto'] ? `, ${datiImpianto['Località impianto']}` : ''}`;
 
                 // Interventi
                 const interventi = getInterventiForImpianto(datiImpianto.impianto);
@@ -903,11 +856,11 @@
                 title: 'Informazioni Generali',
                 fields: [
                     { label: 'Impianto', value: `<strong>${item.impianto}</strong>` },
-                    { label: 'Tipo Cliente', value: item['tipo_cliente'] || 'N/A' },
-                    { label: 'Zona', value: item.zona || 'N/A' },
+                    { label: 'Tipo Cliente', value: item['tipo_cliente'] || '—' },
+                    { label: 'Zona', value: item.zona || '—' },
                     { label: 'Giro', value: giro },
-                    { label: 'Tecnico', value: item.tecnico || 'N/A' },
-                    { label: 'Matricola', value: `<strong>${item.matricola || 'N/A'}</strong>` },
+                    { label: 'Tecnico', value: item.tecnico || '—' },
+                    { label: 'Matricola', value: `<strong>${item.matricola || '—'}</strong>` },
                     { label: 'Venditore', value: commerciale },
                 ]
             }, {
@@ -915,65 +868,65 @@
                 icon: '📍',
                 title: 'Indirizzi',
                 fields: [
-                    { label: 'Indirizzo Impianto', value: item['Indirizzo impianto'] || 'N/A' },
-                    { label: 'Località', value: item['Località impianto'] || 'N/A' },
-                    { label: 'Provincia', value: item.Prov || 'N/A' },
-                    { label: 'Indirizzo Cliente', value: item['Indirizzo Cliente'] || 'N/A' },
-                    { label: 'Città Cliente', value: item['Città cliente'] || 'N/A' },
-                    { label: 'Provincia Cliente', value: item['Prov Cliente'] || 'N/A' },
+                    { label: 'Indirizzo Impianto', value: `${item['Indirizzo impianto'] || '—'} ${item['Indirizzo impianto'] && item['Località impianto'] ? `<a href="${mapLink}" target="_blank" class="map-link">🌍</a>` : ''}` },
+                    { label: 'Località', value: item['Località impianto'] || '—' },
+                    { label: 'Provincia', value: item.Prov || '—' },
+                    { label: 'Indirizzo Cliente', value: item['Indirizzo Cliente'] || '—' },
+                    { label: 'Città Cliente', value: item['Città cliente'] || '—' },
+                    { label: 'Provincia Cliente', value: item['Prov Cliente'] || '—' },
                 ]
             }, {
                 id: 'cliente',
                 icon: '👤',
                 title: 'Cliente',
                 fields: [
-                    { label: 'Cliente', value: `<strong>${item.Cliente || 'N/A'}</strong>` },
-                    { label: 'Amministratore', value: item.Amministratore || 'N/A' },
-                    { label: 'Indirizzo Amm.', value: item['Indirizzo Amm'] || 'N/A' },
-                    { label: 'Città Amm.', value: item['Citta amm'] || 'N/A' },
-                    { label: 'Provincia Amm.', value: item['Prov Amm'] || 'N/A' },
-                    { label: 'CAP Amm.', value: item['Cap Amm'] || 'N/A' },
+                    { label: 'Cliente', value: `<strong>${item.Cliente || '—'}</strong>` },
+                    { label: 'Amministratore', value: item.Amministratore || '—' },
+                    { label: 'Indirizzo Amm.', value: item['Indirizzo Amm'] || '—' },
+                    { label: 'Città Amm.', value: item['Citta amm'] || '—' },
+                    { label: 'Provincia Amm.', value: item['Prov Amm'] || '—' },
+                    { label: 'CAP Amm.', value: item['Cap Amm'] || '—' },
                 ]
             }, {
                 id: 'contatti',
                 icon: '📞',
                 title: 'Contatti',
                 fields: [
-                    { label: 'Email Cliente', value: item.aa ? `<a href="mailto:${item.aa}">${item.aa}</a>` : 'N/A' },
-                    { label: 'Telefono Amm.', value: item['tel amm'] || 'N/A' },
-                    { label: 'Cellulare Amm.', value: item['cell amm'] || 'N/A' },
-                    { label: 'Email Amm.', value: item['email amm'] ? `<a href="mailto:${item['email amm']}">${item['email amm']}</a>` : 'N/A' },
-                    { label: 'Fax Amm.', value: item['fax amm'] || 'N/A' },
+                    { label: 'Email Cliente', value: item.aa ? `<a href="mailto:${item.aa}">${item.aa}</a>` : '—' },
+                    { label: 'Telefono Amm.', value: item['tel amm'] || '—' },
+                    { label: 'Cellulare Amm.', value: item['cell amm'] || '—' },
+                    { label: 'Email Amm.', value: item['email amm'] ? `<a href="mailto:${item['email amm']}">${item['email amm']}</a>` : '—' },
+                    { label: 'Fax Amm.', value: item['fax amm'] || '—' },
                 ]
             }, {
                 id: 'manutenzione',
                 icon: '🔧',
                 title: 'Manutenzione',
                 fields: [
-                    { label: 'Manutenzione', value: item.manut || 'N/A' },
+                    { label: 'Manutenzione', value: item.manut || '—' },
                     { label: 'Ultima Semestrale', value: formatDate(item['ult sem']) },
                     { label: 'Ultima Visita ENTE', value: formatDate(item['utl vp']) },
                     { label: 'Ultima Manutenzione', value: formatDate(item['ult man']) },
-                    { label: 'Periodicità', value: item['periodicità'] || 'N/A' },
+                    { label: 'Periodicità', value: item['periodicità'] || '—' },
                 ]
             }, {
                 id: 'contratto',
                 icon: '📄',
                 title: 'Contratto',
                 fields: [
-                    { label: 'Contratto', value: item.contratto || 'N/A' },
+                    { label: 'Contratto', value: item.contratto || '—' },
                     { label: 'Inizio Contratto', value: formatSimpleDate(item['inizio cont']) },
                     { label: 'Fine Contratto', value: formatSimpleDate(item['fine contratto']) },
-                    { label: 'Canone Contratto', value: item['Canone contratto'] || 'N/A' },
-                    { label: 'Canone Impianto', value: item['Canone impianto'] || 'N/A' },
+                    { label: 'Canone Contratto', value: item['Canone contratto'] || '—' },
+                    { label: 'Canone Impianto', value: item['Canone impianto'] || '—' },
                 ]
             }, {
                 id: 'fiscali',
                 icon: '🏛️',
                 title: 'Dettagli Fiscali',
                 fields: [
-                    { label: 'Codice Fiscale', value: item.PCCODFISCALE || 'N/A' },
-                    { label: 'Partita IVA', value: item.PCPARTITAIVA || 'N/A' },
+                    { label: 'Codice Fiscale', value: item.PCCODFISCALE || '—' },
+                    { label: 'Partita IVA', value: item.PCPARTITAIVA || '—' },
                 ]
             }, {
                 id: 'combinatore',
@@ -981,7 +934,7 @@
                 title: 'Combinatore Telefonico',
                 fields: [
                     { label: 'Stato', value: combinatoreStatus },
-                    { label: 'Canone', value: isRad ? (item.rad || 'Linea Fissa / SIM del Cliente') : 'N/A' },
+                    { label: 'Canone', value: isRad ? (item.rad || 'Linea Fissa / SIM del Cliente') : '—' },
                 ]
             }];
 
@@ -1085,7 +1038,7 @@
 
         document.addEventListener('DOMContentLoaded', init);
 
-        console.log('📱 Scheda Completa Mobile v1.0');
+        console.log('📱 Scheda Completa Mobile v2.0');
     </script>
 
 </body>

@@ -169,7 +169,7 @@
             margin-top: 2px;
         }
 
-        /* ----- FILTERS ----- */
+        /* ----- FILTERS (scroll orizzontale) ----- */
         .filter-wrapper {
             padding: 8px 16px 12px;
             background: var(--ios-gray-bg);
@@ -398,6 +398,7 @@
             gap: 10px;
             font-size: 12px;
             color: var(--ios-text-tertiary);
+            flex-wrap: wrap;
         }
 
         .intervento-item .intervento-header .intervento-meta .tecnico {
@@ -580,7 +581,7 @@
             top: calc(var(--safe-top) + 60px);
             left: 50%;
             transform: translateX(-50%);
-            z-index: 999;
+            z-index: 9999;
             pointer-events: none;
             max-width: 90%;
         }
@@ -605,38 +606,20 @@
         }
 
         @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         @keyframes toastOut {
-            from {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(-20px) scale(0.95);
-            }
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-20px) scale(0.95); }
         }
 
         /* ----- RESPONSIVE ----- */
         @media (max-width: 375px) {
-            .header-title {
-                font-size: 15px;
-            }
-            .job-header .job-left .job-id {
-                font-size: 13px;
-            }
-            .intervento-item .intervento-header .intervento-tipo {
-                font-size: 13px;
-            }
+            .header-title { font-size: 15px; }
+            .job-header .job-left .job-id { font-size: 13px; }
+            .intervento-item .intervento-header .intervento-tipo { font-size: 13px; }
         }
 
         @media (min-width: 768px) {
@@ -657,41 +640,17 @@
                 border: 0.5px solid var(--ios-separator);
                 min-height: 90vh;
             }
-            body.dark {
-                background: #000000;
-            }
+            body.dark { background: #000000; }
         }
 
-        /* ----- PRINT ----- */
         @media print {
-            .header-actions,
-            .bottom-nav,
-            .filter-wrapper {
-                display: none;
-            }
-            body {
-                background: white;
-                padding: 0;
-            }
-            .container {
-                box-shadow: none;
-                border: none;
-            }
-            .job-card {
-                break-inside: avoid;
-                page-break-inside: avoid;
-                border-color: #ddd;
-            }
-            .job-body {
-                display: block !important;
-            }
-            .intervento-detail {
-                display: block !important;
-            }
-            .job-arrow,
-            .intervento-arrow {
-                display: none;
-            }
+            .header-actions, .bottom-nav, .filter-wrapper { display: none; }
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border: none; }
+            .job-card { break-inside: avoid; page-break-inside: avoid; border-color: #ddd; }
+            .job-body { display: block !important; }
+            .intervento-detail { display: block !important; }
+            .job-arrow, .intervento-arrow { display: none; }
         }
     </style>
 </head>
@@ -699,25 +658,25 @@
 
     <div class="container">
 
-        <!-- ===== HEADER ===== -->
+        <!-- HEADER -->
         <header class="header">
             <div class="header-left">
                 <button class="header-back" onclick="goBack()">‹</button>
                 <span class="header-title" id="headerTitle">Interventi</span>
             </div>
             <div class="header-actions">
-                <button onclick="toggleTheme()" aria-label="Tema" title="Tema">🌓</button>
-                <button onclick="window.print()" aria-label="Stampa" title="Stampa">🖨️</button>
+                <button onclick="toggleTheme()" aria-label="Tema">🌓</button>
+                <button onclick="window.print()" aria-label="Stampa">🖨️</button>
             </div>
         </header>
 
-        <!-- ===== IMPIANTO INFO ===== -->
+        <!-- IMPIANTO INFO -->
         <div class="impianto-info">
             <div class="code" id="impiantoCode">Caricamento...</div>
             <div class="address" id="impiantoAddress">📍 Caricamento indirizzo...</div>
         </div>
 
-        <!-- ===== FILTERS ===== -->
+        <!-- FILTERS -->
         <div class="filter-wrapper">
             <div class="filter-scroll" id="filterScroll">
                 <button class="filter-chip active" data-filter="all" onclick="applyFilter('all')">📋 Tutti</button>
@@ -727,7 +686,7 @@
             </div>
         </div>
 
-        <!-- ===== LISTA ===== -->
+        <!-- LISTA -->
         <div class="list" id="listContainer">
             <div class="loading-state">
                 <div class="loading-spinner"></div>
@@ -735,7 +694,7 @@
             </div>
         </div>
 
-        <!-- ===== BOTTOM NAV ===== -->
+        <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
             <button onclick="goHome()">
                 <span class="nav-icon">🏠</span>
@@ -755,7 +714,7 @@
             </button>
         </nav>
 
-        <!-- ===== TOAST ===== -->
+        <!-- TOAST -->
         <div class="toast-container" id="toastContainer"></div>
 
     </div>
@@ -773,9 +732,7 @@
 
         function loadTheme() {
             const saved = localStorage.getItem('theme');
-            if (saved === 'dark') {
-                document.body.classList.add('dark');
-            }
+            if (saved === 'dark') document.body.classList.add('dark');
             document.getElementById('themeIcon').textContent = document.body.classList.contains('dark') ? '☀️' : '🌓';
         }
 
@@ -805,13 +762,8 @@
             }
         }
 
-        function goHome() {
-            window.location.href = 'ricerca_m.html';
-        }
-
-        function goSearch() {
-            window.location.href = 'ricerca_m.html';
-        }
+        function goHome() { window.location.href = 'ricerca_m.html'; }
+        function goSearch() { window.location.href = 'ricerca_m.html'; }
 
         // ============================================================
         // UTILITY
@@ -848,7 +800,7 @@
             if (!dateValue) return 'Data non disponibile';
             const d = excelDateToJSDate(dateValue);
             if (!d || isNaN(d)) return 'Data non disponibile';
-            return d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+            return d.toLocaleDateString('it-IT') + ' · ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
         }
 
         function formatCosto(costo) {
@@ -905,6 +857,10 @@
             if (u.length === 0) return 'Misto';
             if (u.length > 1) return 'Misto';
             return u[0];
+        }
+
+        function pluralize(count, singular, plural) {
+            return count === 1 ? singular : plural;
         }
 
         // ============================================================
@@ -1057,7 +1013,7 @@
                             </div>
                             <div class="job-right">
                                 <span class="job-date">📅 ${jobDate}</span>
-                                <span class="job-count">${count} interventi</span>
+                                <span class="job-count">${count} ${pluralize(count, 'intervento', 'interventi')}</span>
                                 <span class="job-arrow ${isJobOpen ? 'open' : ''}">${isJobOpen ? '▲' : '▼'}</span>
                             </div>
                         </div>
@@ -1238,7 +1194,7 @@
         loadTheme();
         loadInterventi();
 
-        console.log('📱 Interventi Mobile v1.0');
+        console.log('📱 Interventi Mobile v2.0');
     </script>
 
 </body>

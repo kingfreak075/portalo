@@ -4,6 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <title>Ricerca Impianti - Sistema Avanzato</title>
+
+ <!-- ===== REDIRECT MOBILE ===== -->
+    <script>
+        (function() {
+            // Controlla se è un dispositivo mobile
+            const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent);
+            
+            // Controlla anche la larghezza dello schermo
+            const isSmallScreen = window.innerWidth <= 768;
+            
+            // Se è mobile o schermo piccolo, reindirizza
+            if (isMobile || isSmallScreen) {
+                // Evita loop infiniti con parametro forceDesktop
+                if (!window.location.search.includes('forceDesktop')) {
+                    window.location.href = 'ricerca_m.html';
+                }
+            }
+        })();
+    </script>
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />

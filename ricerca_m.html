@@ -1673,10 +1673,15 @@
                 <!-- STATISTICHE (cliccabili) -->
                 <div style="background:var(--ios-card);border-radius:12px;border:0.5px solid var(--ios-separator);padding:14px 16px;margin-bottom:12px;">
                     <div style="font-weight:600;font-size:14px;color:var(--ios-text);margin-bottom:10px;">📊 Statistiche</div>
+                   <div class="sheet-stats-grid">
                     <div class="sheet-stats-grid">
                         <div class="sheet-stat-item" onclick="window.open('interventi_m.html?impianto=${encodeURIComponent(item.impianto)}', '_blank')">
                             <div class="stat-number">${interventiCount}</div>
                             <div class="stat-label">🛠️ Interventi</div>
+                        </div>
+                        <div class="sheet-stat-item" onclick="window.open('commesse_m.html?commessa=${encodeURIComponent(JSON.stringify(getFirstCommessa(item.impianto)))}', '_blank')">
+                            <div class="stat-number">${getCommesseCount(item.impianto)}</div>
+                            <div class="stat-label">🔧 Commesse</div>
                         </div>
                         <div class="sheet-stat-item" onclick="toggleSheetSection(this.closest('.sheet-section'))">
                             <div class="stat-number">${verbaliCount}</div>
@@ -1685,10 +1690,6 @@
                         <div class="sheet-stat-item" onclick="toggleSheetSection(this.closest('.sheet-section'))">
                             <div class="stat-number">${annotazioniCount}</div>
                             <div class="stat-label">💬 Annotazioni</div>
-                        </div>
-                        <div class="sheet-stat-item" onclick="toggleSheetSection(this.closest('.sheet-section'))">
-                            <div class="stat-number">${archivioCount}</div>
-                            <div class="stat-label">📁 Archivio DC</div>
                         </div>
                     </div>
                 </div>
@@ -1725,7 +1726,22 @@
                         ${archivioHTML}
                     </div>
                 </div>
-
+                <!-- SEZIONE COMMESSE -->
+                ${(() => {
+                    const commesseCount = getCommesseCount(item.impianto);
+                    const commesseSheetHTML = getCommesseSheetHTML(item.impianto);
+                    return `
+                        <div class="sheet-section">
+                            <div class="sheet-section-header" onclick="toggleSheetSection(this)">
+                                <span>🔧 Commesse (${commesseCount})</span>
+                                <span class="section-arrow">▼</span>
+                            </div>
+                            <div class="sheet-section-body">
+                                ${commesseSheetHTML}
+                            </div>
+                        </div>
+                    `;
+                })()}
                 <!-- BANNER INTERVENTI -->
                 ${bannerHTML}
 
@@ -1736,9 +1752,50 @@
             `;
         }
 
+        
+        
+        // ============================================================
+// FUNZIONI PER LE COMMESSE
+// ============================================================
+function getCommesseCount(impiantoCodice) {
+    if (!state.m28Data) return 0;
+    return state.m28Data.filter(c => c["ID Imp."] == impiantoCodice).length;
+}
+
+function getFirstCommessa(impiantoCodice) {
+    if (!state.m28Data) return null;
+    const commesse = state.m28Data.filter(c => c["ID Imp."] == impiantoCodice);
+    return commesse.length > 0 ? commesse[0] : null;
+}
+
+function getCommesseHTML(impiantoCodice) {
+    const commesse = state.m28Data.filter(c => c["ID Imp."] == impiantoCodice);
+    if (commesse.length === 0) {
+        return '<span style="font-size:13px;color:var(--ios-text-tertiary);">Nessuna commessa trovata</span>';
+    }
+    return commesse.map(c => {
+        const commessaJSON = encodeURIComponent(JSON.stringify(c));
+        return `
+            <div class="field-row" style="border-bottom:0.5px solid var(--ios-separator);padding:6px 0;display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:13px;">📋 ${c["Numero Commessa"] || 'N/A'} - ${formatData(c["Data commessa"])}</span>
+                <a href="commesse_m.html?commessa=${commessaJSON}" target="_blank" style="color:var(--ios-blue);text-decoration:none;font-size:16px;">🔨</a>
+            </div>
+        `;
+    }).join('');
+}
+        
+        
+        
+        
+        
+        
+        
         // ============================================================
         // TOGGLE SEZIONE SHEET
         // ============================================================
+
+
+        
         function toggleSheetSection(header) {
             // Se header è un elemento, trova il parent
             let el = header;
@@ -1949,7 +2006,39 @@
                 })
                 .slice(0, limite);
         }
+        // ============================================================
+        // COMMESSE
+        // ============================================================
+        function getCommesseForImpianto(impiantoCodice) {
+            if (!state.m28Data || state.m28Data.length === 0) return [];
+            return state.m28Data.filter(c => String(c["ID Imp."]) === String(impiantoCodice));
+        }
 
+        function getCommesseCount(impiantoCodice) {
+            return getCommesseForImpianto(impiantoCodice).length;
+        }
+
+        function getCommesseSheetHTML(impiantoCodice) {
+            const commesse = getCommesseForImpianto(impiantoCodice);
+            if (commesse.length === 0) {
+                return '<span style="font-size:13px;color:var(--ios-text-tertiary);">Nessuna commessa trovata</span>';
+            }
+            return commesse.map(c => {
+                const commessaJSON = encodeURIComponent(JSON.stringify(c));
+                const dataCommessa = formatData(c["Data commessa"]);
+                return `
+                    <div class="field-row" style="border-bottom:0.5px solid var(--ios-separator);padding:6px 0;display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:13px;">📋 ${c["Numero Commessa"] || 'N/A'} - ${dataCommessa}</span>
+                        <a href="commesse_m.html?commessa=${commessaJSON}" target="_blank" style="color:var(--ios-blue);text-decoration:none;font-size:16px;">🔨</a>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getFirstCommessa(impiantoCodice) {
+            const commesse = getCommesseForImpianto(impiantoCodice);
+            return commesse.length > 0 ? commesse[0] : null;
+        }
         // ============================================================
         // STATISTICHE
         // ============================================================

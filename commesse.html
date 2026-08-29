@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dettaglio Commessa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
-        /* ===== RESET ===== */
+        /* ============================================================
+           STILE DESKTOP - Dettaglio Commessa (una colonna)
+           ============================================================ */
+
         * {
             margin: 0;
             padding: 0;
@@ -13,35 +19,38 @@
         }
 
         :root {
-            --primary-color: #1b5e20;
+            --primary: #1b5e20;
             --primary-light: #4caf50;
+            --primary-dark: #0d3b12;
             --primary-bg: #e8f5e9;
+            --success: #2e7d32;
+            --danger: #d32f2f;
+            --warning: #f57c00;
+            --info: #1976d2;
             --text-primary: #1a2332;
             --text-secondary: #4a5568;
             --text-muted: #94a3b8;
             --border-color: #e2e8f0;
+            --card-bg: rgba(255, 255, 255, 0.95);
             --shadow: 0 4px 20px rgba(46, 125, 50, 0.12);
             --shadow-lg: 0 8px 40px rgba(46, 125, 50, 0.18);
-            --border-radius: 16px;
-            --border-radius-sm: 10px;
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --bg-gradient-start: #a5d6a7;
-            --bg-gradient-end: #66bb6a;
-            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow-hover: 0 12px 48px rgba(46, 125, 50, 0.22);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-xs: 6px;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-start: #a5d6a7;
+            --bg-end: #66bb6a;
+            --safe-top: env(safe-area-inset-top, 20px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --header-height: 60px;
         }
 
-        body {
-            font-family: var(--font-family);
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-            min-height: 100vh;
-            padding: 24px;
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-
+        /* Dark Theme */
         body.dark-theme {
-            --bg-gradient-start: #0f1724;
-            --bg-gradient-end: #1a2332;
+            --bg-start: #0f1724;
+            --bg-end: #1a2332;
             --card-bg: rgba(26, 35, 50, 0.95);
             --text-primary: #e8edf5;
             --text-secondary: #b0c4de;
@@ -62,18 +71,21 @@
             border-color: var(--border-color);
         }
 
-        body.dark-theme th {
-            background: rgba(40, 50, 65, 0.8);
-            color: var(--text-secondary);
-        }
-
-        body.dark-theme td {
+        body.dark-theme .card-title {
             border-color: var(--border-color);
             color: var(--text-primary);
         }
 
-        body.dark-theme tr:hover {
-            background: rgba(50, 60, 80, 0.6);
+        body.dark-theme .field {
+            border-color: var(--border-color);
+        }
+
+        body.dark-theme .field .label {
+            color: var(--text-muted);
+        }
+
+        body.dark-theme .field .value {
+            color: var(--text-primary);
         }
 
         body.dark-theme .back-btn {
@@ -88,11 +100,15 @@
 
         body.dark-theme .status-C {
             background: #1b5e20;
+            color: #a5d6a7;
         }
-
-        body.dark-theme .error {
-            background: rgba(198, 40, 40, 0.2);
+        body.dark-theme .status-A {
+            background: #c62828;
             color: #ef9a9a;
+        }
+        body.dark-theme .status-P {
+            background: #e65100;
+            color: #ffcc80;
         }
 
         body.dark-theme .success-message {
@@ -100,55 +116,107 @@
             color: #81c784;
         }
 
+        body.dark-theme .json-display {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        body.dark-theme .error-state {
+            border-color: var(--danger);
+        }
+
+        body.dark-theme .error-state h3 {
+            color: var(--text-secondary);
+        }
+
+        body.dark-theme .loading-state p {
+            color: var(--text-muted);
+        }
+
+        body {
+            font-family: var(--font);
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background var(--transition);
+        }
+
         .container {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
             background: var(--card-bg);
-            padding: 32px 36px;
-            border-radius: var(--border-radius);
+            padding: 28px 32px;
+            border-radius: var(--radius);
             box-shadow: var(--shadow-lg);
             border: 1px solid var(--border-color);
             backdrop-filter: blur(10px);
-            transition: all 0.3s;
+            transition: all var(--transition);
         }
 
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
+        .container:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* ----- HEADER ----- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
             margin-bottom: 8px;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-light);
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
         }
 
-        .header-info {
-            text-align: center;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-            font-size: 0.95rem;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .header-left h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: -0.3px;
+            margin: 0;
+        }
+
+        .header-left h1::before {
+            content: "📋 ";
+        }
+
+        .header-left .badge {
+            background: var(--primary-bg);
+            color: var(--primary);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
         }
 
         .header-actions {
             display: flex;
             gap: 10px;
-            justify-content: flex-end;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
+            align-items: center;
         }
 
         .header-actions button {
             padding: 8px 18px;
-            border-radius: var(--border-radius-sm);
+            border-radius: var(--radius-sm);
             border: 1px solid var(--border-color);
             background: rgba(255, 255, 255, 0.5);
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 500;
-            font-family: var(--font-family);
+            font-family: var(--font);
             color: var(--text-secondary);
-            transition: all 0.3s;
+            transition: all var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -164,15 +232,15 @@
         .back-btn {
             text-decoration: none;
             padding: 8px 18px;
-            border-radius: var(--border-radius-sm);
+            border-radius: var(--radius-sm);
             border: 1px solid var(--border-color);
             background: rgba(255, 255, 255, 0.5);
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 500;
-            font-family: var(--font-family);
+            font-family: var(--font);
             color: var(--text-secondary);
-            transition: all 0.3s;
+            transition: all var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -186,96 +254,83 @@
             text-decoration: none;
         }
 
+        /* ----- SUBHEADER ----- */
+        .subheader {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            padding: 4px 0;
+        }
+
+        /* ----- CONTENUTO ----- */
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* ----- CARD ----- */
         .card {
             background: rgba(255, 255, 255, 0.5);
-            border-radius: var(--border-radius-sm);
+            border-radius: var(--radius-sm);
             border: 1px solid var(--border-color);
-            padding: 20px 24px;
-            margin-bottom: 20px;
-            transition: all 0.3s;
+            overflow: hidden;
+            box-shadow: 0 1px 3px var(--shadow);
+            transition: all var(--transition);
         }
 
         .card:hover {
             box-shadow: var(--shadow);
-            transform: translateY(-2px);
         }
 
-        .section-title {
-            font-size: 1.1rem;
+        .card-title {
+            padding: 12px 18px;
             font-weight: 600;
-            color: var(--primary-color);
-            margin: 0 0 16px 0;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--primary-light);
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.02);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .card-body {
+            padding: 14px 18px;
         }
 
-        th,
-        td {
-            padding: 10px 14px;
-            text-align: left;
+        /* ----- FIELD ----- */
+        .field {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
             border-bottom: 1px solid var(--border-color);
             font-size: 0.9rem;
         }
 
-        th {
-            background: var(--primary-bg);
-            font-weight: 600;
-            color: var(--text-secondary);
-            width: 35%;
+        .field:last-child {
+            border-bottom: none;
         }
 
-        td {
-            width: 65%;
-            color: var(--text-primary);
-        }
-
-        td strong {
-            color: var(--primary-color);
-        }
-
-        tr:hover td {
-            background: rgba(76, 175, 80, 0.04);
-        }
-
-        .error {
-            color: #c62828;
-            padding: 16px 20px;
-            background: #ffcdd2;
-            border-radius: var(--border-radius-sm);
-            margin: 20px 0;
-            border-left: 4px solid #c62828;
-        }
-
-        .success-message {
-            background: var(--primary-bg);
-            color: var(--primary-color);
-            padding: 12px 20px;
-            border-radius: var(--border-radius-sm);
-            margin-bottom: 20px;
-            text-align: center;
-            border-left: 4px solid var(--primary-color);
+        .field .label {
             font-weight: 500;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px 20px;
-            font-style: italic;
             color: var(--text-muted);
-            font-size: 1.1rem;
         }
 
-        .status-badge {
+        .field .value {
+            color: var(--text-primary);
+            text-align: right;
+            max-width: 55%;
+            word-break: break-word;
+        }
+
+        .field .value strong {
+            color: var(--primary);
+        }
+
+        .field .value .status-badge {
             display: inline-block;
-            padding: 3px 12px;
+            padding: 2px 14px;
             border-radius: 12px;
             font-size: 0.8rem;
             font-weight: 600;
@@ -285,48 +340,174 @@
             background: #c8e6c9;
             color: #1b5e20;
         }
-
         .status-A {
             background: #ffcdd2;
             color: #c62828;
         }
-
         .status-P {
             background: #fff3e0;
             color: #e65100;
         }
 
+        /* ----- JSON DISPLAY ----- */
         .json-display {
             background: rgba(0, 0, 0, 0.03);
-            border-left: 4px solid var(--primary-light);
-            padding: 14px 18px;
-            margin: 16px 0 0 0;
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 0.78rem;
+            font-family: 'Courier New', monospace;
+            color: var(--text-secondary);
             overflow-x: auto;
             white-space: pre-wrap;
-            font-family: 'Courier New', monospace;
-            font-size: 0.82rem;
-            border-radius: var(--border-radius-sm);
-            color: var(--text-secondary);
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
         }
 
-        body.dark-theme .json-display {
-            background: rgba(255, 255, 255, 0.05);
+        /* ----- SUCCESS MESSAGE ----- */
+        .success-message {
+            background: var(--primary-bg);
+            color: var(--primary);
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border-left: 4px solid var(--primary-light);
         }
 
-        /* Responsive */
+        /* ----- LOADING ----- */
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-light);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-state p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* ----- ERROR ----- */
+        .error-state {
+            text-align: center;
+            padding: 60px 20px;
+            border: 1px solid var(--danger);
+            border-radius: var(--radius-sm);
+        }
+
+        .error-state .error-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .error-state h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .error-state p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ----- TOAST ----- */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 380px;
+        }
+
+        .toast {
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.3s ease;
+            font-family: var(--font);
+            font-size: 0.9rem;
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+        .toast.error {
+            background: var(--danger);
+        }
+        .toast.warning {
+            background: var(--warning);
+        }
+        .toast.info {
+            background: var(--info);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%) scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .toast.out {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%) scale(0.95);
+                opacity: 0;
+            }
+        }
+
+        /* ----- RESPONSIVE ----- */
         @media (max-width: 768px) {
             body {
                 padding: 12px;
             }
             .container {
                 padding: 18px 16px;
-                border-radius: var(--border-radius-sm);
+                border-radius: var(--radius-sm);
             }
-            h1 {
-                font-size: 1.4rem;
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .header-left h1 {
+                font-size: 1.2rem;
             }
             .header-actions {
-                justify-content: center;
+                width: 100%;
+                flex-wrap: wrap;
             }
             .header-actions button,
             .back-btn {
@@ -335,19 +516,34 @@
                 padding: 8px 12px;
                 font-size: 0.8rem;
             }
-            th,
-            td {
-                padding: 8px 10px;
-                font-size: 0.82rem;
+            .field {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2px;
+                padding: 8px 0;
             }
-            th {
-                width: 40%;
+            .field .value {
+                text-align: left;
+                max-width: 100%;
+                width: 100%;
             }
-            td {
-                width: 60%;
+            .card-title {
+                font-size: 0.85rem;
+                padding: 10px 14px;
             }
-            .card {
-                padding: 14px 16px;
+            .card-body {
+                padding: 10px 14px;
+            }
+            .subheader {
+                font-size: 0.85rem;
+            }
+            .json-display {
+                font-size: 0.7rem;
+                max-height: 200px;
+            }
+            .success-message {
+                font-size: 0.85rem;
+                padding: 10px 14px;
             }
         }
 
@@ -358,33 +554,31 @@
             .container {
                 padding: 12px 10px;
             }
-            h1 {
-                font-size: 1.1rem;
+            .header-left h1 {
+                font-size: 1rem;
             }
-            .section-title {
-                font-size: 0.95rem;
-            }
-            th,
-            td {
-                padding: 6px 8px;
-                font-size: 0.75rem;
-            }
-            th {
-                width: 45%;
-            }
-            td {
-                width: 55%;
-                word-break: break-word;
-            }
-            .card {
-                padding: 10px 12px;
-            }
-            .json-display {
+            .header-left .badge {
                 font-size: 0.7rem;
-                padding: 10px 12px;
+                padding: 2px 10px;
+            }
+            .field {
+                font-size: 0.82rem;
+            }
+            .card-title {
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
+            .card-body {
+                padding: 8px 12px;
+            }
+            .toast-container {
+                left: 16px;
+                right: 16px;
+                max-width: 100%;
             }
         }
 
+        /* ----- PRINT ----- */
         @media print {
             body {
                 padding: 0;
@@ -393,9 +587,9 @@
             .container {
                 box-shadow: none;
                 border: none;
-                padding: 20px;
             }
-            .header-actions {
+            .header-actions,
+            .back-btn {
                 display: none;
             }
             .card {
@@ -407,46 +601,61 @@
                 transform: none;
                 box-shadow: none;
             }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .json-display {
+                max-height: none;
+                overflow: visible;
             }
         }
 
-        .card {
-            animation: fadeInUp 0.35s ease forwards;
+        /* ----- SCROLLBAR ----- */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
-        .card:nth-child(1) { animation-delay: 0.05s; }
-        .card:nth-child(2) { animation-delay: 0.10s; }
-        .card:nth-child(3) { animation-delay: 0.15s; }
-        .card:nth-child(4) { animation-delay: 0.20s; }
-        .card:nth-child(5) { animation-delay: 0.25s; }
-        .card:nth-child(6) { animation-delay: 0.30s; }
+        ::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>📋 Dettaglio Commessa</h1>
-        <div class="header-info">Sistema di visualizzazione dati commesse</div>
 
-        <div class="header-actions">
-            <button onclick="window.print()" title="Stampa">🖨️ Stampa</button>
-            <button onclick="toggleTheme()" title="Cambia tema">🌓 Tema</button>
-            <a href="javascript:history.back()" class="back-btn">⬅️ Torna indietro</a>
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-left">
+                <h1>Dettaglio Commessa</h1>
+                <span class="badge" id="commessaBadge">Caricamento...</span>
+            </div>
+            <div class="header-actions">
+                <button onclick="toggleTheme()" title="Cambia tema">🌓 Tema</button>
+                <button onclick="window.print()" title="Stampa">🖨️ Stampa</button>
+                <a href="javascript:history.back()" class="back-btn">⬅️ Torna indietro</a>
+            </div>
         </div>
 
-        <div id="status-message"></div>
+        <div class="subheader" id="subheader">Sistema di visualizzazione dati commesse</div>
+
+        <!-- CONTENUTO -->
         <div id="content">
-            <div class="loading">Caricamento dati in corso...</div>
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Caricamento dati in corso...</p>
+            </div>
         </div>
+
     </div>
+
+    <!-- TOAST -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <script>
         // ============================================================
@@ -467,12 +676,25 @@
         loadTheme();
 
         // ============================================================
-        // UTILITY: CONVERSIONE DATE (FIX per formato ISO)
+        // TOAST
         // ============================================================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('out');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
 
+        // ============================================================
+        // UTILITY
+        // ============================================================
         function excelDateToJSDate(excelDate) {
             if (!excelDate) return null;
-            if (excelDate instanceof Date && !isNaN(excelDate)) return excelDate;
             if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
                 const d = new Date(excelDate);
                 if (!isNaN(d)) return d;
@@ -501,36 +723,9 @@
 
         function formatExcelDate(excelDate) {
             if (!excelDate || excelDate === 0 || excelDate === '') return 'N/A';
-
-            // Se è già una stringa in formato ISO
-            if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
-                const parts = excelDate.split('-');
-                const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-                if (!isNaN(d)) {
-                    return d.toLocaleDateString('it-IT');
-                }
-                return excelDate;
-            }
-
-            // Se è un numero seriale Excel
-            if (typeof excelDate === 'number') {
-                const d = excelDateToJSDate(excelDate);
-                if (d && !isNaN(d)) {
-                    return d.toLocaleDateString('it-IT');
-                }
-                return String(excelDate);
-            }
-
-            // Se è una stringa
-            if (typeof excelDate === 'string') {
-                const d = excelDateToJSDate(excelDate);
-                if (d && !isNaN(d)) {
-                    return d.toLocaleDateString('it-IT');
-                }
-                return excelDate;
-            }
-
-            return 'N/A';
+            const d = excelDateToJSDate(excelDate);
+            if (!d || isNaN(d)) return 'N/A';
+            return d.toLocaleDateString('it-IT');
         }
 
         function formatCurrency(amount) {
@@ -549,202 +744,229 @@
         // ============================================================
         // CARICAMENTO DATI
         // ============================================================
-
-        document.addEventListener('DOMContentLoaded', function() {
+        function loadCommessa() {
             const urlParams = new URLSearchParams(window.location.search);
             const commessaParam = urlParams.get('commessa');
 
+            const contentDiv = document.getElementById('content');
+            const badgeEl = document.getElementById('commessaBadge');
+
             if (!commessaParam) {
-                showError("Nessun parametro 'commessa' trovato nell'URL.");
+                contentDiv.innerHTML = `
+                    <div class="error-state">
+                        <div class="error-icon">⚠️</div>
+                        <h3>Nessuna commessa selezionata</h3>
+                        <p>Specificare una commessa nella URL: <code>?commessa=...</code></p>
+                    </div>
+                `;
+                badgeEl.textContent = '⚠️ Non selezionata';
+                document.querySelector('.header-left h1').textContent = '📋 Nessuna Commessa';
                 return;
             }
 
             try {
-                const commessaData = JSON.parse(decodeURIComponent(commessaParam));
+                const data = JSON.parse(decodeURIComponent(commessaParam));
 
-                showSuccess(`Dati commessa ${commessaData['Numero Commessa'] || 'N/D'} caricati con successo`);
+                const numero = data['Numero Commessa'] || 'N/D';
+                badgeEl.textContent = `🆔 ${numero}`;
+                document.querySelector('.header-left h1').textContent = `📋 Commessa ${numero}`;
+                document.title = `Commessa ${numero}`;
 
-                displayCommessaData(commessaData);
-            } catch (error) {
-                showError("Errore nell'elaborazione dei dati: " + error.message);
-                console.error("Dati non validi:", commessaParam);
-            }
-        });
+                const stato = data['Stato comm.'];
+                let statoBadge = '';
+                if (stato) {
+                    let cls = 'status-P';
+                    if (stato === 'C') cls = 'status-C';
+                    else if (stato === 'A') cls = 'status-A';
+                    statoBadge = `<span class="status-badge ${cls}">${stato}</span>`;
+                }
 
-        function displayCommessaData(data) {
-            const contentDiv = document.getElementById('content');
+                // Costruisce HTML
+                let html = '';
 
-            // Formatta lo stato
-            let statoBadge = '';
-            const stato = data['Stato comm.'];
-            if (stato) {
-                let cls = 'status-P';
-                if (stato === 'C') cls = 'status-C';
-                else if (stato === 'A') cls = 'status-A';
-                statoBadge = `<span class="status-badge ${cls}">${stato}</span>`;
-            }
+                // Success message
+                html += `
+                    <div class="success-message">✅ Commessa ${numero} caricata con successo</div>
+                `;
 
-            let html = `
+                // Card 1: Informazioni Principali
+                html += `
                     <div class="card">
-                        <div class="section-title">📌 Informazioni Principali</div>
-                        <table>
-                            <tr>
-                                <th>Campo</th>
-                                <th>Valore</th>
-                            </tr>
-                            <tr>
-                                <td>Numero Commessa</td>
-                                <td><strong>${getFieldValue(data, 'Numero Commessa')}</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Data commessa</td>
-                                <td>${formatExcelDate(data['Data commessa'])}</td>
-                            </tr>
-                            <tr>
-                                <td>Stato comm.</td>
-                                <td>${statoBadge || 'N/A'}</td>
-                            </tr>
-                            <tr>
-                                <td>Tipo</td>
-                                <td>${getFieldValue(data, 'Tipo')}</td>
-                            </tr>
-                            <tr>
-                                <td>ID Imp.</td>
-                                <td><strong>${getFieldValue(data, 'ID Imp.')}</strong></td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="card">
-                        <div class="section-title">📍 Dettagli Impianto</div>
-                        <table>
-                            <tr>
-                                <th>Campo</th>
-                                <th>Valore</th>
-                            </tr>
-                            <tr>
-                                <td>Indirizzo</td>
-                                <td>${getFieldValue(data, 'Indirizzo')}</td>
-                            </tr>
-                            <tr>
-                                <td>Località impianto</td>
-                                <td>${getFieldValue(data, 'Località impianto')}</td>
-                            </tr>
-                            <tr>
-                                <td>Prov.</td>
-                                <td>${getFieldValue(data, 'Prov')}</td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="card">
-                        <div class="section-title">💰 Informazioni Commerciali</div>
-                        <table>
-                            <tr>
-                                <th>Campo</th>
-                                <th>Valore</th>
-                            </tr>
-                            <tr>
-                                <td>Addetto commerciale</td>
-                                <td>${getFieldValue(data, 'Addetto commerciale')}</td>
-                            </tr>
-                            <tr>
-                                <td>Descrizione Lavori</td>
-                                <td>${getFieldValue(data, 'Descrizione Lavori')}</td>
-                            </tr>
-                            <tr>
-                                <td>Prezzo Netto</td>
-                                <td><strong>${formatCurrency(data['Prezzo Netto'])}</strong></td>
-                            </tr>
-                            <tr>
-                                <td>N. ordine</td>
-                                <td>${getFieldValue(data, 'N. ordine')}</td>
-                            </tr>
-                            <tr>
-                                <td>Data Ordine</td>
-                                <td>${formatExcelDate(data['Data Ordine'])}</td>
-                            </tr>
-                            <tr>
-                                <td>Costo materiale</td>
-                                <td>${formatCurrency(data['Costo materiale'])}</td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="card">
-                        <div class="section-title">📅 Pianificazione Lavori</div>
-                        <table>
-                            <tr>
-                                <th>Campo</th>
-                                <th>Valore</th>
-                            </tr>
-                            <tr>
-                                <td>Data inizio lavori prevista</td>
-                                <td>${formatExcelDate(data['Data inizio lavori prevista'])}</td>
-                            </tr>
-                            <tr>
-                                <td>Data fine lavori prevista</td>
-                                <td>${formatExcelDate(data['Data fine lavori prevista'])}</td>
-                            </tr>
-                            <tr>
-                                <td>Pianificato / Completato nel mese</td>
-                                <td>${getFieldValue(data, 'Pianificato / Completato nel mese')}</td>
-                            </tr>
-                            <tr>
-                                <td>Data effettiva chiusura commessa</td>
-                                <td>${formatExcelDate(data['Data effettiva chiusura commessa'])}</td>
-                            </tr>
-                            <tr>
-                                <td>Data validazione commessa</td>
-                                <td>${formatExcelDate(data['Data validazione commessa'])}</td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="card">
-                        <div class="section-title">📝 Altri Dettagli</div>
-                        <table>
-                            <tr>
-                                <th>Campo</th>
-                                <th>Valore</th>
-                            </tr>
-                            <tr>
-                                <td>Supervisore STF</td>
-                                <td>${getFieldValue(data, 'Supervisore STF')}</td>
-                            </tr>
-                            <tr>
-                                <td>Subappalto Si o No</td>
-                                <td>${getFieldValue(data, 'Subappalto Si o No')}</td>
-                            </tr>
-                            <tr>
-                                <td>Risorsa/e (interna o esterna)</td>
-                                <td>${getFieldValue(data, 'Risorsa/e (interna o esterna)')}</td>
-                            </tr>
-                            <tr>
-                                <td>NOTE</td>
-                                <td>${getFieldValue(data, 'NOTE')}</td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="card">
-                        <div class="section-title">📋 Dati JSON Completi</div>
-                        <div class="json-display">${JSON.stringify(data, null, 2)}</div>
+                        <div class="card-title">📌 Informazioni Principali</div>
+                        <div class="card-body">
+                            <div class="field">
+                                <span class="label">Numero Commessa</span>
+                                <span class="value"><strong>${getFieldValue(data, 'Numero Commessa')}</strong></span>
+                            </div>
+                            <div class="field">
+                                <span class="label">Data commessa</span>
+                                <span class="value">${formatExcelDate(data['Data commessa'])}</span>
+                            </div>
+                            <div class="field">
+                                <span class="label">Stato comm.</span>
+                                <span class="value">${statoBadge || 'N/A'}</span>
+                            </div>
+                            <div class="field">
+                                <span class="label">Tipo</span>
+                                <span class="value">${getFieldValue(data, 'Tipo')}</span>
+                            </div>
+                            <div class="field" style="border-bottom:none;">
+                                <span class="label">ID Imp.</span>
+                                <span class="value"><strong>${getFieldValue(data, 'ID Imp.')}</strong></span>
+                            </div>
+                        </div>
                     </div>
                 `;
 
-            contentDiv.innerHTML = html;
+                // Card 2: Dettagli Impianto
+                if (data.Indirizzo || data['Località impianto'] || data.Prov) {
+                    html += `
+                        <div class="card">
+                            <div class="card-title">📍 Dettagli Impianto</div>
+                            <div class="card-body">
+                                <div class="field">
+                                    <span class="label">Indirizzo</span>
+                                    <span class="value">${getFieldValue(data, 'Indirizzo')}</span>
+                                </div>
+                                <div class="field">
+                                    <span class="label">Località impianto</span>
+                                    <span class="value">${getFieldValue(data, 'Località impianto')}</span>
+                                </div>
+                                <div class="field" style="border-bottom:none;">
+                                    <span class="label">Prov.</span>
+                                    <span class="value">${getFieldValue(data, 'Prov')}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Card 3: Informazioni Commerciali
+                if (data['Addetto commerciale'] || data['Prezzo Netto']) {
+                    html += `
+                        <div class="card">
+                            <div class="card-title">💰 Informazioni Commerciali</div>
+                            <div class="card-body">
+                                <div class="field">
+                                    <span class="label">Addetto commerciale</span>
+                                    <span class="value">${getFieldValue(data, 'Addetto commerciale')}</span>
+                                </div>
+                                <div class="field">
+                                    <span class="label">Descrizione Lavori</span>
+                                    <span class="value">${getFieldValue(data, 'Descrizione Lavori')}</span>
+                                </div>
+                                <div class="field">
+                                    <span class="label">Prezzo Netto</span>
+                                    <span class="value"><strong>${formatCurrency(data['Prezzo Netto'])}</strong></span>
+                                </div>
+                                <div class="field">
+                                    <span class="label">N. ordine</span>
+                                    <span class="value">${getFieldValue(data, 'N. ordine')}</span>
+                                </div>
+                                <div class="field">
+                                    <span class="label">Data Ordine</span>
+                                    <span class="value">${formatExcelDate(data['Data Ordine'])}</span>
+                                </div>
+                                <div class="field" style="border-bottom:none;">
+                                    <span class="label">Costo materiale</span>
+                                    <span class="value">${formatCurrency(data['Costo materiale'])}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Card 4: Pianificazione
+                if (data['Data inizio lavori prevista'] || data['Data fine lavori prevista']) {
+                    html += `
+                        <div class="card">
+                            <div class="card-title">📅 Pianificazione Lavori</div>
+                            <div class="card-body">
+                                <div class="field">
+                                    <span class="label">Data inizio lavori prevista</span>
+                                    <span class="value">${formatExcelDate(data['Data inizio lavori prevista'])}</span>
+                                </div>
+                                <div class="field">
+                                    <span class="label">Data fine lavori prevista</span>
+                                    <span class="value">${formatExcelDate(data['Data fine lavori prevista'])}</span>
+                                </div>
+                                <div class="field">
+                                    <span class="label">Pianificato / Completato nel mese</span>
+                                    <span class="value">${getFieldValue(data, 'Pianificato / Completato nel mese')}</span>
+                                </div>
+                                <div class="field">
+                                    <span class="label">Data effettiva chiusura commessa</span>
+                                    <span class="value">${formatExcelDate(data['Data effettiva chiusura commessa'])}</span>
+                                </div>
+                                <div class="field" style="border-bottom:none;">
+                                    <span class="label">Data validazione commessa</span>
+                                    <span class="value">${formatExcelDate(data['Data validazione commessa'])}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Card 5: Altri Dettagli
+                if (data['Supervisore STF'] || data.NOTE) {
+                    html += `
+                        <div class="card">
+                            <div class="card-title">📝 Altri Dettagli</div>
+                            <div class="card-body">
+                                <div class="field">
+                                    <span class="label">Supervisore STF</span>
+                                    <span class="value">${getFieldValue(data, 'Supervisore STF')}</span>
+                                </div>
+                                <div class="field">
+                                    <span class="label">Subappalto</span>
+                                    <span class="value">${getFieldValue(data, 'Subappalto Si o No')}</span>
+                                </div>
+                                <div class="field">
+                                    <span class="label">Risorsa/e</span>
+                                    <span class="value">${getFieldValue(data, 'Risorsa/e (interna o esterna)')}</span>
+                                </div>
+                                <div class="field" style="border-bottom:none;">
+                                    <span class="label">NOTE</span>
+                                    <span class="value" style="max-width:50%;">${getFieldValue(data, 'NOTE')}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Card 6: Dati JSON
+                html += `
+                    <div class="card">
+                        <div class="card-title">📋 Dati JSON Completi</div>
+                        <div class="card-body">
+                            <div class="json-display">${JSON.stringify(data, null, 2)}</div>
+                        </div>
+                    </div>
+                `;
+
+                contentDiv.innerHTML = html;
+
+            } catch (error) {
+                console.error('Errore:', error);
+                contentDiv.innerHTML = `
+                    <div class="error-state">
+                        <div class="error-icon">❌</div>
+                        <h3>Errore nel caricamento</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+                badgeEl.textContent = '❌ Errore';
+                showToast('❌ Errore caricamento commessa', 'error');
+            }
         }
 
-        function showError(message) {
-            const contentDiv = document.getElementById('content');
-            contentDiv.innerHTML = `<div class="error">❌ ${message}</div>`;
-        }
+        // ============================================================
+        // INIT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', loadCommessa);
 
-        function showSuccess(message) {
-            const statusDiv = document.getElementById('status-message');
-            statusDiv.innerHTML = `<div class="success-message">✅ ${message}</div>`;
-        }
+        console.log('📱 Commesse Desktop v1.0');
     </script>
+
 </body>
 </html>

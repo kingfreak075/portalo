@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
-           iOS NATIVE STYLE - Mobile First con Bottom Sheet
+           iOS NATIVE STYLE - Mobile First
            ============================================================ */
 
         * {
@@ -40,11 +40,8 @@
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --tab-height: 50px;
             --header-height: 52px;
-            --search-height: 52px;
-            --sheet-handle: 40px;
         }
 
-        /* Dark Mode */
         body.dark {
             --ios-gray-bg: #000000;
             --ios-card: #1C1C1E;
@@ -56,68 +53,6 @@
             --ios-shadow-heavy: rgba(255, 255, 255, 0.08);
         }
 
-        body.dark .bottom-sheet {
-            background: var(--ios-card);
-            border-color: var(--ios-separator);
-        }
-
-        body.dark .sheet-handle {
-            background: var(--ios-separator);
-        }
-
-        body.dark .sheet-header {
-            border-color: var(--ios-separator);
-        }
-
-        body.dark .sheet-close {
-            color: var(--ios-text-tertiary);
-        }
-
-        body.dark .sheet-close:active {
-            background: var(--ios-separator);
-        }
-
-        body.dark .detail-row {
-            border-color: var(--ios-separator);
-        }
-
-        body.dark .detail-section {
-            border-color: var(--ios-separator);
-        }
-
-        body.dark .detail-section-header {
-            background: var(--ios-gray-bg);
-        }
-
-        body.dark .section-content {
-            background: var(--ios-card);
-        }
-
-        body.dark .annotazione-item {
-            background: var(--ios-gray-bg);
-            border-color: var(--ios-separator);
-        }
-
-        body.dark .doc-item {
-            border-color: var(--ios-separator);
-        }
-
-        body.dark .archivio-item {
-            background: rgba(255, 149, 0, 0.1);
-            border-color: var(--ios-separator);
-        }
-
-        body.dark .badge-tipo {
-            background: var(--ios-gray-bg);
-        }
-
-        /* ----- BASE ----- */
-        html {
-            -webkit-text-size-adjust: 100%;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
             background: var(--ios-gray-bg);
@@ -125,9 +60,7 @@
             min-height: 100vh;
             padding-top: var(--safe-top);
             padding-bottom: calc(var(--tab-height) + var(--safe-bottom) + 8px);
-            overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
-            position: relative;
         }
 
         /* ----- HEADER ----- */
@@ -166,45 +99,34 @@
             padding: 4px;
             color: var(--ios-blue);
             transition: transform 0.15s ease;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .header-actions button:active {
             transform: scale(0.85);
         }
 
-        /* ----- DASHBOARD CAROSELLO ----- */
+        /* ----- DASHBOARD (4 in riga) ----- */
         .dashboard-wrapper {
-            padding: 12px 0 8px 16px;
+            padding: 12px 16px;
             background: var(--ios-gray-bg);
             transition: background 0.3s ease;
         }
 
-        .dashboard-scroll {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-right: 16px;
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: none;
-        }
-
-        .dashboard-scroll::-webkit-scrollbar {
-            display: none;
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
         }
 
         .dash-item {
-            flex: 0 0 120px;
             background: var(--ios-card);
-            border-radius: 14px;
-            padding: 14px 12px;
+            border-radius: 12px;
+            padding: 10px 8px;
             text-align: center;
-            scroll-snap-align: start;
             border: 0.5px solid var(--ios-separator);
             box-shadow: 0 1px 3px var(--ios-shadow);
-            transition: background 0.3s ease, border-color 0.3s ease;
-            min-height: 72px;
+            transition: background 0.3s ease;
+            min-height: 64px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -212,7 +134,7 @@
         }
 
         .dash-item .dash-number {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--ios-text);
             line-height: 1.2;
@@ -224,20 +146,19 @@
         .dash-item .dash-number.orange { color: var(--ios-orange); }
 
         .dash-item .dash-icon {
-            font-size: 18px;
-            margin-bottom: 2px;
+            font-size: 16px;
+            margin-bottom: 1px;
         }
 
         .dash-item .dash-label {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 500;
             color: var(--ios-text-tertiary);
             text-transform: uppercase;
             letter-spacing: 0.3px;
-            margin-top: 2px;
         }
 
-        /* ----- SEARCH BAR (sticky) ----- */
+        /* ----- SEARCH BAR ----- */
         .search-wrapper {
             background: var(--ios-gray-bg);
             padding: 8px 16px 12px;
@@ -257,7 +178,7 @@
             gap: 8px;
             transition: border-color 0.3s, box-shadow 0.3s;
             box-shadow: 0 1px 3px var(--ios-shadow);
-            min-height: 44px;
+            min-height: 48px;
         }
 
         .search-bar:focus-within {
@@ -313,7 +234,7 @@
             font-family: inherit;
             transition: background 0.2s;
             flex-shrink: 0;
-            min-height: 32px;
+            min-height: 34px;
         }
 
         .search-bar .search-submit:active {
@@ -399,28 +320,21 @@
             letter-spacing: 0.3px;
         }
 
-        /* ----- FILTER CHIPS ----- */
+        /* ----- FILTER CHIPS (wrap su più righe) ----- */
         .filter-wrapper {
             padding: 0 16px 12px;
             background: var(--ios-gray-bg);
             transition: background 0.3s ease;
         }
 
-        .filter-scroll {
+        .filter-wrap {
             display: flex;
+            flex-wrap: wrap;
             gap: 6px;
-            overflow-x: auto;
-            padding: 2px 0 4px;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .filter-scroll::-webkit-scrollbar {
-            display: none;
+            padding: 2px 0;
         }
 
         .filter-chip {
-            flex-shrink: 0;
             padding: 6px 16px;
             border-radius: 20px;
             font-size: 13px;
@@ -470,12 +384,11 @@
             background: var(--ios-card);
             border-radius: 14px;
             border: 0.5px solid var(--ios-separator);
-            padding: 14px 16px;
-            margin-bottom: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
             box-shadow: 0 1px 3px var(--ios-shadow);
             transition: all 0.2s;
             cursor: pointer;
-            -webkit-touch-callout: none;
         }
 
         .result-item:active {
@@ -483,31 +396,36 @@
         }
 
         .result-item .result-code {
-            font-size: 17px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
             color: var(--ios-text);
-            margin-bottom: 2px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            margin-bottom: 2px;
         }
 
         .result-item .result-code .fav-icon {
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             background: none;
             border: none;
-            padding: 0;
+            padding: 4px;
         }
 
         .result-item .result-code .fav-icon:active {
             transform: scale(0.8);
         }
 
+        .result-item .result-code .fav-icon.fav-active {
+            color: var(--ios-yellow);
+        }
+
         .result-item .result-address {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--ios-text-secondary);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            padding-left: 2px;
         }
 
         .result-item .result-meta {
@@ -515,17 +433,21 @@
             flex-wrap: wrap;
             gap: 6px;
             align-items: center;
-            font-size: 12px;
+            font-size: 13px;
             color: var(--ios-text-tertiary);
+            padding-left: 2px;
         }
 
         .result-item .result-meta .badge-giro {
             background: var(--ios-gray-bg);
-            padding: 2px 10px;
+            padding: 2px 12px;
             border-radius: 12px;
             font-weight: 500;
-            font-size: 11px;
+            font-size: 12px;
             color: var(--ios-text-secondary);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .result-item .result-meta .badge-giro.disdetta {
@@ -533,27 +455,39 @@
             color: var(--ios-red);
         }
 
+        .result-item .result-meta .badge-scaduto {
+            background: #FFE5E5;
+            color: var(--ios-red);
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
         .result-item .result-meta .badge-verifica {
             background: #FFF3E0;
             color: var(--ios-orange);
-            padding: 2px 10px;
+            padding: 2px 12px;
             border-radius: 12px;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
         }
 
         .result-item .result-meta .icons {
-            font-size: 13px;
+            font-size: 14px;
             display: flex;
-            gap: 2px;
+            gap: 4px;
             margin-left: auto;
         }
 
         .result-item .result-actions {
             display: flex;
             gap: 8px;
-            margin-top: 8px;
-            padding-top: 8px;
+            margin-top: 10px;
+            padding-top: 10px;
             border-top: 0.5px solid var(--ios-separator);
         }
 
@@ -562,12 +496,12 @@
             border: none;
             font-size: 18px;
             cursor: pointer;
-            padding: 4px 8px;
+            padding: 6px 10px;
             border-radius: 8px;
             transition: background 0.2s;
             color: var(--ios-text-tertiary);
-            min-height: 36px;
-            min-width: 36px;
+            min-height: 40px;
+            min-width: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -578,11 +512,17 @@
             transform: scale(0.9);
         }
 
+        .result-item .result-actions button.scheda-btn {
+            color: var(--ios-blue);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
         .result-item .result-actions button.fav-active {
             color: var(--ios-yellow);
         }
 
-        /* ----- EMPTY STATE ----- */
+        /* ----- EMPTY ----- */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -605,41 +545,44 @@
             font-size: 15px;
         }
 
-        /* ----- LOADING ----- */
-        .loading-state {
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .loading-spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid var(--ios-separator);
-            border-top: 3px solid var(--ios-blue);
+        /* ----- SCROLL TOP ----- */
+        .scroll-top {
+            position: fixed;
+            bottom: calc(var(--tab-height) + var(--safe-bottom) + 20px);
+            right: 16px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 12px;
+            background: var(--ios-card);
+            border: 0.5px solid var(--ios-separator);
+            box-shadow: 0 4px 12px var(--ios-shadow-heavy);
+            font-size: 20px;
+            color: var(--ios-blue);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 80;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .scroll-top:active {
+            transform: scale(0.85);
         }
 
-        .loading-state p {
-            color: var(--ios-text-tertiary);
-            font-size: 15px;
+        .scroll-top.visible {
+            display: flex;
         }
 
         /* ============================================================
-           BOTTOM SHEET
+           BOTTOM SHEET - FIXATO
            ============================================================ */
 
-        /* Overlay */
         .sheet-overlay {
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.4);
-            z-index: 200;
+            z-index: 999;
             opacity: 0;
             visibility: hidden;
             transition: all 0.4s ease;
@@ -652,7 +595,6 @@
             visibility: visible;
         }
 
-        /* Bottom Sheet */
         .bottom-sheet {
             position: fixed;
             bottom: 0;
@@ -661,7 +603,7 @@
             max-height: 92vh;
             background: var(--ios-card);
             border-radius: 20px 20px 0 0;
-            z-index: 201;
+            z-index: 1000;
             transform: translateY(100%);
             transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
             box-shadow: 0 -8px 40px var(--ios-shadow-heavy);
@@ -676,13 +618,12 @@
             transform: translateY(0);
         }
 
-        /* Drag Handle */
         .sheet-handle {
             width: 36px;
             height: 5px;
             background: var(--ios-separator);
             border-radius: 3px;
-            margin: 8px auto 4px;
+            margin: 4px auto 2px;
             flex-shrink: 0;
             cursor: grab;
         }
@@ -691,7 +632,6 @@
             cursor: grabbing;
         }
 
-        /* Sheet Header */
         .sheet-header {
             display: flex;
             align-items: center;
@@ -795,283 +735,184 @@
             transform: scale(0.9);
         }
 
-        /* Sheet Body (scrollabile) */
+        /* SHEET BODY - FIX SCROLL */
         .sheet-body {
             flex: 1;
             overflow-y: auto;
-            padding: 12px 16px 20px;
             -webkit-overflow-scrolling: touch;
+            padding: 12px 16px 120px;
+            min-height: 0;
         }
 
-        /* Detail Row */
-        .detail-row {
+        /* ============================================================
+           STILI PER LE SEZIONI DELLA SHEET
+           ============================================================ */
+
+        .sheet-section {
+            background: var(--ios-card);
+            border-radius: 12px;
+            border: 0.5px solid var(--ios-separator);
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .sheet-section-header {
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 0.5px solid var(--ios-separator);
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
             font-size: 14px;
+            color: var(--ios-text);
+            min-height: 44px;
+            user-select: none;
+            transition: background 0.2s;
         }
 
-        .detail-row:last-child {
+        .sheet-section-header:active {
+            background: var(--ios-separator);
+        }
+
+        .sheet-section-header .section-arrow {
+            font-size: 14px;
+            color: var(--ios-text-tertiary);
+            transition: transform 0.3s ease;
+        }
+
+        .sheet-section-header .section-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .sheet-section-body {
+            display: none;
+            padding: 12px 16px;
+            border-top: 0.5px solid var(--ios-separator);
+        }
+
+        .sheet-section-body.open {
+            display: block;
+        }
+
+        .sheet-section-body .field-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 0.5px solid var(--ios-separator);
+            font-size: 13px;
+        }
+
+        .sheet-section-body .field-row:last-child {
             border-bottom: none;
         }
 
-        .detail-row .detail-label {
+        .sheet-section-body .field-row .label {
             font-weight: 500;
             color: var(--ios-text-tertiary);
         }
 
-        .detail-row .detail-value {
+        .sheet-section-body .field-row .value {
             color: var(--ios-text);
             text-align: right;
             max-width: 60%;
             word-break: break-word;
         }
 
-        .detail-row .detail-value .map-link {
+        .sheet-section-body .field-row .value a {
             color: var(--ios-blue);
             text-decoration: none;
-            font-size: 12px;
         }
 
-        /* Detail Sections (collassabili) */
-        .detail-section {
-            margin-top: 12px;
-            border: 0.5px solid var(--ios-separator);
-            border-radius: 12px;
-            overflow: hidden;
-            background: var(--ios-card);
+        /* Statistiche nella sheet */
+        .sheet-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
-        .detail-section-header {
+        .sheet-stat-item {
             background: var(--ios-gray-bg);
-            padding: 10px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--ios-text);
             transition: background 0.2s;
-            min-height: 44px;
-            user-select: none;
+            border: 0.5px solid transparent;
         }
 
-        .detail-section-header:active {
+        .sheet-stat-item:active {
             background: var(--ios-separator);
+            transform: scale(0.97);
         }
 
-        .detail-section-header .section-icon {
-            font-size: 16px;
-            margin-right: 8px;
+        .sheet-stat-item .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--ios-text);
         }
 
-        .detail-section-header .section-badge {
-            background: var(--ios-blue);
-            color: white;
-            font-size: 11px;
-            padding: 1px 10px;
-            border-radius: 12px;
+        .sheet-stat-item .stat-label {
+            font-size: 10px;
+            color: var(--ios-text-tertiary);
             font-weight: 500;
         }
 
-        .detail-section-header .section-arrow {
-            font-size: 14px;
-            color: var(--ios-text-tertiary);
-            transition: transform 0.3s ease;
-        }
-
-        .detail-section-header .section-arrow.open {
-            transform: rotate(180deg);
-        }
-
-        .section-content {
-            display: none;
-            padding: 12px 16px;
-            background: var(--ios-card);
-            border-top: 0.5px solid var(--ios-separator);
-        }
-
-        .section-content.open {
-            display: block;
-        }
-
-        /* Annotazioni */
-        .annotazione-item {
-            background: var(--ios-gray-bg);
-            border-radius: 10px;
-            padding: 10px 14px;
-            margin-bottom: 8px;
-            border: 0.5px solid var(--ios-separator);
-        }
-
-        .annotazione-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .annotazione-item .annotazione-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-bottom: 4px;
-        }
-
-        .annotazione-item .badge-tipo {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 2px 12px;
+        /* Banner interventi */
+        .sheet-interventi-banner {
+            margin-top: 16px;
+            background: var(--ios-blue);
             border-radius: 12px;
-            background: var(--ios-separator);
-            color: var(--ios-text-secondary);
-        }
-
-        .badge-semestrale {
-            background: #E8F5E9;
-            color: #2E7D32;
-        }
-
-        .badge-appuntamento {
-            background: #E3F2FD;
-            color: #0D47A1;
-        }
-
-        .badge-manutenzione {
-            background: #FFF3E0;
-            color: #E65100;
-        }
-
-        body.dark .badge-semestrale {
-            background: #1B5E20;
-            color: #A5D6A7;
-        }
-
-        body.dark .badge-appuntamento {
-            background: #0D47A1;
-            color: #90CAF9;
-        }
-
-        body.dark .badge-manutenzione {
-            background: #E65100;
-            color: #FFCC80;
-        }
-
-        .annotazione-item .tecnico {
-            font-size: 12px;
-            color: var(--ios-text-tertiary);
-        }
-
-        .annotazione-item .annotazione-note {
-            font-size: 13px;
-            color: var(--ios-text-secondary);
-            padding-left: 10px;
-            border-left: 2px solid var(--ios-separator);
-            margin-top: 4px;
-        }
-
-        /* Documenti */
-        .doc-item {
-            padding: 6px 0;
-            border-bottom: 0.5px solid var(--ios-separator);
-        }
-
-        .doc-item:last-child {
-            border-bottom: none;
-        }
-
-        .doc-item a {
-            color: var(--ios-blue);
-            text-decoration: none;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .doc-item a:active {
-            opacity: 0.6;
-        }
-
-        /* Archivio */
-        .archivio-item {
-            background: rgba(255, 149, 0, 0.08);
-            border-radius: 10px;
-            padding: 10px 14px;
-            margin-bottom: 8px;
-            border: 0.5px solid var(--ios-separator);
-        }
-
-        .archivio-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .archivio-item .archivio-title {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .archivio-item .archivio-detail {
-            font-size: 13px;
-            color: var(--ios-text-secondary);
-            margin-top: 4px;
-        }
-
-        /* Commesse */
-        .commessa-item {
-            padding: 6px 0;
-            border-bottom: 0.5px solid var(--ios-separator);
-            font-size: 13px;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
 
-        .commessa-item:last-child {
-            border-bottom: none;
+        .sheet-interventi-banner:active {
+            opacity: 0.7;
         }
 
-        .commessa-item a {
-            color: var(--ios-blue);
+        .sheet-interventi-banner .banner-text {
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .sheet-interventi-banner .banner-link {
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
             text-decoration: none;
+        }
+
+        /* Pulsante scheda completa */
+        .sheet-full-btn {
+            margin-top: 16px;
+            text-align: center;
+            padding: 14px;
+            background: var(--ios-blue);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .sheet-full-btn:active {
+            opacity: 0.7;
+        }
+
+        .sheet-full-btn span {
+            color: white;
+            font-weight: 600;
             font-size: 16px;
         }
 
-        .commessa-item a:active {
-            opacity: 0.6;
-        }
-
-        /* ----- SCROLL TOP BUTTON ----- */
-        .scroll-top {
-            position: fixed;
-            bottom: calc(var(--tab-height) + var(--safe-bottom) + 20px);
-            right: 16px;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--ios-card);
-            border: 0.5px solid var(--ios-separator);
-            box-shadow: 0 4px 12px var(--ios-shadow-heavy);
-            font-size: 20px;
-            color: var(--ios-blue);
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            z-index: 80;
-        }
-
-        .scroll-top:active {
-            transform: scale(0.85);
-        }
-
-        .scroll-top.visible {
-            display: flex;
-        }
-
-        /* ----- BOTTOM NAV (Tab Bar) ----- */
+        /* ----- BOTTOM NAV ----- */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -1104,7 +945,6 @@
             font-weight: 500;
             color: var(--ios-text-tertiary);
             transition: color 0.2s;
-            -webkit-tap-highlight-color: transparent;
             min-width: 44px;
             min-height: 44px;
             justify-content: center;
@@ -1134,7 +974,7 @@
             top: calc(var(--safe-top) + 60px);
             left: 50%;
             transform: translateX(-50%);
-            z-index: 999;
+            z-index: 9999;
             pointer-events: none;
             max-width: 90%;
         }
@@ -1159,58 +999,26 @@
         }
 
         @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         @keyframes toastOut {
-            from {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(-20px) scale(0.95);
-            }
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-20px) scale(0.95); }
         }
 
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
-
+        /* ----- RESPONSIVE ----- */
         @media (max-width: 375px) {
-            .dash-item {
-                flex: 0 0 100px;
-                padding: 10px 8px;
-                min-height: 60px;
-            }
-            .dash-item .dash-number {
-                font-size: 18px;
-            }
-            .header-title {
-                font-size: 17px;
-            }
-            .search-bar input {
-                font-size: 15px;
-            }
-            .result-item .result-code {
-                font-size: 15px;
-            }
+            .dash-item { min-height: 56px; }
+            .dash-item .dash-number { font-size: 17px; }
+            .header-title { font-size: 17px; }
+            .search-bar input { font-size: 15px; }
+            .result-item .result-code { font-size: 18px; }
         }
 
         @media (min-width: 430px) {
-            .dash-item {
-                flex: 0 0 130px;
-            }
-            .dash-item .dash-number {
-                font-size: 24px;
-            }
+            .dash-item .dash-number { font-size: 22px; }
         }
 
         @media (min-width: 768px) {
@@ -1231,37 +1039,16 @@
                 border: 0.5px solid var(--ios-separator);
                 min-height: 90vh;
             }
-            body {
-                padding: 20px;
-                background: #E5E5EA;
-            }
-            body.dark {
-                background: #000000;
-            }
-            .header {
-                border-radius: 0;
-            }
-            .bottom-sheet {
-                max-width: 430px;
-                left: 50%;
-                transform: translateX(-50%) translateY(100%);
-            }
-            .bottom-sheet.open {
-                transform: translateX(-50%) translateY(0);
-            }
-            .sheet-overlay {
-                left: 50%;
-                transform: translateX(-50%);
-                max-width: 430px;
-            }
+            body.dark { background: #000000; }
+            .bottom-sheet { max-width: 430px; left: 50%; transform: translateX(-50%) translateY(100%); }
+            .bottom-sheet.open { transform: translateX(-50%) translateY(0); }
+            .sheet-overlay { left: 50%; transform: translateX(-50%); max-width: 430px; }
         }
 
-        /* ----- UTILITY ----- */
-        .text-muted {
-            color: var(--ios-text-tertiary);
-        }
-        .text-center {
-            text-align: center;
+        @media print {
+            .header-actions, .bottom-nav, .scroll-top { display: none; }
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border: none; }
         }
     </style>
 </head>
@@ -1269,18 +1056,18 @@
 
     <div class="container">
 
-        <!-- ===== HEADER ===== -->
+        <!-- HEADER -->
         <header class="header">
             <span class="header-title">🔍 Ricerca</span>
             <div class="header-actions">
-                <button onclick="toggleTheme()" aria-label="Tema" title="Tema">🌓</button>
-                <button onclick="showFavorites()" aria-label="Preferiti" title="Preferiti">⭐</button>
+                <button onclick="toggleTheme()" aria-label="Tema">🌓</button>
+                <button onclick="showFavorites()" aria-label="Preferiti">⭐</button>
             </div>
         </header>
 
-        <!-- ===== DASHBOARD ===== -->
+        <!-- DASHBOARD -->
         <div class="dashboard-wrapper" id="dashboardWrapper" style="display:none;">
-            <div class="dashboard-scroll" id="dashboardScroll">
+            <div class="dashboard-grid">
                 <div class="dash-item">
                     <div class="dash-number blue" id="dashTotal">0</div>
                     <div class="dash-icon">📊</div>
@@ -1304,7 +1091,7 @@
             </div>
         </div>
 
-        <!-- ===== SEARCH ===== -->
+        <!-- SEARCH -->
         <div class="search-wrapper">
             <div class="search-bar">
                 <span class="search-icon">🔍</span>
@@ -1316,7 +1103,7 @@
             </div>
         </div>
 
-        <!-- ===== STATS ===== -->
+        <!-- STATS TOGGLE -->
         <div class="stats-toggle">
             <button class="stats-toggle-btn" onclick="toggleStats()">
                 <span>📊 Statistiche</span>
@@ -1346,9 +1133,9 @@
             </div>
         </div>
 
-        <!-- ===== FILTERS ===== -->
+        <!-- FILTERS -->
         <div class="filter-wrapper">
-            <div class="filter-scroll" id="filterScroll">
+            <div class="filter-wrap" id="filterWrap">
                 <button class="filter-chip active" data-filter="all" onclick="applyFilter('all')">📋 Tutti</button>
                 <button class="filter-chip" data-filter="disdette" onclick="applyFilter('disdette')">🚫 Disdette</button>
                 <button class="filter-chip" data-filter="scadute" onclick="applyFilter('scadute')">⏰ Scadute</button>
@@ -1358,7 +1145,7 @@
             </div>
         </div>
 
-        <!-- ===== RESULTS ===== -->
+        <!-- RESULTS -->
         <div class="results-container" id="resultsContainer">
             <div class="empty-state">
                 <div class="empty-icon">🔍</div>
@@ -1367,22 +1154,13 @@
             </div>
         </div>
 
-        <!-- ===== SCROLL TOP ===== -->
+        <!-- SCROLL TOP -->
         <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">⬆</button>
 
-        <!-- ============================================================
-             BOTTOM SHEET
-             ============================================================ -->
-
-        <!-- Overlay -->
+        <!-- BOTTOM SHEET -->
         <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
-
-        <!-- Bottom Sheet -->
         <div class="bottom-sheet" id="bottomSheet">
-            <!-- Drag Handle -->
             <div class="sheet-handle" id="sheetHandle"></div>
-
-            <!-- Header -->
             <div class="sheet-header">
                 <div class="sheet-header-left">
                     <button class="sheet-fav" id="sheetFav" onclick="sheetToggleFavorite()">☆</button>
@@ -1395,14 +1173,12 @@
                     <button class="sheet-close" onclick="closeSheet()">✕</button>
                 </div>
             </div>
-
-            <!-- Body -->
             <div class="sheet-body" id="sheetBody">
-                <!-- Il contenuto viene popolato dinamicamente -->
+                <!-- Contenuto generato dinamicamente -->
             </div>
         </div>
 
-        <!-- ===== BOTTOM NAV ===== -->
+        <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
             <button class="active" onclick="goHome()">
                 <span class="nav-icon">🏠</span>
@@ -1422,7 +1198,7 @@
             </button>
         </nav>
 
-        <!-- ===== TOAST ===== -->
+        <!-- TOAST -->
         <div class="toast-container" id="toastContainer"></div>
 
     </div>
@@ -1462,9 +1238,7 @@
 
         function loadTheme() {
             const saved = localStorage.getItem('theme');
-            if (saved === 'dark') {
-                document.body.classList.add('dark');
-            }
+            if (saved === 'dark') document.body.classList.add('dark');
             document.getElementById('themeIcon').textContent = document.body.classList.contains('dark') ? '☀️' : '🌓';
         }
 
@@ -1492,26 +1266,18 @@
 
         window.addEventListener('scroll', function() {
             const btn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 300) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
+            btn.classList.toggle('visible', window.scrollY > 300);
         });
 
         // ============================================================
         // NAVIGATION
         // ============================================================
-        function goHome() {
-            window.location.href = 'ricerca_m.html';
-        }
-
+        function goHome() { window.location.href = 'ricerca_m.html'; }
         function focusSearch() {
             document.getElementById('searchInput').focus();
             document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
             document.querySelector('.bottom-nav button:nth-child(2)').classList.add('active');
         }
-
         function showFavorites() {
             applyFilter('preferiti');
             showToast('⭐ Mostrando preferiti', 'info');
@@ -1525,9 +1291,7 @@
         function loadFavorites() {
             try {
                 const saved = localStorage.getItem('impiantiFavorites');
-                if (saved) {
-                    state.favorites = JSON.parse(saved);
-                }
+                if (saved) state.favorites = JSON.parse(saved);
             } catch (e) { /* ignore */ }
         }
 
@@ -1547,28 +1311,15 @@
                 showToast(`⭐ Aggiunto: ${impianto}`, 'success');
             }
             saveFavorites();
-            // Aggiorna la lista e lo sheet
             renderResults(state.filtered);
-            if (state.sheetOpen && state.sheetImpianto === impianto) {
-                updateSheetFavButton(impianto);
-            }
+            if (state.sheetOpen && state.sheetImpianto === impianto) updateSheetFavButton(impianto);
         }
 
-        function isFavorite(impianto) {
-            return state.favorites.includes(impianto);
-        }
-
-        function sheetToggleFavorite() {
-            if (state.sheetImpianto) {
-                toggleFavorite(state.sheetImpianto);
-            }
-        }
-
+        function isFavorite(impianto) { return state.favorites.includes(impianto); }
+        function sheetToggleFavorite() { if (state.sheetImpianto) toggleFavorite(state.sheetImpianto); }
         function updateSheetFavButton(impianto) {
             const btn = document.getElementById('sheetFav');
-            if (btn) {
-                btn.textContent = isFavorite(impianto) ? '⭐' : '☆';
-            }
+            if (btn) btn.textContent = isFavorite(impianto) ? '⭐' : '☆';
         }
 
         // ============================================================
@@ -1576,7 +1327,6 @@
         // ============================================================
         function applyFilter(filter) {
             state.currentFilter = filter;
-
             document.querySelectorAll('.filter-chip').forEach(chip => {
                 chip.classList.remove('active', 'active-red', 'active-orange');
                 if (chip.dataset.filter === filter) {
@@ -1592,41 +1342,21 @@
             }
 
             let filtered = [...state.results];
-
             switch (filter) {
-                case 'disdette':
-                    filtered = filtered.filter(item => isGiroDisdetta(item.giro));
-                    break;
-                case 'scadute':
-                    filtered = filtered.filter(item => isSemestraleScaduta(item));
-                    break;
-                case 'verbali':
-                    filtered = filtered.filter(item => hasVerbali(item.impianto));
-                    break;
-                case 'senza':
-                    filtered = filtered.filter(item => !hasAnnotazioni(item.impianto));
-                    break;
-                case 'preferiti':
-                    filtered = filtered.filter(item => state.favorites.includes(item.impianto));
-                    break;
-                case 'all':
-                default:
-                    break;
+                case 'disdette': filtered = filtered.filter(item => isGiroDisdetta(item.giro)); break;
+                case 'scadute': filtered = filtered.filter(item => isSemestraleScaduta(item)); break;
+                case 'verbali': filtered = filtered.filter(item => hasVerbali(item.impianto)); break;
+                case 'senza': filtered = filtered.filter(item => !hasAnnotazioni(item.impianto)); break;
+                case 'preferiti': filtered = filtered.filter(item => state.favorites.includes(item.impianto)); break;
+                default: break;
             }
 
             state.filtered = filtered;
             renderResults(filtered);
             updateStats(filtered);
 
-            const filterNames = {
-                'all': 'Tutti',
-                'disdette': 'Disdette',
-                'scadute': 'Scadute',
-                'verbali': 'Con verbali',
-                'senza': 'Senza annotazioni',
-                'preferiti': 'Preferiti'
-            };
-            showToast(`🔍 ${filterNames[filter]}: ${filtered.length} risultati`, 'info');
+            const names = { 'all': 'Tutti', 'disdette': 'Disdette', 'scadute': 'Scadute', 'verbali': 'Con verbali', 'senza': 'Senza annotazioni', 'preferiti': 'Preferiti' };
+            showToast(`🔍 ${names[filter]}: ${filtered.length} risultati`, 'info');
         }
 
         // ============================================================
@@ -1683,7 +1413,6 @@
 
             renderResults(results);
             updateStats(results);
-
             if (results.length === 0) {
                 showToast('🔍 Nessun risultato trovato', 'info');
             } else {
@@ -1709,49 +1438,47 @@
             }
 
             const query = state.currentQuery.replace(/\*/g, '');
-            const highlightText = (text) => {
+            const highlight = (text) => {
                 if (!text || !query) return text || 'N/A';
                 const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
                 return String(text).replace(regex, '<span style="background:#FFE57F;padding:0 3px;border-radius:3px;font-weight:600;">$1</span>');
             };
 
             let html = '';
-            results.forEach((item, index) => {
+            results.forEach((item) => {
                 const isFav = isFavorite(item.impianto);
-                const giroDisplay = getGiroDisplay(item.giro);
+                const giro = getGiroDisplay(item.giro);
+                const isScaduto = isSemestraleScaduta(item);
                 const icons = [];
                 if (hasVerbali(item.impianto)) icons.push('📄');
                 if (hasAnnotazioni(item.impianto)) icons.push('💬');
                 if (hasInterventi(item.impianto)) icons.push('🛠️');
 
-                const showVerifica = isSemestraleScaduta(item);
-
                 html += `
                     <div class="result-item" onclick="openSheet('${item.impianto}')">
                         <div class="result-code">
-                            ${highlightText(item.impianto)}
+                            ${highlight(item.impianto)}
                             <button class="fav-icon ${isFav ? 'fav-active' : ''}" 
                                     onclick="event.stopPropagation(); toggleFavorite('${item.impianto}')">
                                 ${isFav ? '⭐' : '☆'}
                             </button>
                         </div>
-                        <div class="result-address">${highlightText(item['Indirizzo impianto'])}${item['Località impianto'] ? `, ${item['Località impianto']}` : ''}</div>
+                        <div class="result-address">${highlight(item['Indirizzo impianto'])}${item['Località impianto'] ? `, ${item['Località impianto']}` : ''}</div>
                         <div class="result-meta">
-                            ${item.matricola ? `<span>🔢 ${highlightText(item.matricola)}</span>` : ''}
-                            ${giroDisplay}
-                            ${showVerifica ? `<span class="badge-verifica">⏰ Verifica</span>` : ''}
+                            ${item.matricola ? `<span>🔢 ${highlight(item.matricola)}</span>` : ''}
+                            ${giro}
+                            ${isScaduto ? `<span class="badge-scaduto">⏰ Scaduto</span>` : ''}
                             ${icons.length > 0 ? `<span class="icons">${icons.join('')}</span>` : ''}
                         </div>
-                      <div class="result-actions">
-    <button onclick="event.stopPropagation(); openSheet('${item.impianto}')">📋</button>
-    <button onclick="event.stopPropagation(); openFullScheda('${item.impianto}')" 
-            style="color:var(--ios-blue);font-weight:600;font-size:13px;">📄</button>
-    <button onclick="event.stopPropagation(); shareImpianto('${item.impianto}')">📧</button>
-    <button onclick="event.stopPropagation(); toggleFavorite('${item.impianto}')" 
-            class="${isFav ? 'fav-active' : ''}">
-        ${isFav ? '⭐' : '☆'}
-    </button>
-</div>
+                        <div class="result-actions">
+                            <button onclick="event.stopPropagation(); openSheet('${item.impianto}')">📋 Dettaglio</button>
+                            <button onclick="event.stopPropagation(); openFullScheda('${item.impianto}')" class="scheda-btn">📄 Scheda</button>
+                            <button onclick="event.stopPropagation(); shareImpianto('${item.impianto}')">📧</button>
+                            <button onclick="event.stopPropagation(); toggleFavorite('${item.impianto}')" 
+                                    class="${isFav ? 'fav-active' : ''}">
+                                ${isFav ? '⭐' : '☆'}
+                            </button>
+                        </div>
                     </div>
                 `;
             });
@@ -1759,31 +1486,40 @@
             container.innerHTML = html;
         }
 
-
-// ============================================================
-// APRI SCHEDA COMPLETA
-// ============================================================
-function openFullScheda(impianto) {
-    const item = state.data.find(d => d.impianto === impianto);
-    if (!item) {
-        showToast('❌ Impianto non trovato', 'error');
-        return;
-    }
-    const datiJSON = encodeURIComponent(JSON.stringify(item));
-    window.open(`scheda_completa_m.html?impianto=${datiJSON}`, '_blank');
-}
+        // ============================================================
+        // APRI SCHEDA COMPLETA
+        // ============================================================
+        function openFullScheda(impianto) {
+            const item = state.data.find(d => d.impianto === impianto);
+            if (!item) {
+                showToast('❌ Impianto non trovato', 'error');
+                return;
+            }
+            const datiJSON = encodeURIComponent(JSON.stringify(item));
+            window.open(`scheda_completa_m.html?impianto=${datiJSON}`, '_blank');
+        }
 
         // ============================================================
-        // BOTTOM SHEET
+        // SHARE
         // ============================================================
+        function shareImpianto(impianto) {
+            const item = state.data.find(d => d.impianto === impianto);
+            if (!item) return;
+            const subject = encodeURIComponent(
+                `${item.impianto} - ${item['Indirizzo impianto'] || ''} - ${item.matricola || ''}`
+            );
+            window.location.href = `mailto:?subject=${subject}`;
+        }
 
+        // ============================================================
+        // BOTTOM SHEET - FUNZIONI
+        // ============================================================
         function openSheet(impianto) {
             const item = state.data.find(d => d.impianto === impianto);
             if (!item) {
                 showToast('❌ Impianto non trovato', 'error');
                 return;
             }
-
             state.sheetOpen = true;
             state.sheetImpianto = impianto;
             state.currentIndex = state.results.findIndex(r => r.impianto === impianto);
@@ -1804,262 +1540,233 @@ function openFullScheda(impianto) {
             document.body.style.overflow = '';
         }
 
+        // ============================================================
+        // RENDER SHEET CONTENT - CON TUTTE LE SEZIONI
+        // ============================================================
         function renderSheetContent(item) {
             const body = document.getElementById('sheetBody');
             document.getElementById('sheetCode').textContent = item.impianto;
-            body.innerHTML = generateDetailHTML(item);
+            body.innerHTML = generateSheetHTML(item);
         }
 
-        function generateDetailHTML(item) {
-            const oggi = new Date();
-
-            const ultSemDate = excelDateToJSDate(item['ult sem']);
-            const ultVpDate = excelDateToJSDate(item['utl vp']);
-            const diffUltSem = ultSemDate ? Math.floor((oggi - ultSemDate) / (1000 * 60 * 60 * 24)) : Infinity;
-            const diffUltVp = ultVpDate ? Math.floor((oggi - ultVpDate) / (1000 * 60 * 60 * 24)) : Infinity;
-
+        function generateSheetHTML(item) {
             const commerciale = formatWithMapping(item['venditore'], state.mappature.commerciali);
             const giro = formatWithMapping(item.giro, state.mappature.giri);
-
             const mesi = getMesiText();
             const meseSem = parseInt(item['mese sem']);
             const meseSemText = mesi[meseSem - 1] || 'N/A';
             const meseSemPrec = meseSem > 6 ? mesi[meseSem - 7] : mesi[meseSem + 5];
             const meseSemDisplay = meseSemPrec ? `${meseSemPrec} - ${meseSemText}` : meseSemText;
 
-            const showVerificaSem = diffUltSem > 180;
-            const showVerificaVp = diffUltVp > 730;
-
             const mapLink = item['Indirizzo impianto'] && item['Località impianto'] ?
                 `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item['Indirizzo impianto'] + ', ' + item['Località impianto'])}` :
                 '#';
 
-            // Verbali
-            const documenti = state.elencoData.filter(d => d.IMPIANTO === item.impianto);
-            const docHTML = documenti.length > 0 ?
-                documenti.map(doc => `
-                    <div class="doc-item">
-                        <a href="https://otiselevatoreur.sharepoint.com/:f:/r/teams/ESABologna/Shared%20Documents/General/Uff_Tecnico/KING/PROGETTO%20VERBALI/VERBALO_DOWN_ARXC/${doc['NOME FILE']}" target="_blank">
-                            📄 ${doc['NOME FILE']}
-                        </a>
+            // Statistiche
+            const interventiCount = countInterventiByImpianto(item.impianto);
+            const verbaliCount = state.elencoData.filter(d => d.IMPIANTO === item.impianto).length;
+            const annotazioniCount = getUltimeAnnotazioni(item.impianto, 999).length;
+            const archivioCount = state.archivioData.filter(r => {
+                const esa = String(r['N°IMPIANTO ESA'] || '').trim();
+                return esa === item.impianto.trim() || esa === item.impianto.trim().replace(/^0+/, '');
+            }).length;
+
+            // Banner interventi (solo se > 0)
+            const bannerHTML = interventiCount > 0 ? `
+                <div class="sheet-interventi-banner" onclick="window.open('interventi_m.html?impianto=${encodeURIComponent(item.impianto)}', '_blank')">
+                    <span class="banner-text">🛠️ INTERVENTI (${interventiCount})</span>
+                    <span class="banner-link">📋 Visualizza →</span>
+                </div>
+            ` : '';
+
+            // Verbali HTML
+            const verbali = state.elencoData.filter(d => d.IMPIANTO === item.impianto);
+            const verbaliHTML = verbali.length > 0 ?
+                verbali.map(d => `
+                    <div class="field-row">
+                        <span class="label">📄 ${d['NOME FILE'] || 'Verbale'}</span>
+                        <span class="value"><a href="https://otiselevatoreur.sharepoint.com/:f:/r/teams/ESABologna/Shared%20Documents/General/Uff_Tecnico/KING/PROGETTO%20VERBALI/VERBALO_DOWN_ARXC/${d['NOME FILE']}" target="_blank">📎 Apri</a></span>
                     </div>
                 `).join('') :
-                '<span class="text-muted" style="font-size:13px;">Nessun verbale trovato</span>';
+                '<span style="font-size:13px;color:var(--ios-text-tertiary);">Nessun verbale trovato</span>';
 
-            // Annotazioni
-            const annotazioni = getUltimeAnnotazioni(item.impianto);
-            const annoHTML = annotazioni.length > 0 ?
+            // Annotazioni HTML
+            const annotazioni = getUltimeAnnotazioni(item.impianto, 10);
+            const annotazioniHTML = annotazioni.length > 0 ?
                 annotazioni.map(ann => {
                     const data = formattaDataAnnotazione(ann.giorno_ann, ann.mese_ann, ann.anno_ann);
                     const tipo = formattaTipoAnnotazione(ann.tipo);
-                    const badgeCls = getClasseBadgeTipo(ann.tipo);
                     return `
-                        <div class="annotazione-item">
-                            <div class="annotazione-header">
-                                <div>
-                                    <span class="badge-tipo ${badgeCls}">${tipo}</span>
-                                    <strong style="font-size:13px;">${data}</strong>
-                                </div>
-                                <span class="tecnico">👨‍🔧 ${ann.tecnico_ann || 'N/D'}</span>
-                            </div>
-                            <div class="annotazione-note">${ann.note || '<i>Nessuna nota</i>'}</div>
+                        <div class="field-row" style="flex-direction:column;align-items:flex-start;padding:6px 0;border-bottom:0.5px solid var(--ios-separator);">
+                            <span style="font-weight:500;font-size:13px;">${tipo} - ${data}</span>
+                            <span style="font-size:12px;color:var(--ios-text-tertiary);">${ann.tecnico_ann || 'N/D'}</span>
+                            <span style="font-size:13px;color:var(--ios-text-secondary);margin-top:2px;">${ann.note || '—'}</span>
                         </div>
                     `;
                 }).join('') :
-                '<span class="text-muted" style="font-size:13px;">Nessuna annotazione nell\'ultimo anno</span>';
+                '<span style="font-size:13px;color:var(--ios-text-tertiary);">Nessuna annotazione</span>';
 
-            // Archivio
-            const codImpianto = String(item.impianto).trim();
-            const recordsArchivio = state.archivioData.filter(r => {
+            // Archivio HTML
+            const archivio = state.archivioData.filter(r => {
                 const esa = String(r['N°IMPIANTO ESA'] || '').trim();
-                return esa === codImpianto || esa === codImpianto.replace(/^0+/, '');
+                return esa === item.impianto.trim() || esa === item.impianto.trim().replace(/^0+/, '');
             });
-            const archHTML = recordsArchivio.length > 0 ?
-                recordsArchivio.map(r => `
-                    <div class="archivio-item">
-                        <div class="archivio-title">📁 ${r['N°  PRATICA ARCHIVIO'] || 'N/D'}</div>
-                        <div class="archivio-detail">
-                            Richiesta: <b>${r['DOC RICHIESTI'] || 'N/D'}</b> il ${formatData(r['Column12'])}
-                        </div>
-                        <div class="archivio-detail">
-                            Consegna: <b>${r['DOCS PER CLIENTE CONSEGNATI'] || 'N/D'}</b> il ${formatData(r['Column17'])}
-                        </div>
+            const archivioHTML = archivio.length > 0 ?
+                archivio.map(r => `
+                    <div class="field-row" style="flex-direction:column;align-items:flex-start;padding:6px 0;border-bottom:0.5px solid var(--ios-separator);">
+                        <span style="font-weight:500;font-size:13px;">📁 ${r['N°  PRATICA ARCHIVIO'] || 'N/D'}</span>
+                        <span style="font-size:12px;color:var(--ios-text-tertiary);">Richiesta: ${r['DOC RICHIESTI'] || 'N/D'} (${formatData(r['Column12'])})</span>
+                        <span style="font-size:12px;color:var(--ios-text-tertiary);">Consegna: ${r['DOCS PER CLIENTE CONSEGNATI'] || 'N/D'} (${formatData(r['Column17'])})</span>
                     </div>
                 `).join('') :
-                '<span class="text-muted" style="font-size:13px;">✅ Nessuna Dichiarazione presente</span>';
-
-            // Commesse
-            const commesse = state.m28Data.filter(c => c["ID Imp."] == item.impianto);
-            const commesseHTML = commesse.length > 0 ?
-                commesse.map(c => `
-                    <div class="commessa-item">
-                        <span>📋 ${c["Numero Commessa"] || 'N/A'} - ${formatData(c["Data commessa"])}</span>
-                        <a href="commesse_m.html?commessa=${encodeURIComponent(JSON.stringify(c))}" target="_blank">🔨</a>
-                    </div>
-                `).join('') :
-                '<span class="text-muted" style="font-size:13px;">Nessuna commessa trovata</span>';
-
-            // Interventi
-            const interventiCount = countInterventiByImpianto(item.impianto);
-            const hasInterv = interventiCount > 0;
-            const interventiLink = hasInterv ?
-                `<a href="interventi_m.html?impianto=${encodeURIComponent(item.impianto)}" style="color:var(--ios-blue);text-decoration:none;font-weight:500;">📋 Visualizza tutti →</a>` :
-                `<span class="text-muted" style="font-size:13px;">Nessun intervento registrato</span>`;
+                '<span style="font-size:13px;color:var(--ios-text-tertiary);">Nessuna dichiarazione</span>';
 
             return `
                 <!-- Dettagli principali -->
                 <div style="background:var(--ios-card);border-radius:12px;border:0.5px solid var(--ios-separator);padding:14px 16px;margin-bottom:12px;">
-                    <div class="detail-row">
-                        <span class="detail-label">📌 Matricola</span>
-                        <span class="detail-value">${item.matricola || 'N/A'}</span>
+                    <div class="field-row" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--ios-separator);font-size:14px;">
+                        <span style="font-weight:500;color:var(--ios-text-tertiary);">📌 Matricola</span>
+                        <span style="color:var(--ios-text);">${item.matricola || '—'}</span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">📍 Indirizzo</span>
-                        <span class="detail-value">
-                            ${item['Indirizzo impianto']}
-                            ${item['Indirizzo impianto'] && item['Località impianto'] ? `<a href="${mapLink}" target="_blank" class="map-link">🌍 Mappa</a>` : ''}
-                        </span>
+                    <div class="field-row" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--ios-separator);font-size:14px;">
+                        <span style="font-weight:500;color:var(--ios-text-tertiary);">📍 Indirizzo</span>
+                        <span style="color:var(--ios-text);text-align:right;max-width:60%;">${item['Indirizzo impianto'] || '—'} ${item['Località impianto'] ? `, ${item['Località impianto']}` : ''} ${item['Indirizzo impianto'] && item['Località impianto'] ? `<a href="${mapLink}" target="_blank" style="color:var(--ios-blue);text-decoration:none;font-size:12px;">🌍</a>` : ''}</span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">🏠 Località</span>
-                        <span class="detail-value">${item['Località impianto'] || 'N/A'}</span>
+                    <div class="field-row" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--ios-separator);font-size:14px;">
+                        <span style="font-weight:500;color:var(--ios-text-tertiary);">💼 Commerciale</span>
+                        <span style="color:var(--ios-text);">${commerciale}</span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">💼 Commerciale</span>
-                        <span class="detail-value">${commerciale}</span>
+                    <div class="field-row" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--ios-separator);font-size:14px;">
+                        <span style="font-weight:500;color:var(--ios-text-tertiary);">🔄 Giro</span>
+                        <span style="color:var(--ios-text);">${giro}</span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">🔄 Giro</span>
-                        <span class="detail-value">${giro}</span>
+                    <div class="field-row" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--ios-separator);font-size:14px;">
+                        <span style="font-weight:500;color:var(--ios-text-tertiary);">📅 Mese Semestrale</span>
+                        <span style="color:var(--ios-text);">${meseSemDisplay}</span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">📅 Mese Semestrale</span>
-                        <span class="detail-value">${meseSemDisplay}</span>
+                    <div class="field-row" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--ios-separator);font-size:14px;">
+                        <span style="font-weight:500;color:var(--ios-text-tertiary);">🟢 Ultima Semestrale</span>
+                        <span style="color:var(--ios-text);">${formatData(item['ult sem'])}</span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">🟢 Ultima Semestrale</span>
-                        <span class="detail-value">${formatData(item['ult sem'])} ${showVerificaSem ? '⏰' : ''}</span>
+                    <div class="field-row" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--ios-separator);font-size:14px;">
+                        <span style="font-weight:500;color:var(--ios-text-tertiary);">🔵 Ultima Visita ENTE</span>
+                        <span style="color:var(--ios-text);">${formatData(item['utl vp'])}</span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">🔵 Ultima Visita ENTE</span>
-                        <span class="detail-value">${formatData(item['utl vp'])} ${showVerificaVp ? '⏰' : ''}</span>
+                    <div class="field-row" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--ios-separator);font-size:14px;">
+                        <span style="font-weight:500;color:var(--ios-text-tertiary);">🔧 Manutenzione</span>
+                        <span style="color:var(--ios-text);">${item.manut || '—'}</span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">🔧 Manutenzione</span>
-                        <span class="detail-value">${item.manut || 'N/A'}</span>
+                    <div class="field-row" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--ios-separator);font-size:14px;">
+                        <span style="font-weight:500;color:var(--ios-text-tertiary);">👤 Tipo Cliente</span>
+                        <span style="color:var(--ios-text);">${item['tipo cliente'] || '—'}</span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">👤 Tipo Cliente</span>
-                        <span class="detail-value">${item['tipo cliente'] || 'N/A'}</span>
+                    <div class="field-row" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--ios-separator);font-size:14px;">
+                        <span style="font-weight:500;color:var(--ios-text-tertiary);">🏢 Cliente</span>
+                        <span style="color:var(--ios-text);">${item.Cliente || '—'}</span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">🏢 Cliente</span>
-                        <span class="detail-value">${item.Cliente || 'N/A'}</span>
-                    </div>
-                    <div class="detail-row" style="border-bottom:none;">
-                        <span class="detail-label">👔 Amministratore</span>
-                        <span class="detail-value">${item.Amministratore || 'N/A'}</span>
+                    <div class="field-row" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:none;font-size:14px;">
+                        <span style="font-weight:500;color:var(--ios-text-tertiary);">👔 Amministratore</span>
+                        <span style="color:var(--ios-text);">${item.Amministratore || '—'}</span>
                     </div>
                 </div>
 
-                <!-- Interventi -->
-                <div class="detail-section">
-                    <div class="detail-section-header" onclick="toggleSection(this)">
-                        <span><span class="section-icon">🛠️</span> Interventi <span class="section-badge">${interventiCount}</span></span>
+                <!-- STATISTICHE (cliccabili) -->
+                <div style="background:var(--ios-card);border-radius:12px;border:0.5px solid var(--ios-separator);padding:14px 16px;margin-bottom:12px;">
+                    <div style="font-weight:600;font-size:14px;color:var(--ios-text);margin-bottom:10px;">📊 Statistiche</div>
+                    <div class="sheet-stats-grid">
+                        <div class="sheet-stat-item" onclick="window.open('interventi_m.html?impianto=${encodeURIComponent(item.impianto)}', '_blank')">
+                            <div class="stat-number">${interventiCount}</div>
+                            <div class="stat-label">🛠️ Interventi</div>
+                        </div>
+                        <div class="sheet-stat-item" onclick="toggleSheetSection(this.closest('.sheet-section'))">
+                            <div class="stat-number">${verbaliCount}</div>
+                            <div class="stat-label">📄 Verbali</div>
+                        </div>
+                        <div class="sheet-stat-item" onclick="toggleSheetSection(this.closest('.sheet-section'))">
+                            <div class="stat-number">${annotazioniCount}</div>
+                            <div class="stat-label">💬 Annotazioni</div>
+                        </div>
+                        <div class="sheet-stat-item" onclick="toggleSheetSection(this.closest('.sheet-section'))">
+                            <div class="stat-number">${archivioCount}</div>
+                            <div class="stat-label">📁 Archivio DC</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEZIONE VERBALI -->
+                <div class="sheet-section">
+                    <div class="sheet-section-header" onclick="toggleSheetSection(this)">
+                        <span>📄 Verbali (${verbaliCount})</span>
                         <span class="section-arrow">▼</span>
                     </div>
-                    <div class="section-content">
-                        ${interventiLink}
+                    <div class="sheet-section-body">
+                        ${verbaliHTML}
                     </div>
                 </div>
 
-                <!-- Annotazioni -->
-                <div class="detail-section">
-                    <div class="detail-section-header" onclick="toggleSection(this)">
-                        <span><span class="section-icon">📝</span> Annotazioni</span>
+                <!-- SEZIONE ANNOTAZIONI -->
+                <div class="sheet-section">
+                    <div class="sheet-section-header" onclick="toggleSheetSection(this)">
+                        <span>💬 Annotazioni (${annotazioniCount})</span>
                         <span class="section-arrow">▼</span>
                     </div>
-                    <div class="section-content">
-                        ${annoHTML}
+                    <div class="sheet-section-body">
+                        ${annotazioniHTML}
                     </div>
                 </div>
 
-                <!-- Verbali -->
-                <div class="detail-section">
-                    <div class="detail-section-header" onclick="toggleSection(this)">
-                        <span><span class="section-icon">📄</span> Verbali <span class="section-badge">${documenti.length}</span></span>
+                <!-- SEZIONE ARCHIVIO -->
+                <div class="sheet-section">
+                    <div class="sheet-section-header" onclick="toggleSheetSection(this)">
+                        <span>📁 Archivio DC (${archivioCount})</span>
                         <span class="section-arrow">▼</span>
                     </div>
-                    <div class="section-content">
-                        ${docHTML}
+                    <div class="sheet-section-body">
+                        ${archivioHTML}
                     </div>
                 </div>
 
-                <!-- Commesse -->
-                <div class="detail-section">
-                    <div class="detail-section-header" onclick="toggleSection(this)">
-                        <span><span class="section-icon">🔧</span> Commesse <span class="section-badge">${commesse.length}</span></span>
-                        <span class="section-arrow">▼</span>
-                    </div>
-                    <div class="section-content">
-                        ${commesseHTML}
-                    </div>
-                </div>
+                <!-- BANNER INTERVENTI -->
+                ${bannerHTML}
 
-                <!-- Archivio -->
-                <div class="detail-section">
-                    <div class="detail-section-header" onclick="toggleSection(this)">
-                        <span><span class="section-icon">📁</span> Archivio DC <span class="section-badge">${recordsArchivio.length}</span></span>
-                        <span class="section-arrow">▼</span>
-                    </div>
-                    <div class="section-content">
-                        ${archHTML}
-                    </div>
+                <!-- PULSANTE SCHEDA COMPLETA -->
+                <div class="sheet-full-btn" onclick="window.open('scheda_completa_m.html?impianto=${encodeURIComponent(JSON.stringify(item))}', '_blank')">
+                    <span>📋 Apri scheda completa →</span>
                 </div>
-
-                <!-- Note -->
-                <div class="detail-section">
-                    <div class="detail-section-header" onclick="toggleSection(this)">
-                        <span><span class="section-icon">📝</span> Note</span>
-                        <span class="section-arrow">▼</span>
-                    </div>
-                    <div class="section-content">
-                        <span style="font-size:14px;color:var(--ios-text-secondary);">${item.note || 'Nessuna nota disponibile.'}</span>
-                    </div>
-                </div>
-
-                <!-- Link scheda completa -->
-<div style="margin-top:16px;text-align:center;padding:14px;background:var(--ios-blue);border-radius:12px;cursor:pointer;" 
-     onclick="window.open('scheda_completa_m.html?impianto=${encodeURIComponent(JSON.stringify(item))}', '_blank')">
-    <span style="color:white;font-weight:600;font-size:16px;">
-        📋 Apri scheda completa →
-    </span>
-</div>
             `;
         }
 
         // ============================================================
-        // TOGGLE SECTION (collassabili)
+        // TOGGLE SEZIONE SHEET
         // ============================================================
-        function toggleSection(header) {
-            const content = header.nextElementSibling;
-            const arrow = header.querySelector('.section-arrow');
-            if (content.classList.contains('open')) {
-                content.classList.remove('open');
+        function toggleSheetSection(header) {
+            // Se header è un elemento, trova il parent
+            let el = header;
+            if (!el.classList.contains('sheet-section-header')) {
+                el = el.closest('.sheet-section-header');
+            }
+            if (!el) return;
+
+            const section = el.closest('.sheet-section');
+            const body = section.querySelector('.sheet-section-body');
+            const arrow = el.querySelector('.section-arrow');
+
+            if (body.classList.contains('open')) {
+                body.classList.remove('open');
                 arrow.classList.remove('open');
             } else {
                 // Chiudi tutte le altre sezioni (espansione singola)
-                document.querySelectorAll('.section-content').forEach(el => {
-                    if (el !== content) {
-                        el.classList.remove('open');
-                        const parent = el.closest('.detail-section');
+                document.querySelectorAll('.sheet-section-body').forEach(b => {
+                    if (b !== body) {
+                        b.classList.remove('open');
+                        const parent = b.closest('.sheet-section');
                         if (parent) {
-                            const arrow2 = parent.querySelector('.section-arrow');
-                            if (arrow2) arrow2.classList.remove('open');
+                            const arr = parent.querySelector('.section-arrow');
+                            if (arr) arr.classList.remove('open');
                         }
                     }
                 });
-                content.classList.add('open');
+                body.classList.add('open');
                 arrow.classList.add('open');
             }
         }
@@ -2090,19 +1797,38 @@ function openFullScheda(impianto) {
         }
 
         // ============================================================
-        // SHARE
+        // SHEET DRAG TO CLOSE
         // ============================================================
-        function shareImpianto(impianto) {
-            const item = state.data.find(d => d.impianto === impianto);
-            if (!item) return;
-            const subject = encodeURIComponent(
-                `${item.impianto} - ${item['Indirizzo impianto'] || ''} - ${item.matricola || ''}`
-            );
-            window.location.href = `mailto:?subject=${subject}`;
-        }
+        let sheetStartY = 0, sheetCurrentY = 0, isDragging = false;
+        const sheetHandle = document.getElementById('sheetHandle');
+        const sheet = document.getElementById('bottomSheet');
+
+        sheetHandle.addEventListener('touchstart', function(e) {
+            sheetStartY = e.touches[0].clientY;
+            isDragging = true;
+            sheet.style.transition = 'none';
+        }, { passive: true });
+
+        sheetHandle.addEventListener('touchmove', function(e) {
+            if (!isDragging) return;
+            const deltaY = e.touches[0].clientY - sheetStartY;
+            if (deltaY > 0) {
+                sheetCurrentY = deltaY;
+                sheet.style.transform = `translateY(${deltaY}px)`;
+            }
+        }, { passive: true });
+
+        sheetHandle.addEventListener('touchend', function() {
+            if (!isDragging) return;
+            isDragging = false;
+            sheet.style.transition = 'transform 0.4s cubic-bezier(0.32, 0.72, 0, 1)';
+            if (sheetCurrentY > 80) closeSheet();
+            else sheet.style.transform = '';
+            sheetCurrentY = 0;
+        }, { passive: true });
 
         // ============================================================
-        // UTILITY (da ricerca.html)
+        // UTILITY
         // ============================================================
         const GIRO_DISDETTA = [66, 77, 88, 99];
 
@@ -2135,32 +1861,26 @@ function openFullScheda(impianto) {
         }
 
         function formatData(excelDate) {
-            if (!excelDate) return 'N/A';
+            if (!excelDate) return '—';
             const jsDate = excelDateToJSDate(excelDate);
-            if (!jsDate || isNaN(jsDate)) return 'N/A';
+            if (!jsDate || isNaN(jsDate)) return '—';
             return jsDate.toLocaleDateString('it-IT');
         }
 
         function formatWithMapping(value, mapping) {
-            if (!value) return 'N/A';
+            if (!value) return '—';
             const mapped = mapping[value];
             return mapped ? `${value} - ${mapped}` : value;
         }
 
         function getMesiText() {
             return ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
-                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
-            ];
+                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
         }
 
         function formattaTipoAnnotazione(tipo) {
             const tipi = { 0: 'Semestrale', 1: 'Appuntamento', 2: 'Manutenzione' };
             return tipi[tipo] || `Tipo ${tipo}`;
-        }
-
-        function getClasseBadgeTipo(tipo) {
-            const classi = { 0: 'badge-semestrale', 1: 'badge-appuntamento', 2: 'badge-manutenzione' };
-            return classi[tipo] || '';
         }
 
         function formattaDataAnnotazione(giorno, mese, anno) {
@@ -2169,12 +1889,10 @@ function openFullScheda(impianto) {
             return `${giorno}-${meseText}-${anno}`;
         }
 
-        function isGiroDisdetta(giro) {
-            return GIRO_DISDETTA.includes(parseInt(giro));
-        }
+        function isGiroDisdetta(giro) { return GIRO_DISDETTA.includes(parseInt(giro)); }
 
         function getGiroDisplay(giro) {
-            if (!giro) return 'N/A';
+            if (!giro) return '';
             const giroNum = parseInt(giro);
             if (isGiroDisdetta(giroNum)) {
                 return `<span class="badge-giro disdetta">🚫 DISDETTA</span>`;
@@ -2354,58 +2072,14 @@ function openFullScheda(impianto) {
         // ============================================================
         document.getElementById('searchInput').addEventListener('input', function() {
             const clearBtn = document.getElementById('clearBtn');
-            if (this.value.length > 0) {
-                clearBtn.classList.add('visible');
-            } else {
-                clearBtn.classList.remove('visible');
-            }
+            clearBtn.classList.toggle('visible', this.value.length > 0);
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(performSearch, 300);
         });
 
         document.getElementById('searchInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                performSearch();
-            }
+            if (e.key === 'Enter') { e.preventDefault(); performSearch(); }
         });
-
-        // ============================================================
-        // SHEET DRAG TO CLOSE (iOS style)
-        // ============================================================
-        let sheetStartY = 0;
-        let sheetCurrentY = 0;
-        let isDragging = false;
-
-        const sheetHandle = document.getElementById('sheetHandle');
-        const sheet = document.getElementById('bottomSheet');
-
-        sheetHandle.addEventListener('touchstart', function(e) {
-            sheetStartY = e.touches[0].clientY;
-            isDragging = true;
-            sheet.style.transition = 'none';
-        }, { passive: true });
-
-        sheetHandle.addEventListener('touchmove', function(e) {
-            if (!isDragging) return;
-            const deltaY = e.touches[0].clientY - sheetStartY;
-            if (deltaY > 0) {
-                sheetCurrentY = deltaY;
-                sheet.style.transform = `translateY(${deltaY}px)`;
-            }
-        }, { passive: true });
-
-        sheetHandle.addEventListener('touchend', function(e) {
-            if (!isDragging) return;
-            isDragging = false;
-            sheet.style.transition = 'transform 0.4s cubic-bezier(0.32, 0.72, 0, 1)';
-            if (sheetCurrentY > 80) {
-                closeSheet();
-            } else {
-                sheet.style.transform = '';
-            }
-            sheetCurrentY = 0;
-        }, { passive: true });
 
         // ============================================================
         // INIT
@@ -2414,8 +2088,7 @@ function openFullScheda(impianto) {
         loadFavorites();
         loadDatabase();
 
-        console.log('📱 Ricerca Mobile v2.0 - Bottom Sheet integrato');
-        console.log('📊 Funzionalità: ricerca, filtri, preferiti, tema, pull-to-refresh, bottom sheet');
+        console.log('📱 Ricerca Mobile v2.0 - Layout migliorato');
     </script>
 
 </body>

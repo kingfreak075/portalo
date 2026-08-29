@@ -632,13 +632,9 @@
         // ============================================================
         // NAVIGATION
         // ============================================================
-        function goBack() {
-            if (document.referrer && document.referrer.includes('ricerca_m')) {
-                window.location.href = 'ricerca_m.html';
-            } else {
-                window.history.back();
-            }
-        }
+       function goBack() {
+    window.history.back();
+}
 
         function goHome() { window.location.href = 'ricerca_m.html'; }
         function goSearch() { window.location.href = 'ricerca_m.html'; }

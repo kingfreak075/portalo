@@ -1,32 +1,32 @@
 {
   "version": "1.0",
   "fileName": "data_base_Settembre_2026.xlsx",
-  "timestamp": "2026-09-10T08:31:30.867Z",
-  "totalRecords": 48840,
+  "timestamp": "2026-10-06T14:57:21.139Z",
+  "totalRecords": 50821,
   "numChunks": 3,
   "maxChunkSizeMB": 15,
-  "totalSizeMB": "39.97",
+  "totalSizeMB": "41.36",
   "chunks": [
     {
       "index": 0,
       "fileName": "chunk_000.json",
-      "size": 15755433,
+      "size": 15756116,
       "sizeMB": "15.03",
-      "records": 26159
+      "records": 27014
     },
     {
       "index": 1,
       "fileName": "chunk_001.json",
-      "size": 15742304,
+      "size": 15742487,
       "sizeMB": "15.01",
-      "records": 13662
+      "records": 13659
     },
     {
       "index": 2,
       "fileName": "chunk_002.json",
-      "size": 10411245,
-      "sizeMB": "9.93",
-      "records": 9019
+      "size": 11868240,
+      "sizeMB": "11.32",
+      "records": 10148
     }
   ]
 }

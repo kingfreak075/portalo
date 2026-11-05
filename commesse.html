@@ -1,972 +1,931 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dettaglio Commessa</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <style>
-        /* ============================================================
-           STILE DESKTOP - Dettaglio Commessa (una colonna)
-           ============================================================ */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dettaglio commessa</title>
+  <style>
+    :root {
+      --bg: #f3f6fa;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --text: #172033;
+      --muted: #667085;
+      --line: #e4e9f0;
+      --primary: #0067b8;
+      --primary-dark: #004f8f;
+      --primary-soft: #eaf4fb;
+      --success: #147a46;
+      --success-soft: #e9f7ef;
+      --warning: #9a6700;
+      --warning-soft: #fff7df;
+      --danger: #b42318;
+      --danger-soft: #fef0ee;
+      --shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+      --radius: 16px;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * { box-sizing: border-box; }
 
-        :root {
-            --primary: #1b5e20;
-            --primary-light: #4caf50;
-            --primary-dark: #0d3b12;
-            --primary-bg: #e8f5e9;
-            --success: #2e7d32;
-            --danger: #d32f2f;
-            --warning: #f57c00;
-            --info: #1976d2;
-            --text-primary: #1a2332;
-            --text-secondary: #4a5568;
-            --text-muted: #94a3b8;
-            --border-color: #e2e8f0;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --shadow: 0 4px 20px rgba(46, 125, 50, 0.12);
-            --shadow-lg: 0 8px 40px rgba(46, 125, 50, 0.18);
-            --shadow-hover: 0 12px 48px rgba(46, 125, 50, 0.22);
-            --radius: 16px;
-            --radius-sm: 10px;
-            --radius-xs: 6px;
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --bg-start: #a5d6a7;
-            --bg-end: #66bb6a;
-            --safe-top: env(safe-area-inset-top, 20px);
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
-            --header-height: 60px;
-        }
+    html { scroll-behavior: smooth; }
 
-        /* Dark Theme */
-        body.dark-theme {
-            --bg-start: #0f1724;
-            --bg-end: #1a2332;
-            --card-bg: rgba(26, 35, 50, 0.95);
-            --text-primary: #e8edf5;
-            --text-secondary: #b0c4de;
-            --text-muted: #7a8ba3;
-            --border-color: rgba(76, 175, 80, 0.15);
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
-            --primary-bg: rgba(76, 175, 80, 0.12);
-        }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", Arial, sans-serif;
+      line-height: 1.45;
+    }
 
-        body.dark-theme .container {
-            background: var(--card-bg);
-            border-color: var(--border-color);
-        }
+    button, a { font: inherit; }
 
-        body.dark-theme .card {
-            background: rgba(40, 50, 65, 0.6);
-            border-color: var(--border-color);
-        }
+    .app-shell {
+      width: min(1440px, calc(100% - 32px));
+      margin: 24px auto 48px;
+    }
 
-        body.dark-theme .card-title {
-            border-color: var(--border-color);
-            color: var(--text-primary);
-        }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #063d68 0%, #0067b8 58%, #2b88d8 100%);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
 
-        body.dark-theme .field {
-            border-color: var(--border-color);
-        }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 290px;
+      height: 290px;
+      right: -90px;
+      top: -130px;
+      border: 46px solid rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      pointer-events: none;
+    }
 
-        body.dark-theme .field .label {
-            color: var(--text-muted);
-        }
+    .hero-top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
 
-        body.dark-theme .field .value {
-            color: var(--text-primary);
-        }
+    .eyebrow {
+      margin: 0 0 6px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
 
-        body.dark-theme .back-btn {
-            background: rgba(76, 175, 80, 0.15);
-            color: var(--text-secondary);
-        }
+    h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 4vw, 2.7rem);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
 
-        body.dark-theme .back-btn:hover {
-            background: var(--primary-light);
-            color: white;
-        }
+    .hero-subtitle {
+      margin: 12px 0 0;
+      max-width: 850px;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 1rem;
+    }
 
-        body.dark-theme .status-C {
-            background: #1b5e20;
-            color: #a5d6a7;
-        }
-        body.dark-theme .status-A {
-            background: #c62828;
-            color: #ef9a9a;
-        }
-        body.dark-theme .status-P {
-            background: #e65100;
-            color: #ffcc80;
-        }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
 
-        body.dark-theme .success-message {
-            background: rgba(27, 94, 32, 0.2);
-            color: #81c784;
-        }
+    .action-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 10px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+      backdrop-filter: blur(4px);
+    }
 
-        body.dark-theme .json-display {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-secondary);
-        }
+    .action-button:hover { background: rgba(255, 255, 255, 0.22); transform: translateY(-1px); }
+    .action-button:focus-visible { outline: 3px solid rgba(255, 255, 255, 0.5); outline-offset: 2px; }
+    .action-button svg { width: 19px; height: 19px; fill: currentColor; }
 
-        body.dark-theme .error-state {
-            border-color: var(--danger);
-        }
+    .hero-facts {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 26px;
+    }
 
-        body.dark-theme .error-state h3 {
-            color: var(--text-secondary);
-        }
+    .hero-fact {
+      min-width: 0;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.10);
+    }
 
-        body.dark-theme .loading-state p {
-            color: var(--text-muted);
-        }
+    .hero-fact-label {
+      display: block;
+      margin-bottom: 4px;
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
 
-        body {
-            font-family: var(--font);
-            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
-            min-height: 100vh;
-            padding: 24px;
-            color: var(--text-primary);
-            line-height: 1.6;
-            transition: background var(--transition);
-        }
+    .hero-fact-value {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: 1rem;
+      font-weight: 700;
+    }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            padding: 28px 32px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border-color);
-            backdrop-filter: blur(10px);
-            transition: all var(--transition);
-        }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 20px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: 0 3px 12px rgba(16, 24, 40, 0.04);
+    }
 
-        .container:hover {
-            box-shadow: var(--shadow-hover);
-        }
+    .status-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .status-label { color: var(--muted); font-size: 0.9rem; }
 
-        /* ----- HEADER ----- */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 8px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--primary-light);
-        }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
+    .status-badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
 
-        .header-left h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            letter-spacing: -0.3px;
-            margin: 0;
-        }
+    .status-badge.closed { background: var(--success-soft); color: var(--success); }
+    .status-badge.warning { background: var(--warning-soft); color: var(--warning); }
 
-        .header-left h1::before {
-            content: "📋 ";
-        }
+    .toolbar-text {
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: right;
+    }
 
-        .header-left .badge {
-            background: var(--primary-bg);
-            color: var(--primary);
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border: 1px solid var(--border-color);
-        }
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 18px;
+    }
 
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
+    .card {
+      grid-column: span 6;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 5px 18px rgba(16, 24, 40, 0.045);
+    }
 
-        .header-actions button {
-            padding: 8px 18px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 500;
-            font-family: var(--font);
-            color: var(--text-secondary);
-            transition: all var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
+    .card.wide { grid-column: 1 / -1; }
 
-        .header-actions button:hover {
-            background: var(--primary-light);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(46, 125, 50, 0.15);
-        }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff 0%, #fbfcfe 100%);
+    }
 
-        .back-btn {
-            text-decoration: none;
-            padding: 8px 18px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 500;
-            font-family: var(--font);
-            color: var(--text-secondary);
-            transition: all var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
+    .card-icon {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      border-radius: 10px;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
 
-        .back-btn:hover {
-            background: var(--primary-light);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(46, 125, 50, 0.15);
-            text-decoration: none;
-        }
+    .card-icon svg { width: 20px; height: 20px; fill: currentColor; }
 
-        /* ----- SUBHEADER ----- */
-        .subheader {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            padding: 4px 0;
-        }
+    .card-title { margin: 0; font-size: 1rem; }
+    .card-description { margin: 2px 0 0; color: var(--muted); font-size: 0.8rem; }
 
-        /* ----- CONTENUTO ----- */
-        .content {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+    .field-list { margin: 0; padding: 4px 20px 10px; }
 
-        /* ----- CARD ----- */
-        .card {
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            box-shadow: 0 1px 3px var(--shadow);
-            transition: all var(--transition);
-        }
+    .field-row {
+      display: grid;
+      grid-template-columns: minmax(150px, 42%) minmax(0, 1fr);
+      gap: 18px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
 
-        .card:hover {
-            box-shadow: var(--shadow);
-        }
+    .field-row:last-child { border-bottom: 0; }
+    .field-row dt { color: var(--muted); font-size: 0.86rem; }
+    .field-row dd { margin: 0; overflow-wrap: anywhere; font-size: 0.91rem; font-weight: 600; text-align: right; }
+    .field-row dd.empty { color: #98a2b3; font-style: italic; font-weight: 500; }
 
-        .card-title {
-            padding: 12px 18px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: var(--text-primary);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.02);
-        }
+    .description-box, .notes-box {
+      margin: 20px;
+      padding: 18px;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
 
-        .card-body {
-            padding: 14px 18px;
-        }
+    .description-box {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-soft);
+      font-weight: 600;
+    }
 
-        /* ----- FIELD ----- */
-        .field {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.9rem;
-        }
+    .notes-box {
+      border: 1px solid #f1dfab;
+      background: var(--warning-soft);
+    }
 
-        .field:last-child {
-            border-bottom: none;
-        }
+    .error-panel {
+      display: none;
+      margin-top: 20px;
+      padding: 22px;
+      border: 1px solid #fecdca;
+      border-radius: var(--radius);
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
 
-        .field .label {
-            font-weight: 500;
-            color: var(--text-muted);
-        }
+    .error-panel h2 { margin: 0 0 7px; font-size: 1.1rem; }
+    .error-panel p { margin: 0; }
 
-        .field .value {
-            color: var(--text-primary);
-            text-align: right;
-            max-width: 55%;
-            word-break: break-word;
-        }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 30;
+      max-width: calc(100% - 32px);
+      padding: 11px 16px;
+      border-radius: 10px;
+      background: #172033;
+      color: #fff;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translate(-50%, 12px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
 
-        .field .value strong {
-            color: var(--primary);
-        }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-        .field .value .status-badge {
-            display: inline-block;
-            padding: 2px 14px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
+    .footer-note {
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-align: center;
+    }
 
-        .status-C {
-            background: #c8e6c9;
-            color: #1b5e20;
-        }
-        .status-A {
-            background: #ffcdd2;
-            color: #c62828;
-        }
-        .status-P {
-            background: #fff3e0;
-            color: #e65100;
-        }
+    @media (max-width: 900px) {
+      .hero-top { flex-direction: column; }
+      .hero-actions { justify-content: flex-start; }
+      .hero-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .card { grid-column: 1 / -1; }
+    }
 
-        /* ----- JSON DISPLAY ----- */
-        .json-display {
-            background: rgba(0, 0, 0, 0.03);
-            border-radius: 6px;
-            padding: 12px 14px;
-            font-size: 0.78rem;
-            font-family: 'Courier New', monospace;
-            color: var(--text-secondary);
-            overflow-x: auto;
-            white-space: pre-wrap;
-            word-break: break-all;
-            max-height: 300px;
-            overflow-y: auto;
-        }
+    @media (max-width: 560px) {
+      .app-shell { width: min(100% - 18px, 1440px); margin-top: 10px; }
+      .hero { padding: 21px 18px; border-radius: 16px; }
+      .hero-actions { width: 100%; }
+      .action-button { flex: 1 1 130px; }
+      .hero-facts { grid-template-columns: 1fr; }
+      .toolbar { align-items: flex-start; flex-direction: column; }
+      .toolbar-text { text-align: left; }
+      .field-row { grid-template-columns: 1fr; gap: 5px; }
+      .field-row dd { text-align: left; }
+      .card-header, .field-list { padding-left: 16px; padding-right: 16px; }
+      .description-box, .notes-box { margin: 16px; }
+    }
 
-        /* ----- SUCCESS MESSAGE ----- */
-        .success-message {
-            background: var(--primary-bg);
-            color: var(--primary);
-            padding: 12px 18px;
-            border-radius: var(--radius-sm);
-            text-align: center;
-            font-weight: 500;
-            font-size: 0.95rem;
-            border-left: 4px solid var(--primary-light);
-        }
-
-        /* ----- LOADING ----- */
-        .loading-state {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--border-color);
-            border-top: 4px solid var(--primary-light);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 16px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-state p {
-            color: var(--text-muted);
-            font-size: 1rem;
-        }
-
-        /* ----- ERROR ----- */
-        .error-state {
-            text-align: center;
-            padding: 60px 20px;
-            border: 1px solid var(--danger);
-            border-radius: var(--radius-sm);
-        }
-
-        .error-state .error-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-
-        .error-state h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .error-state p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        /* ----- TOAST ----- */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-width: 380px;
-        }
-
-        .toast {
-            padding: 12px 20px;
-            border-radius: var(--radius-sm);
-            color: white;
-            font-weight: 500;
-            box-shadow: var(--shadow-lg);
-            animation: slideIn 0.3s ease;
-            font-family: var(--font);
-            font-size: 0.9rem;
-        }
-
-        .toast.success {
-            background: var(--success);
-        }
-        .toast.error {
-            background: var(--danger);
-        }
-        .toast.warning {
-            background: var(--warning);
-        }
-        .toast.info {
-            background: var(--info);
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%) scale(0.95);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0) scale(1);
-                opacity: 1;
-            }
-        }
-
-        .toast.out {
-            animation: slideOut 0.3s ease forwards;
-        }
-
-        @keyframes slideOut {
-            from {
-                transform: translateX(0) scale(1);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%) scale(0.95);
-                opacity: 0;
-            }
-        }
-
-        /* ----- RESPONSIVE ----- */
-        @media (max-width: 768px) {
-            body {
-                padding: 12px;
-            }
-            .container {
-                padding: 18px 16px;
-                border-radius: var(--radius-sm);
-            }
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-            .header-left h1 {
-                font-size: 1.2rem;
-            }
-            .header-actions {
-                width: 100%;
-                flex-wrap: wrap;
-            }
-            .header-actions button,
-            .back-btn {
-                flex: 1;
-                justify-content: center;
-                padding: 8px 12px;
-                font-size: 0.8rem;
-            }
-            .field {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 2px;
-                padding: 8px 0;
-            }
-            .field .value {
-                text-align: left;
-                max-width: 100%;
-                width: 100%;
-            }
-            .card-title {
-                font-size: 0.85rem;
-                padding: 10px 14px;
-            }
-            .card-body {
-                padding: 10px 14px;
-            }
-            .subheader {
-                font-size: 0.85rem;
-            }
-            .json-display {
-                font-size: 0.7rem;
-                max-height: 200px;
-            }
-            .success-message {
-                font-size: 0.85rem;
-                padding: 10px 14px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 8px;
-            }
-            .container {
-                padding: 12px 10px;
-            }
-            .header-left h1 {
-                font-size: 1rem;
-            }
-            .header-left .badge {
-                font-size: 0.7rem;
-                padding: 2px 10px;
-            }
-            .field {
-                font-size: 0.82rem;
-            }
-            .card-title {
-                font-size: 0.8rem;
-                padding: 8px 12px;
-            }
-            .card-body {
-                padding: 8px 12px;
-            }
-            .toast-container {
-                left: 16px;
-                right: 16px;
-                max-width: 100%;
-            }
-        }
-
-        /* ----- PRINT ----- */
-        @media print {
-            body {
-                padding: 0;
-                background: white;
-            }
-            .container {
-                box-shadow: none;
-                border: none;
-            }
-            .header-actions,
-            .back-btn {
-                display: none;
-            }
-            .card {
-                break-inside: avoid;
-                page-break-inside: avoid;
-                border-color: #ddd;
-            }
-            .card:hover {
-                transform: none;
-                box-shadow: none;
-            }
-            .json-display {
-                max-height: none;
-                overflow: visible;
-            }
-        }
-
-        /* ----- SCROLLBAR ----- */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--border-color);
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-light);
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
-    </style>
+    @media print {
+      body { background: #fff; }
+      .app-shell { width: 100%; margin: 0; }
+      .hero { background: #fff; color: #111; border: 1px solid #bbb; box-shadow: none; }
+      .hero::after, .hero-actions, .toolbar-text, .footer-note, .toast { display: none !important; }
+      .hero-subtitle, .eyebrow, .hero-fact-label { color: #555; }
+      .hero-fact { border-color: #ccc; background: #fff; }
+      .toolbar, .card { break-inside: avoid; box-shadow: none; }
+      .content-grid { display: block; }
+      .card { margin-top: 14px; }
+    }
+  </style>
 </head>
 <body>
+  <main class="app-shell">
+    <section id="pageContent" hidden>
+      <header class="hero">
+        <div class="hero-top">
+          <div>
+            <p class="eyebrow">Portale commesse</p>
+            <h1 id="pageTitle">Dettaglio commessa</h1>
+            <p class="hero-subtitle" id="heroSubtitle">Riepilogo completo dei dati tecnici, economici e operativi.</p>
+          </div>
 
-    <div class="container">
-
-        <!-- HEADER -->
-        <div class="header">
-            <div class="header-left">
-                <h1>Dettaglio Commessa</h1>
-                <span class="badge" id="commessaBadge">Caricamento...</span>
-            </div>
-            <div class="header-actions">
-                <button onclick="toggleTheme()" title="Cambia tema">🌓 Tema</button>
-                <button onclick="window.print()" title="Stampa">🖨️ Stampa</button>
-                <a href="javascript:history.back()" class="back-btn">⬅️ Torna indietro</a>
-            </div>
+          <div class="hero-actions" aria-label="Azioni">
+            <a id="emailLink" class="action-button" href="#" title="Apri un nuovo messaggio email">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+              <span>Email</span>
+            </a>
+            <button id="copyButton" class="action-button" type="button" title="Copia l'oggetto dell'email">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/></svg>
+              <span>Copia oggetto</span>
+            </button>
+            <button id="printButton" class="action-button" type="button" title="Stampa il riepilogo">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 8H5a3 3 0 0 0-3 3v4h4v4h12v-4h4v-4a3 3 0 0 0-3-3ZM16 17H8v-5h8v5Zm3-5a1 1 0 1 1 0-2 1 1 0 0 1 0 2ZM18 3H6v4h12V3Z"/></svg>
+              <span>Stampa</span>
+            </button>
+          </div>
         </div>
 
-        <div class="subheader" id="subheader">Sistema di visualizzazione dati commesse</div>
-
-        <!-- CONTENUTO -->
-        <div id="content">
-            <div class="loading-state">
-                <div class="loading-spinner"></div>
-                <p>Caricamento dati in corso...</p>
-            </div>
+        <div class="hero-facts">
+          <div class="hero-fact">
+            <span class="hero-fact-label">Impianto</span>
+            <span class="hero-fact-value" id="heroImpianto">N/D</span>
+          </div>
+          <div class="hero-fact">
+            <span class="hero-fact-label">Commessa</span>
+            <span class="hero-fact-value" id="heroCommessa">N/D</span>
+          </div>
+          <div class="hero-fact">
+            <span class="hero-fact-label">Località</span>
+            <span class="hero-fact-value" id="heroLocalita">N/D</span>
+          </div>
+          <div class="hero-fact">
+            <span class="hero-fact-label">Prezzo netto</span>
+            <span class="hero-fact-value" id="heroPrezzo">N/D</span>
+          </div>
         </div>
+      </header>
 
-    </div>
+      <section class="toolbar" aria-label="Stato della commessa">
+        <div class="status-wrap">
+          <span class="status-label">Stato commessa</span>
+          <span id="statusBadge" class="status-badge">Non indicato</span>
+        </div>
+        <div id="recordInfo" class="toolbar-text"></div>
+      </section>
 
-    <!-- TOAST -->
-    <div class="toast-container" id="toastContainer"></div>
+      <div id="cards" class="content-grid"></div>
 
-    <script>
-        // ============================================================
-        // TEMA
-        // ============================================================
-        function toggleTheme() {
-            document.body.classList.toggle('dark-theme');
-            const isDark = document.body.classList.contains('dark-theme');
-            localStorage.setItem('commesseTheme', isDark ? 'dark' : 'light');
+      <p class="footer-note">I dati visualizzati provengono dal parametro “commessa” presente nel collegamento.</p>
+    </section>
+
+    <section id="errorPanel" class="error-panel" role="alert">
+      <h2>Impossibile visualizzare la commessa</h2>
+      <p id="errorMessage">Il collegamento non contiene dati validi.</p>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const EMPTY_TEXT = "Non disponibile";
+
+      const icons = {
+        building: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V3h12v6h6v12h-7v-4h-2v4H3Zm2-2h5v-4h6v4h3v-8h-6V5H5v14Zm2-10h2V7H7v2Zm0 4h2v-2H7v2Zm4-4h2V7h-2v2Z"/></svg>',
+        briefcase: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4V2h6v2h5a2 2 0 0 1 2 2v5a3 3 0 0 1-2 2.83V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6.17A3 3 0 0 1 0 11V6a2 2 0 0 1 2-2h7Zm2 0h2V3h-2v1ZM2 6v5a1 1 0 0 0 1 1h7v-1h4v1h7a1 1 0 0 0 1-1V6H2Zm10 6h-1v2h2v-2h-1ZM4 14v6h14v-6h-4v2h-4v-2H4Z"/></svg>',
+        euro: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5a6.5 6.5 0 0 0-6.08 4H17v2H8.9a7.6 7.6 0 0 0 0 2H16v2H9.42a6.5 6.5 0 0 0 9.08 3.3v2.3A8.5 8.5 0 0 1 7.27 15H4v-2h2.9a9.5 9.5 0 0 1 0-2H4V9h3.27A8.5 8.5 0 0 1 18.5 3.4v2.3A6.45 6.45 0 0 0 15.5 5Z"/></svg>',
+        truck: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h11v4h4l3 4v6h-2.18a3 3 0 0 1-5.64 0H9.82a3 3 0 0 1-5.64 0H2V5a1 1 0 0 1 1-1Zm1 2v10h.18a3 3 0 0 1 5.64 0H12V6H4Zm10 4v6h.18a3 3 0 0 1 5.64 0H19v-3.33L17 10h-3ZM7 16a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/></svg>',
+        calendar: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h2v2h6V2h2v2h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3V2Zm13 8H4v10h16V10ZM4 8h16V6h-3v1h-2V6H9v1H7V6H4v2Z"/></svg>',
+        people: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0-6a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm6.5 7a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm0-5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM9 13c-4.42 0-7 2.08-7 5v3h14v-3c0-2.92-2.58-5-7-5Zm5 6H4v-1c0-1.83 1.87-3 5-3s5 1.17 5 3v1Zm2.68-5c3.34.28 5.32 1.74 5.32 4.17V21h-4v-2h2v-.83c0-1.09-1.02-1.86-3.3-2.13l-.02-2.04Z"/></svg>',
+        note: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2h10l4 4v16H5V2Zm2 2v16h10V8h-4V4H7Zm8 1.41V6h.59L15 5.41ZM9 11h6v2H9v-2Zm0 4h6v2H9v-2Z"/></svg>',
+        list: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2v2H4V5Zm4 0h12v2H8V5ZM4 11h2v2H4v-2Zm4 0h12v2H8v-2ZM4 17h2v2H4v-2Zm4 0h12v2H8v-2Z"/></svg>'
+      };
+
+      const groups = [
+        {
+          id: "impianto",
+          title: "Dati impianto",
+          description: "Identificazione e ubicazione",
+          icon: "building",
+          fields: [
+            ["ID Imp.", ["ID Imp.", "ID Imp", "Impianto"]],
+            ["Indirizzo", ["Indirizzo2", "Indirizzo"]],
+            ["Località impianto", ["Località impianto", "Localita impianto"]],
+            ["Provincia", ["Prov.", "Prov", "Provincia"]]
+          ]
+        },
+        {
+          id: "commessa",
+          title: "Dati commessa",
+          description: "Riferimenti principali",
+          icon: "briefcase",
+          fields: [
+            ["Numero commessa", ["Numero Commessa", "Numero commessa"]],
+            ["Data commessa", ["Data commessa"]],
+            ["Stato commessa", ["Stato comm.", "Stato commessa"]],
+            ["Tipo", ["Tipo"]],
+            ["SPV", ["SPV"]]
+          ]
+        },
+        {
+          id: "economico",
+          title: "Dati economici e pagamento",
+          description: "Valori, rate e incassi",
+          icon: "euro",
+          fields: [
+            ["Prezzo netto", ["Prezzo Netto", "Prezzo netto"]],
+            ["Costo materiale", ["Costo materiale"]],
+            ["Percentuale / Column18", ["Column18"]],
+            ["Rata", ["Rate", "Rata"]],
+            ["Importo rata", ["Importo rata"]],
+            ["Pagamento avvenuto", ["Avvenuto pagamento"]],
+            ["Data pagamento", ["Data pagamento"]],
+            ["Canone SIM inserito in COG", ["CANONE SIM INSERITO IN COG"]]
+          ]
+        },
+        {
+          id: "ordine",
+          title: "Ordine e materiali",
+          description: "Ordine, costi e consegne",
+          icon: "truck",
+          fields: [
+            ["Numero ordine", ["N. ordine", "Numero ordine"]],
+            ["Data ordine", ["Data Ordine", "Data ordine"]],
+            ["Consegna materiali prevista", ["Data prevista consegna materiali"]],
+            ["Consegna materiali effettiva", ["Data effettiva di consegna materiali"]]
+          ]
+        },
+        {
+          id: "pianificazione",
+          title: "Pianificazione lavori",
+          description: "Date previste e consuntive",
+          icon: "calendar",
+          fields: [
+            ["Inizio lavori previsto", ["Data inizio lavori prevista"]],
+            ["Fine lavori prevista", ["Data fine lavori prevista"]],
+            ["Fine lavori tassativa", ["Data tassativa di fine lavori (se prevista da contratto)"]],
+            ["Mese pianificato / completato", ["Pianificato / Completato nel mese"]],
+            ["Chiusura effettiva commessa", ["Data effettiva chiusura commessa"]],
+            ["Validazione commessa", ["Data validazione commessa"]]
+          ]
+        },
+        {
+          id: "responsabili",
+          title: "Responsabili e risorse",
+          description: "Riferimenti organizzativi",
+          icon: "people",
+          fields: [
+            ["Addetto commerciale", ["Addetto commerciale"]],
+            ["Supervisore STF", ["Supervisore STF"]],
+            ["Risorsa interna o esterna", ["Risorsa/e (interna o esterna)"]],
+            ["Subappalto", ["Subappalto Si o No", "Subappalto"]]
+          ]
+        }
+      ];
+
+      const specialFields = {
+        description: ["Descrizione Lavori", "Descrizione lavori"],
+        notes: ["NOTE", "Note"]
+      };
+
+      const normalizedMap = new Map();
+      let sourceData = {};
+      let usedKeys = new Set();
+      let emailSubject = "";
+
+      function normalizeKey(value) {
+        return String(value ?? "")
+          .replace(/\r\n|\r|\n/g, " ")
+          .replace(/\s+/g, " ")
+          .trim()
+          .toLocaleLowerCase("it-IT");
+      }
+
+      function rebuildNormalizedMap() {
+        normalizedMap.clear();
+        Object.keys(sourceData).forEach(key => normalizedMap.set(normalizeKey(key), key));
+      }
+
+      function resolveKey(aliases) {
+        for (const alias of aliases) {
+          if (Object.prototype.hasOwnProperty.call(sourceData, alias)) return alias;
+          const actualKey = normalizedMap.get(normalizeKey(alias));
+          if (actualKey !== undefined) return actualKey;
+        }
+        return null;
+      }
+
+      function getValue(aliases, markUsed = true) {
+        const key = resolveKey(aliases);
+        if (key === null) return null;
+        if (markUsed) usedKeys.add(key);
+        return sourceData[key];
+      }
+
+      function isEmpty(value) {
+        return value === null || value === undefined || String(value).trim() === "";
+      }
+
+      function formatExcelDate(serial) {
+        const number = Number(serial);
+        if (!Number.isFinite(number) || number <= 0) return null;
+        const excelEpoch = Date.UTC(1899, 11, 30);
+        const date = new Date(excelEpoch + Math.round(number) * 86400000);
+        if (Number.isNaN(date.getTime())) return null;
+        return new Intl.DateTimeFormat("it-IT", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          timeZone: "UTC"
+        }).format(date);
+      }
+
+      function looksLikeDateKey(key) {
+        return normalizeKey(key).includes("data") || normalizeKey(key).includes("date");
+      }
+
+      function looksLikeMoneyKey(key) {
+        const normalized = normalizeKey(key);
+        return ["prezzo", "costo", "importo"].some(part => normalized.includes(part));
+      }
+
+      function looksLikePercentKey(key) {
+        return normalizeKey(key).includes("column18") || normalizeKey(key).includes("percentuale");
+      }
+
+      function formatValue(key, value) {
+        if (isEmpty(value)) return EMPTY_TEXT;
+
+        const text = String(value).trim();
+        const lower = text.toLowerCase();
+
+        if (looksLikeDateKey(key)) {
+          if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(text)) return text;
+          if (/^\d{4}-\d{2}-\d{2}/.test(text)) {
+            const parts = text.slice(0, 10).split("-");
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+          }
+          if (/^\d+(\.\d+)?$/.test(text)) {
+            const converted = formatExcelDate(text);
+            if (converted) return converted;
+          }
         }
 
-        function loadTheme() {
-            const saved = localStorage.getItem('commesseTheme');
-            if (saved === 'dark') {
-                document.body.classList.add('dark-theme');
-            }
-        }
-        loadTheme();
-
-        // ============================================================
-        // TOAST
-        // ============================================================
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.add('out');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
+        if (looksLikeMoneyKey(key) && Number.isFinite(Number(value))) {
+          return new Intl.NumberFormat("it-IT", {
+            style: "currency",
+            currency: "EUR",
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+          }).format(Number(value));
         }
 
-        // ============================================================
-        // UTILITY
-        // ============================================================
-        function excelDateToJSDate(excelDate) {
-            if (!excelDate) return null;
-            if (typeof excelDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(excelDate)) {
-                const d = new Date(excelDate);
-                if (!isNaN(d)) return d;
-            }
-            if (typeof excelDate === 'number') {
-                const epoch = new Date(1899, 11, 30);
-                const d = new Date(epoch.getTime() + excelDate * 86400000);
-                if (!isNaN(d)) return d;
-            }
-            if (typeof excelDate === 'string') {
-                const d = new Date(excelDate);
-                if (!isNaN(d)) return d;
-                const parts = excelDate.split(/[/.-]/);
-                if (parts.length === 3) {
-                    const day = parseInt(parts[0]);
-                    const month = parseInt(parts[1]);
-                    const year = parseInt(parts[2]);
-                    if (!isNaN(day) && !isNaN(month) && !isNaN(year) && year > 2000) {
-                        const d = new Date(year, month - 1, day);
-                        if (!isNaN(d)) return d;
-                    }
-                }
-            }
-            return null;
+        if (looksLikePercentKey(key) && Number.isFinite(Number(value))) {
+          const number = Number(value);
+          const percent = Math.abs(number) <= 1 ? number : number / 100;
+          return new Intl.NumberFormat("it-IT", {
+            style: "percent",
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+          }).format(percent);
         }
 
-        function formatExcelDate(excelDate) {
-            if (!excelDate || excelDate === 0 || excelDate === '') return 'N/A';
-            const d = excelDateToJSDate(excelDate);
-            if (!d || isNaN(d)) return 'N/A';
-            return d.toLocaleDateString('it-IT');
+        if (["true", "sì", "si", "yes"].includes(lower)) return "Sì";
+        if (["false", "no"].includes(lower)) return "No";
+
+        return text.replace(/\r\n|\r|\n/g, " ").replace(/\s+/g, " ").trim();
+      }
+
+      function rawDisplay(aliases) {
+        const key = resolveKey(aliases);
+        if (key === null) return EMPTY_TEXT;
+        usedKeys.add(key);
+        return formatValue(key, sourceData[key]);
+      }
+
+      function createFieldRow(label, value) {
+        const row = document.createElement("div");
+        row.className = "field-row";
+
+        const term = document.createElement("dt");
+        term.textContent = label;
+
+        const description = document.createElement("dd");
+        description.textContent = value;
+        if (value === EMPTY_TEXT) description.classList.add("empty");
+
+        row.append(term, description);
+        return row;
+      }
+
+      function createCard(group) {
+        const card = document.createElement("section");
+        card.className = "card";
+
+        const header = document.createElement("header");
+        header.className = "card-header";
+
+        const icon = document.createElement("div");
+        icon.className = "card-icon";
+        icon.innerHTML = icons[group.icon] || icons.list;
+
+        const headingWrap = document.createElement("div");
+        const heading = document.createElement("h2");
+        heading.className = "card-title";
+        heading.textContent = group.title;
+        const description = document.createElement("p");
+        description.className = "card-description";
+        description.textContent = group.description;
+        headingWrap.append(heading, description);
+        header.append(icon, headingWrap);
+
+        const list = document.createElement("dl");
+        list.className = "field-list";
+        group.fields.forEach(([label, aliases]) => list.appendChild(createFieldRow(label, rawDisplay(aliases))));
+
+        card.append(header, list);
+        return card;
+      }
+
+      function createTextCard(title, description, iconName, content, className) {
+        if (isEmpty(content)) return null;
+
+        const card = document.createElement("section");
+        card.className = "card wide";
+
+        const header = document.createElement("header");
+        header.className = "card-header";
+        const icon = document.createElement("div");
+        icon.className = "card-icon";
+        icon.innerHTML = icons[iconName];
+        const headingWrap = document.createElement("div");
+        const heading = document.createElement("h2");
+        heading.className = "card-title";
+        heading.textContent = title;
+        const subtitle = document.createElement("p");
+        subtitle.className = "card-description";
+        subtitle.textContent = description;
+        headingWrap.append(heading, subtitle);
+        header.append(icon, headingWrap);
+
+        const box = document.createElement("div");
+        box.className = className;
+        box.textContent = String(content).trim();
+
+        card.append(header, box);
+        return card;
+      }
+
+      function createOtherFieldsCard() {
+        const remaining = Object.keys(sourceData).filter(key => !usedKeys.has(key));
+        if (remaining.length === 0) return null;
+
+        const group = {
+          title: "Altre informazioni",
+          description: "Campi aggiuntivi ricevuti dal collegamento",
+          icon: "list",
+          fields: []
+        };
+
+        const card = document.createElement("section");
+        card.className = "card wide";
+
+        const header = document.createElement("header");
+        header.className = "card-header";
+        const icon = document.createElement("div");
+        icon.className = "card-icon";
+        icon.innerHTML = icons.list;
+        const headingWrap = document.createElement("div");
+        const heading = document.createElement("h2");
+        heading.className = "card-title";
+        heading.textContent = group.title;
+        const subtitle = document.createElement("p");
+        subtitle.className = "card-description";
+        subtitle.textContent = group.description;
+        headingWrap.append(heading, subtitle);
+        header.append(icon, headingWrap);
+
+        const list = document.createElement("dl");
+        list.className = "field-list";
+        remaining.forEach(key => {
+          usedKeys.add(key);
+          const cleanLabel = key.replace(/\r\n|\r|\n/g, " ").replace(/\s+/g, " ").trim();
+          list.appendChild(createFieldRow(cleanLabel || "Campo senza nome", formatValue(key, sourceData[key])));
+        });
+
+        card.append(header, list);
+        return card;
+      }
+
+      function statusText(rawStatus) {
+        if (isEmpty(rawStatus)) return "Non indicato";
+        const status = String(rawStatus).trim().toUpperCase();
+        const labels = {
+          C: "Chiusa",
+          A: "Aperta",
+          O: "Aperta",
+          S: "Sospesa",
+          X: "Annullata"
+        };
+        return labels[status] ? `${labels[status]} (${status})` : String(rawStatus).trim();
+      }
+
+      function updateStatus(rawStatus) {
+        const badge = document.getElementById("statusBadge");
+        const text = statusText(rawStatus);
+        badge.textContent = text;
+        const normalized = String(rawStatus ?? "").trim().toUpperCase();
+        if (normalized === "C") badge.classList.add("closed");
+        if (["S", "X"].includes(normalized)) badge.classList.add("warning");
+      }
+
+      function setText(id, value) {
+        document.getElementById(id).textContent = isEmpty(value) ? EMPTY_TEXT : String(value);
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        window.clearTimeout(showToast.timer);
+        showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2200);
+      }
+
+      async function copyEmailSubject() {
+        try {
+          await navigator.clipboard.writeText(emailSubject);
+          showToast("Oggetto email copiato");
+        } catch (error) {
+          const area = document.createElement("textarea");
+          area.value = emailSubject;
+          area.style.position = "fixed";
+          area.style.opacity = "0";
+          document.body.appendChild(area);
+          area.select();
+          const copied = document.execCommand("copy");
+          area.remove();
+          showToast(copied ? "Oggetto email copiato" : "Copia non disponibile");
+        }
+      }
+
+      function parseCommessa() {
+        const params = new URLSearchParams(window.location.search);
+        const encoded = params.get("commessa");
+        if (!encoded) throw new Error("Nel collegamento manca il parametro “commessa”.");
+
+        const attempts = [encoded];
+        try { attempts.push(decodeURIComponent(encoded)); } catch (error) { /* valore già decodificato */ }
+
+        for (const candidate of attempts) {
+          try {
+            const parsed = JSON.parse(candidate);
+            if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) return parsed;
+          } catch (error) { /* prova successiva */ }
         }
 
-        function formatCurrency(amount) {
-            if (amount === undefined || amount === null || amount === '') return 'N/A';
-            const num = parseFloat(amount);
-            if (isNaN(num)) return 'N/A';
-            return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(num);
+        throw new Error("Il parametro “commessa” è presente, ma non contiene un JSON valido.");
+      }
+
+      function render() {
+        sourceData = parseCommessa();
+        rebuildNormalizedMap();
+
+        const impianto = rawDisplay(["ID Imp.", "ID Imp", "Impianto"]);
+        const commessa = rawDisplay(["Numero Commessa", "Numero commessa"]);
+        const indirizzo = rawDisplay(["Indirizzo2", "Indirizzo"]);
+        const localita = rawDisplay(["Località impianto", "Localita impianto"]);
+        const provincia = rawDisplay(["Prov.", "Prov", "Provincia"]);
+        const prezzo = rawDisplay(["Prezzo Netto", "Prezzo netto"]);
+        const stato = getValue(["Stato comm.", "Stato commessa"]);
+
+        const titleParts = [impianto, commessa].filter(value => value !== EMPTY_TEXT);
+        setText("pageTitle", titleParts.length ? titleParts.join(" / ") : "Dettaglio commessa");
+
+        const locationParts = [indirizzo, localita, provincia !== EMPTY_TEXT ? `(${provincia})` : null]
+          .filter(value => value && value !== EMPTY_TEXT);
+        setText("heroSubtitle", locationParts.length ? locationParts.join(" · ") : "Riepilogo completo della commessa");
+        setText("heroImpianto", impianto);
+        setText("heroCommessa", commessa);
+        setText("heroLocalita", localita);
+        setText("heroPrezzo", prezzo);
+        updateStatus(stato);
+
+        const subjectParts = [
+          `${impianto !== EMPTY_TEXT ? impianto : "Impianto"}/${commessa !== EMPTY_TEXT ? commessa : "Commessa"}`,
+          indirizzo !== EMPTY_TEXT ? indirizzo : null,
+          localita !== EMPTY_TEXT ? localita : null
+        ].filter(Boolean);
+        emailSubject = subjectParts.join(" - ");
+        document.getElementById("emailLink").href = `mailto:?subject=${encodeURIComponent(emailSubject)}`;
+        document.title = titleParts.length ? titleParts.join(" - ") : "Dettaglio commessa";
+
+        const totalFields = Object.keys(sourceData).length;
+        document.getElementById("recordInfo").textContent = `${totalFields} camp${totalFields === 1 ? "o" : "i"} ricevut${totalFields === 1 ? "o" : "i"} dal collegamento`;
+
+     const cardsContainer = document.getElementById("cards");
+
+// Prima riga: Dati impianto + Dati commessa
+groups.slice(0, 2).forEach(group => 
+  cardsContainer.appendChild(createCard(group))
+);
+
+// Seconda riga: Descrizione lavori
+const descriptionKey = resolveKey(specialFields.description);
+
+if (descriptionKey !== null) {
+  usedKeys.add(descriptionKey);
+
+  const descriptionCard = createTextCard(
+    "Descrizione lavori",
+    "Attività previste dalla commessa",
+    "note",
+    sourceData[descriptionKey],
+    "description-box"
+  );
+
+  if (descriptionCard) {
+    cardsContainer.appendChild(descriptionCard);
+  }
+}
+
+// Subito dopo: Pianificazione lavori + Responsabili e risorse
+[groups[4], groups[5]].forEach(group =>
+  cardsContainer.appendChild(createCard(group))
+);
+
+// Poi: Dati economici + Ordine e materiali
+[groups[2], groups[3]].forEach(group =>
+  cardsContainer.appendChild(createCard(group))
+);
+
+        const notesKey = resolveKey(specialFields.notes);
+        if (notesKey !== null) {
+          usedKeys.add(notesKey);
+          const notesCard = createTextCard(
+            "Note",
+            "Annotazioni operative",
+            "note",
+            sourceData[notesKey],
+            "notes-box"
+          );
+          if (notesCard) cardsContainer.appendChild(notesCard);
         }
 
-        function getFieldValue(obj, key, defaultValue = 'N/A') {
-            if (!obj) return defaultValue;
-            const value = obj[key];
-            return (value !== undefined && value !== null && value !== '') ? value : defaultValue;
-        }
+        const otherCard = createOtherFieldsCard();
+        if (otherCard) cardsContainer.appendChild(otherCard);
 
-        // ============================================================
-        // CARICAMENTO DATI
-        // ============================================================
-        function loadCommessa() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const commessaParam = urlParams.get('commessa');
+        document.getElementById("copyButton").addEventListener("click", copyEmailSubject);
+        document.getElementById("printButton").addEventListener("click", () => window.print());
+        document.getElementById("pageContent").hidden = false;
+      }
 
-            const contentDiv = document.getElementById('content');
-            const badgeEl = document.getElementById('commessaBadge');
-
-            if (!commessaParam) {
-                contentDiv.innerHTML = `
-                    <div class="error-state">
-                        <div class="error-icon">⚠️</div>
-                        <h3>Nessuna commessa selezionata</h3>
-                        <p>Specificare una commessa nella URL: <code>?commessa=...</code></p>
-                    </div>
-                `;
-                badgeEl.textContent = '⚠️ Non selezionata';
-                document.querySelector('.header-left h1').textContent = '📋 Nessuna Commessa';
-                return;
-            }
-
-            try {
-                const data = JSON.parse(decodeURIComponent(commessaParam));
-
-                const numero = data['Numero Commessa'] || 'N/D';
-                badgeEl.textContent = `🆔 ${numero}`;
-                document.querySelector('.header-left h1').textContent = `📋 Commessa ${numero}`;
-                document.title = `Commessa ${numero}`;
-
-                const stato = data['Stato comm.'];
-                let statoBadge = '';
-                if (stato) {
-                    let cls = 'status-P';
-                    if (stato === 'C') cls = 'status-C';
-                    else if (stato === 'A') cls = 'status-A';
-                    statoBadge = `<span class="status-badge ${cls}">${stato}</span>`;
-                }
-
-                // Costruisce HTML
-                let html = '';
-
-                // Success message
-                html += `
-                    <div class="success-message">✅ Commessa ${numero} caricata con successo</div>
-                `;
-
-                // Card 1: Informazioni Principali
-                html += `
-                    <div class="card">
-                        <div class="card-title">📌 Informazioni Principali</div>
-                        <div class="card-body">
-                            <div class="field">
-                                <span class="label">Numero Commessa</span>
-                                <span class="value"><strong>${getFieldValue(data, 'Numero Commessa')}</strong></span>
-                            </div>
-                            <div class="field">
-                                <span class="label">Data commessa</span>
-                                <span class="value">${formatExcelDate(data['Data commessa'])}</span>
-                            </div>
-                            <div class="field">
-                                <span class="label">Stato comm.</span>
-                                <span class="value">${statoBadge || 'N/A'}</span>
-                            </div>
-                            <div class="field">
-                                <span class="label">Tipo</span>
-                                <span class="value">${getFieldValue(data, 'Tipo')}</span>
-                            </div>
-                            <div class="field" style="border-bottom:none;">
-                                <span class="label">ID Imp.</span>
-                                <span class="value"><strong>${getFieldValue(data, 'ID Imp.')}</strong></span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                // Card 2: Dettagli Impianto
-                if (data.Indirizzo || data['Località impianto'] || data.Prov) {
-                    html += `
-                        <div class="card">
-                            <div class="card-title">📍 Dettagli Impianto</div>
-                            <div class="card-body">
-                                <div class="field">
-                                    <span class="label">Indirizzo</span>
-                                    <span class="value">${getFieldValue(data, 'Indirizzo')}</span>
-                                </div>
-                                <div class="field">
-                                    <span class="label">Località impianto</span>
-                                    <span class="value">${getFieldValue(data, 'Località impianto')}</span>
-                                </div>
-                                <div class="field" style="border-bottom:none;">
-                                    <span class="label">Prov.</span>
-                                    <span class="value">${getFieldValue(data, 'Prov')}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                // Card 3: Informazioni Commerciali
-                if (data['Addetto commerciale'] || data['Prezzo Netto']) {
-                    html += `
-                        <div class="card">
-                            <div class="card-title">💰 Informazioni Commerciali</div>
-                            <div class="card-body">
-                                <div class="field">
-                                    <span class="label">Addetto commerciale</span>
-                                    <span class="value">${getFieldValue(data, 'Addetto commerciale')}</span>
-                                </div>
-                                <div class="field">
-                                    <span class="label">Descrizione Lavori</span>
-                                    <span class="value">${getFieldValue(data, 'Descrizione Lavori')}</span>
-                                </div>
-                                <div class="field">
-                                    <span class="label">Prezzo Netto</span>
-                                    <span class="value"><strong>${formatCurrency(data['Prezzo Netto'])}</strong></span>
-                                </div>
-                                <div class="field">
-                                    <span class="label">N. ordine</span>
-                                    <span class="value">${getFieldValue(data, 'N. ordine')}</span>
-                                </div>
-                                <div class="field">
-                                    <span class="label">Data Ordine</span>
-                                    <span class="value">${formatExcelDate(data['Data Ordine'])}</span>
-                                </div>
-                                <div class="field" style="border-bottom:none;">
-                                    <span class="label">Costo materiale</span>
-                                    <span class="value">${formatCurrency(data['Costo materiale'])}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                // Card 4: Pianificazione
-                if (data['Data inizio lavori prevista'] || data['Data fine lavori prevista']) {
-                    html += `
-                        <div class="card">
-                            <div class="card-title">📅 Pianificazione Lavori</div>
-                            <div class="card-body">
-                                <div class="field">
-                                    <span class="label">Data inizio lavori prevista</span>
-                                    <span class="value">${formatExcelDate(data['Data inizio lavori prevista'])}</span>
-                                </div>
-                                <div class="field">
-                                    <span class="label">Data fine lavori prevista</span>
-                                    <span class="value">${formatExcelDate(data['Data fine lavori prevista'])}</span>
-                                </div>
-                                <div class="field">
-                                    <span class="label">Pianificato / Completato nel mese</span>
-                                    <span class="value">${getFieldValue(data, 'Pianificato / Completato nel mese')}</span>
-                                </div>
-                                <div class="field">
-                                    <span class="label">Data effettiva chiusura commessa</span>
-                                    <span class="value">${formatExcelDate(data['Data effettiva chiusura commessa'])}</span>
-                                </div>
-                                <div class="field" style="border-bottom:none;">
-                                    <span class="label">Data validazione commessa</span>
-                                    <span class="value">${formatExcelDate(data['Data validazione commessa'])}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                // Card 5: Altri Dettagli
-                if (data['Supervisore STF'] || data.NOTE) {
-                    html += `
-                        <div class="card">
-                            <div class="card-title">📝 Altri Dettagli</div>
-                            <div class="card-body">
-                                <div class="field">
-                                    <span class="label">Supervisore STF</span>
-                                    <span class="value">${getFieldValue(data, 'Supervisore STF')}</span>
-                                </div>
-                                <div class="field">
-                                    <span class="label">Subappalto</span>
-                                    <span class="value">${getFieldValue(data, 'Subappalto Si o No')}</span>
-                                </div>
-                                <div class="field">
-                                    <span class="label">Risorsa/e</span>
-                                    <span class="value">${getFieldValue(data, 'Risorsa/e (interna o esterna)')}</span>
-                                </div>
-                                <div class="field" style="border-bottom:none;">
-                                    <span class="label">NOTE</span>
-                                    <span class="value" style="max-width:50%;">${getFieldValue(data, 'NOTE')}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                // Card 6: Dati JSON
-                html += `
-                    <div class="card">
-                        <div class="card-title">📋 Dati JSON Completi</div>
-                        <div class="card-body">
-                            <div class="json-display">${JSON.stringify(data, null, 2)}</div>
-                        </div>
-                    </div>
-                `;
-
-                contentDiv.innerHTML = html;
-
-            } catch (error) {
-                console.error('Errore:', error);
-                contentDiv.innerHTML = `
-                    <div class="error-state">
-                        <div class="error-icon">❌</div>
-                        <h3>Errore nel caricamento</h3>
-                        <p>${error.message}</p>
-                    </div>
-                `;
-                badgeEl.textContent = '❌ Errore';
-                showToast('❌ Errore caricamento commessa', 'error');
-            }
-        }
-
-        // ============================================================
-        // INIT
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', loadCommessa);
-
-        console.log('📱 Commesse Desktop v1.0');
-    </script>
-
+      try {
+        render();
+      } catch (error) {
+        document.getElementById("errorMessage").textContent = error.message || "Si è verificato un errore durante la lettura dei dati.";
+        document.getElementById("errorPanel").style.display = "block";
+      }
+    })();
+  </script>
 </body>
 </html>
